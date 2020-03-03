@@ -1,24 +1,18 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import Header from "./components/header"
+import ConvertedList from "./components/convertedList"
+import ConversionForm from "./components/conversationForm"
 
 function App() {
+  const [ingredients, setIngredients] = useState([])
+// ingredient ex. {"amount": "3", "unitFrom": "cups", "unitTo": "grams", "ingredient": "flour", "id": 0}
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header/>
+      <ConversionForm setIngredients={setIngredients}/>
+      <ConvertedList ingredients={ingredients}/>
     </div>
   );
 }
