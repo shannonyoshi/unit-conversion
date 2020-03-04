@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="App">
       <Header/>
-      <ConversionForm setIngredients={setIngredients}/>
+      <ConversionForm setIngredients={setIngredients} ingredients={ingredients}/>
       <ConvertedList ingredients={ingredients}/>
     </div>
   );
