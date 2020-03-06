@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {unitDict, commonFractions} from "./util"
+import {unitDict, commonFractions, convertSimple} from "./util"
 // import { notDeepEqual } from "assert";
 // import { forInStatement } from "@babel/types";
 
@@ -24,16 +24,22 @@ export default function ConversionForm(props) {
   // TODO: finish handleSubmit for complex conversions once backend is functional. BE should check if item is in DB forInStatement, if not perform additional API call 
   const handleSubmit = e => {
     e.preventDefault();
+    console.log("submitted")
     setErrors({ amount: false, ingredient: false });
 
     let result = simpleConvert();
+    console.log("simpleConversion?", result)
     let amountResult = validateAmount();
+    console.log("amount valid?", amountResult)
     if (result && amountResult) {
-      convertSimple(amountResult, inputs.unitFrom, inputs.unitTo)
+      console.log("to go convertSimple", amountResult, inputs.unitFrom, inputs.unitTo)
+      let converted = convertSimple(amountResult, inputs.unitFrom, inputs.unitTo)
+      console.log("converted", converted)
     }
   };
   const handleInputChange = e => {
     e.persist();
+    // console.log("event.target", e.target, "event.target.value",e.target.value)
     setInputs(inputs => ({ ...inputs, [e.target.name]: e.target.value }));
   };
   // returns false of not valid and the parsed number without fractions if valid""
@@ -102,7 +108,8 @@ export default function ConversionForm(props) {
   const simpleConvert = () => {
     let unitFrom = inputs.unitFrom;
     let unitTo = inputs.unitTo;
-    if (unitDict[unitFrom] === unitDict[unitTo]) {
+    console.log("in simpleConvert", unitDict[unitFrom], unitDict[unitTo])
+    if (unitDict[unitFrom].type === unitDict[unitTo].type) {
       return true;
     } else {
       return false;
@@ -119,6 +126,7 @@ export default function ConversionForm(props) {
           type="text"
           id="amount"
           placeholder="3 1/2"
+          name="amount"
           value={inputs.amount}
           onChange={handleInputChange}
         />
@@ -127,11 +135,12 @@ export default function ConversionForm(props) {
           required
           id="unitFrom"
           name="unitFrom"
+
           value={inputs.unitFrom}
           onChange={handleInputChange}
         >
           {unitKeys.map(unit => 
-            <option value={unit}>{unit}</option>
+            <option value={unit}key={`unitFrom${unit}`}>{unit}</option>
           )}
         </select>
         <label for="unitTo">To</label>
@@ -142,15 +151,17 @@ export default function ConversionForm(props) {
           onChange={handleInputChange}
         >
           {unitKeys.map(unit => 
-            <option value={unit}>{unit}</option>
+            <option value={unit} key={`unitTo${unit}`}>{unit}</option>
           )}
         </select>
         <label for="ingredient">Ingredient</label>
         <input
           type="text"
           id="ingredient"
+          name="ingredient"
           placeholder="flour"
           value={inputs.ingredient}
+          onChange={handleInputChange}
         ></input>
         <button type="submit">Convert</button>
       </form>
