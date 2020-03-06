@@ -1,52 +1,9 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-//this could be held in the backend to make it more flexible
-const unitDict = {
-  drop: "volume",
-  smidge: "volume",
-  pinch: "volume",
-  dash: "volume",
-  teaspoon: "volume",
-  tablespoon: "volume",
-  "fluid ounce": "volume",
-  cup: "volume",
-  pint: "volume",
-  quart: "volume",
-  gallon: "volume",
-  milliliter: "volume",
-  liter: "volume",
-  ounce: "weight",
-  pound: "weight",
-  gram: "weight",
-  kilogram: "weight"
-};
+import React, {useState} from "react";
+import {unitDict, commonFractions} from "./util"
+// import { notDeepEqual } from "assert";
+// import { forInStatement } from "@babel/types";
 
 const unitKeys = Object.keys(unitDict);
-
-const commonFractions = {
-  "1/16": 0.0625,
-  "1/10": 0.1,
-  "1/8": 0.125,
-  "1/6": 0.1667,
-  "3/16": 0.1875,
-  "1/5": 0.2,
-  "1/4": 0.25,
-  "5/16": 0.3125,
-  "1/3": 0.333,
-  "3/8": 0.375,
-  "2/5": 0.4,
-  "7/16": 0.4375,
-  "1/2": 0.5,
-  "9/16": 0.5625,
-  "5/8": 0.625,
-  "2/3": 0.667,
-  "11/16": 0.6875,
-  "3/4": 0.75,
-  "13/16": 0.8125,
-  "5/6": 0.833,
-  "7/8": 0.875,
-  "15/16": 0.9375
-};
 
 export default function ConversionForm(props) {
   const setIngredients = props.setIngredients;
@@ -59,32 +16,39 @@ export default function ConversionForm(props) {
   });
   const [errors, setErrors] = useState({ amount: false, ingredient: false });
 
-  // const [amount, setAmount] = useState("");
-  // const [unitTo, setUnitTo] = useState("")
-  // const [unitFrom, setUnitFrom] = useState("")
-  // const [ingredient, setIngredient] = useState("")
+  //should check for type of conversion, validate amount
+  //if a simple conversion, use function from util file to perform the conversion, then set to state converted list to display
+  //if not a simple conversion (vol=>vol or weight=>weight), validate ingredient
+  //perform API call to BE(not yet set up)
 
+  // TODO: finish handleSubmit for complex conversions once backend is functional. BE should check if item is in DB forInStatement, if not perform additional API call 
   const handleSubmit = e => {
     e.preventDefault();
-    setErrors({ amount:false, ingredient:false})
-    result = simpleConvert();
-    amountResult = validateAmount();
+    setErrors({ amount: false, ingredient: false });
+
+    let result = simpleConvert();
+    let amountResult = validateAmount();
+    if (result && amountResult) {
+      convertSimple(amountResult, inputs.unitFrom, inputs.unitTo)
+    }
   };
   const handleInputChange = e => {
     e.persist();
     setInputs(inputs => ({ ...inputs, [e.target.name]: e.target.value }));
   };
-  // returns false of not valid and the parsed number if valid""
+  // returns false of not valid and the parsed number without fractions if valid""
   const validateAmount = () => {
-
     let amount = inputs.amount.trim();
-    let amountArray = amount.split(" ").map(item => {
-      item.trim();
-    });
-    if (amountArray.length>2||(amount.includes("/")&&amount.includes("."))) {
+    let amountArray = amount.split(" ").map(item => 
+      item.trim()
+    );
+    if (
+      amountArray.length > 2 ||
+      (amount.includes("/") && amount.includes("."))
+    ) {
       setErrors({ ...errors, amount: true });
-        return false
-      }
+      return false;
+    }
     if (amount.includes("/")) {
       // parses whole number
       const parsed = parseInt(amountArray[0], 10);
@@ -109,36 +73,35 @@ export default function ConversionForm(props) {
         }
       }
     }
-      if (amount.includes(".")) {
-        const parsedFl = parseFloat(amount, 10);
-        if (isNaN(parsedFl)) {
-          setErrors({ ...errors, amount: true });
-          return false;
-        } else {
-          return parsedFl;
-        }
-      } 
-      
-      if (!amount.includes(".") && !amount.includes("/")) {
-        let parsingAmount=amount
-        if (amountArray.length > 1) {
-          parsingAmount = amountArray.join("");
-        }
-        const parsedInt = parseInt(parsinAmount, 10);
-        if (isNaN(parsedInt)) {
-          setErrors({ ...errors, amount: true });
-          return false;
-        } else {
-          return parsedInt;
-        }
+    if (amount.includes(".")) {
+      const parsedFl = parseFloat(amount, 10);
+      if (isNaN(parsedFl)) {
+        setErrors({ ...errors, amount: true });
+        return false;
+      } else {
+        return parsedFl;
+      }
+    }
+
+    if (!amount.includes(".") && !amount.includes("/")) {
+      let parsingAmount = amount;
+      if (amountArray.length > 1) {
+        parsingAmount = amountArray.join("");
+      }
+      const parsedInt = parseInt(parsingAmount, 10);
+      if (isNaN(parsedInt)) {
+        setErrors({ ...errors, amount: true });
+        return false;
+      } else {
+        return parsedInt;
       }
     }
   };
 
   // checks to see if conversion can be done using simple calculation, or an API call is needed
   const simpleConvert = () => {
-    unitFrom = inputs.unitFrom;
-    unitTo = inputs.unitTo;
+    let unitFrom = inputs.unitFrom;
+    let unitTo = inputs.unitTo;
     if (unitDict[unitFrom] === unitDict[unitTo]) {
       return true;
     } else {
@@ -167,9 +130,9 @@ export default function ConversionForm(props) {
           value={inputs.unitFrom}
           onChange={handleInputChange}
         >
-          {unitKeys.map(unit => {
-            <option value={unit}>{unit}</option>;
-          })}
+          {unitKeys.map(unit => 
+            <option value={unit}>{unit}</option>
+          )}
         </select>
         <label for="unitTo">To</label>
         <select
@@ -178,9 +141,9 @@ export default function ConversionForm(props) {
           name="unitTo"
           onChange={handleInputChange}
         >
-          {unitKeys.map(unit => {
-            <option value={unit}>{unit}</option>;
-          })}
+          {unitKeys.map(unit => 
+            <option value={unit}>{unit}</option>
+          )}
         </select>
         <label for="ingredient">Ingredient</label>
         <input

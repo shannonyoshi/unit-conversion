@@ -1,9 +1,9 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
+// import logo from './logo.svg';
 import './App.css';
 import Header from "./components/header"
 import ConvertedList from "./components/convertedList"
-import ConversionForm from "./components/conversationForm"
+import ConversionForm from "./components/conversionForm"
 
 function App() {
   const [ingredients, setIngredients] = useState([])
