@@ -1,7 +1,6 @@
 import React, {useState} from "react";
-import {unitDict, commonFractions, convertSimple} from "./util"
-// import { notDeepEqual } from "assert";
-// import { forInStatement } from "@babel/types";
+import { convertSimple} from "../util/utilFunctions"
+import {unitDict, commonFractions} from "../util/units"
 
 const unitKeys = Object.keys(unitDict);
 
@@ -108,7 +107,8 @@ export default function ConversionForm(props) {
   const simpleConvert = () => {
     let unitFrom = inputs.unitFrom;
     let unitTo = inputs.unitTo;
-    console.log("in simpleConvert", unitDict[unitFrom], unitDict[unitTo])
+    console.log("in simpleConvert unitFrom", unitDict[unitFrom])
+    console.log("in simpleConvert unitTo", unitDict[unitTo].type)
     if (unitDict[unitFrom].type === unitDict[unitTo].type) {
       return true;
     } else {
