@@ -4,6 +4,7 @@ import React from "react";
 
 export default function ConvertedList(props) {
     const ingredients = props.ingredients
+    if (ingredients.length > 0) {
     return(
         <div className="list-wrapper">
             <ul className="list">
@@ -13,5 +14,12 @@ export default function ConvertedList(props) {
 
         </ul>
         </div>
-    )
+    )}
+    else {
+        return (
+            <div>
+                <h4>No Ingredients Converted</h4>
+            </div>
+        )
+    }
 }
