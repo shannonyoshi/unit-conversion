@@ -9,7 +9,9 @@ export default function ConvertedList(props) {
         <div className="list-wrapper">
             <ul className="list">
             {ingredients.map(ingredient=> 
-                <li className="list-item"key={ingredient.ingredient}>ingredient</li>
+                <li className="list-item"key={ingredient.ingredient}>{ingredient[0]}</li>
+                // {if (!ingredient[1]===null) {
+                //     <span>{ingredient[1]}</span>}
             )}
 
         </ul>

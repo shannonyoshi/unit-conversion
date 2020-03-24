@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { convertSimple, validateAmount } from "../util/utilFunctions";
+import { convertSimple, validateAmount, convertRemainder } from "../util/utilFunctions";
 import { unitDict, allFractions } from "../util/units";
 
 const unitKeys = Object.keys(unitDict);
@@ -13,7 +13,7 @@ export default function ConversionForm(props) {
     unitTo: "",
     ingredient: ""
   });
-  const [errors, setErrors] = useState({ amount: false, ingredient: false });
+  const [errors, setErrors] = useState({ amount: false, ingredient: false, conversion: false});
 
   //should check for type of conversion, validate amount
   //if a simple conversion, use function from util file to perform the conversion, then set to state converted list to display
@@ -23,7 +23,7 @@ export default function ConversionForm(props) {
   // TODO: finish handleSubmit for complex conversions once backend is functional. BE should check if item is in DB forInStatement, if not perform additional API call
   const handleSubmit = e => {
     e.preventDefault();
-    console.log("submitted");
+    // console.log("submitted");
     setErrors({ amount: false, ingredient: false });
 
     let simpleResult = simpleConvert();
@@ -35,12 +35,6 @@ export default function ConversionForm(props) {
       return;
     }
     if (simpleResult) {
-      console.log(
-        "go to convertSimple",
-        amountResult,
-        inputs.unitFrom,
-        inputs.unitTo
-      );
       let converted = convertSimple(
         amountResult,
         inputs.unitFrom,
@@ -49,11 +43,18 @@ export default function ConversionForm(props) {
       console.log("converted", converted);
       if (converted) {
         setConvertedIngredients({ ...convertedIngredients, converted });
+      } else {
+        setErrors({...errors, conversion: true})
+
       }
     }
   };
   const handleInputChange = e => {
     e.persist();
+  let result = convertRemainder(100, "US")
+  console.log("final result", result)
+  // convertRemainder(60, "US")
+
     // console.log("event.target", e.target, "event.target.value",e.target.value)
     setInputs(inputs => ({ ...inputs, [e.target.name]: e.target.value }));
   };

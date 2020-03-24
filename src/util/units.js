@@ -114,7 +114,7 @@
     },
     "liter(s)": {
       type: "mL",
-      conversion: 29.5735,
+      conversion: 1000,
       output: "decimal",
       unit: "metric"
     },
