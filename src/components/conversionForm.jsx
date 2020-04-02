@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { convertSimple, validateAmount, convertRemainder } from "../util/utilFunctions";
-import { unitDict, allFractions } from "../util/units";
+import { convertSimple, validateAmount, checkIfSimple } from "../util/utilFunctions";
+import { unitDict } from "../util/units";
 
 const unitKeys = Object.keys(unitDict);
 
@@ -26,23 +26,24 @@ export default function ConversionForm(props) {
     // console.log("submitted");
     setErrors({ amount: false, ingredient: false });
 
-    let simpleResult = simpleConvert();
-    console.log("simpleConversion?", simpleResult);
-    let amountResult = validateAmount(inputs.amount.trim());
-    console.log("amount valid?", amountResult);
-    if (amountResult === false) {
+    let isSimple = checkIfSimple(inputs.unitFrom, inputs.unitTo);
+    console.log("simpleConversion?", isSimple);
+    let isAmount = validateAmount(inputs.amount.trim());
+    console.log("amount valid?", isAmount);
+    if (!isAmount) {
       setErrors({ ...errors, amount: true });
       return;
     }
-    if (simpleResult) {
-      let converted = convertSimple(
-        amountResult,
+    if (isSimple) {
+      let convertedAmount = convertSimple(
+        isAmount,
         inputs.unitFrom,
         inputs.unitTo
       );
+      let converted = `${isAmount} ${inputs.unitFrom} = ${convertedAmount} ${inputs.ingredient}`
       console.log("converted", converted);
       if (converted) {
-        setConvertedIngredients({ ...convertedIngredients, converted });
+        setConvertedIngredients([ ...convertedIngredients, converted ]);
       } else {
         setErrors({...errors, conversion: true})
 
@@ -51,26 +52,8 @@ export default function ConversionForm(props) {
   };
   const handleInputChange = e => {
     e.persist();
-  let result = convertRemainder(100, "US")
-  console.log("final result", result)
-  // convertRemainder(60, "US")
-
     // console.log("event.target", e.target, "event.target.value",e.target.value)
     setInputs(inputs => ({ ...inputs, [e.target.name]: e.target.value }));
-  };
-  // returns false if not valid and the parsed number in decmial if true
-  
-
-  // checks to see if conversion can be done using simple calculation, or an API call is needed
-  const simpleConvert = () => {
-    let unitFrom = inputs.unitFrom;
-    let unitTo = inputs.unitTo;
-    console.log("in simpleConvert unitFrom", unitDict[unitFrom]);
-    console.log("in simpleConvert unitTo", unitDict[unitTo].type);
-    if (unitDict[unitFrom].type === unitDict[unitTo].type) {
-      return true;
-    }
-    return false;
   };
 
   return (

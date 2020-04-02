@@ -40,75 +40,88 @@ export const validateAmount = amount => {
   return false;
 };
 
-//performs simple conversion, returns string of converted amount + unit, warning if not accurate withing +/-2.5%
+//checks if the conversion is weight=>weight or vol=>vol
+export const checkIfSimple = (unitFrom, unitTo) => {
+  console.log("in simpleConvert unitFrom", unitDict[unitFrom]);
+  console.log("in simpleConvert unitTo", unitDict[unitTo].type);
+  if (unitDict[unitFrom].type === unitDict[unitTo].type) {
+    return true;
+  }
+  return false;
+}
+
+//performs simple conversion, returns string of converted amount + unit
 export const convertSimple = (amount, startingUnit, endUnit) => {
   startingUnit = unitDict[startingUnit];
   let targetUnit = unitDict[endUnit];
-  let warning = null;
-  const amountmLs = amount * startingUnit.conversion;
-  const targetUnitInDecimal = amountmLs / targetUnit.conversion;
+  const amountInmLs = amount * startingUnit.conversion;
+  const targetUnitInDecimal = amountInmLs / targetUnit.conversion;
+  const targetUnitInteger = Math.floor(targetUnitInDecimal)
   const decimalRemainder =
-    targetUnitInDecimal - Math.floor(targetUnitInDecimal);
-  if (decimalRemainder <= 0.015) {
-    //returns whole numbers + unit
-    return [`${Math.floor(targetUnitInDecimal)} ${endUnit}`, warning];
-  }
-  if (targetUnit.output === "decimal") {
-    //returns amount with max 2 decimal numbers
-    let amountTo2Decimal = Math.floor(targetUnitInDecimal * 100) / 100;
-    return [`${amountTo2Decimal.toString(10)} ${endUnit}`, warning];
-  }
-  //ex. fraction = ["1/10", 0.1, false]
-  const fraction = findClosestFraction(decimalRemainder);
-  console.log(`FRACTION: ${fraction} is true? ${fraction[2]}`);
-  const targetUnitmLs = Math.floor(targetUnitInDecimal) + fraction[1];
-  if (
-    amountmLs * 0.985 <= targetUnitmLs &&
-    targetUnitmLs <= amountmLs * 1.025
-  ) {
-    warning = "Warning: conversion is not accurate within +/-2.5%";
-  }
-  //true means this is a common fraction used for baking
-  if (fraction[2] === true) {
-    console.log("should return fraction here");
-    return [
-      `${Math.floor(targetUnitInDecimal)} ${fraction[0]} ${endUnit}`,
-      warning
-    ];
-  } else {
-    let remainingmLs = decimalRemainder * targetUnit.conversion;
+    targetUnitInDecimal - targetUnitInteger;
 
-    //START WORKING HERE, convertedRemainder needs work
-    let converted = convertRemainder(remainingmLs, targetUnit.unit);
+//returns whole numbers + unit
+  if (decimalRemainder <= 0.015) {
+    return `${Math.floor(targetUnitInDecimal)} ${endUnit}`
   }
-  console.log("Nothing returned from convertSimple");
+//returns amount with 2 decimal places for unit types that commonly use decimal (mostly metric)
+  if (targetUnit.output === "decimal") {
+    let amountTo2Decimal = Math.floor(targetUnitInDecimal * 100) / 100;
+    return `${amountTo2Decimal.toString(10)} ${endUnit}`
+  }
+//ex. fraction = ["1/10", 0.1, false] means [fraction string, fraction in decimal, boolean if regular baking fraction]
+  const fraction = findClosestFraction(decimalRemainder);
+
+//fraction[2] =true  means this is a common fraction used for baking
+  if (fraction[2] === true) {
+    if (targetUnitInteger=== 0) {
+      return `${fraction[0]} ${endUnit}`
+    } else {
+      return `${targetUnitInteger} ${fraction[0]} ${endUnit}`
+    }
+
+  } else {
+    let remainingmLs = amountInmLs - (targetUnitInteger * targetUnit.conversion)
+    const mLsTolerance = calcTolerancemLs(amountInmLs)
+    let converted = convertRemainder(remainingmLs, targetUnit.unit, mLsTolerance);
+      if (targetUnitInteger===0) {
+    return `${fraction[0]} ${endUnit} or ${converted}`
+    } else {
+      return `${targetUnitInteger} ${fraction[0]} ${endUnit} or ${targetUnitInteger} ${endUnit} plus ${converted}`
+    }
+  }
 };
 
+//returns tolerance of 2.5% in mLs
+const calcTolerancemLs = (amountInmLs) => {
+  const upperLimitmLs = amountInmLs* 1.025  - amountInmLs
+  return upperLimitmLs
+}
+
 //temporarily exporting to test
-export const convertRemainder = (remainingmLs, targetUnitType) => {
-  console.log(
-    `CONVERT Remainder: ${remainingmLs} targetUnitType: ${targetUnitType}`
-  );
+const convertRemainder = (remainingmLs, targetUnitType, mLsTolerance) => {
   let possibleUnits = findPossibleUnits(remainingmLs, targetUnitType)
-  console.log(possibleUnits)
   let mLs = remainingmLs
   let result = []
   for (let i=0; i<possibleUnits.length; i++) {
     let unitmLs = possibleUnits[i][1]
     if (mLs >= unitmLs) {
       let count = 0
-      while(mLs >=unitmLs) {
+      while(mLs + mLsTolerance >=unitmLs) {
         count +=1
         mLs-=unitmLs
       }
       result.push([count, possibleUnits[i][0]])
+    }
+    //ends loop if total amount is within +/- 2.5% of total
+    if (Math.abs(mLs) <=mLsTolerance) {
+      break
     }
   }
   let resultingString = ""
   for(let i=0; i< result.length; i++) {
     resultingString=resultingString.concat(` ${result[i][0]} ${result[i][1]},`)
   }
-  console.log("resultingString", resultingString)
   return resultingString.slice(0,-1)
 };
 
@@ -116,10 +129,8 @@ const findClosestFraction = remainder => {
   let closestFraction = allFractions.reduce((prev, curr) =>
     Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder) ? curr : prev
   );
-  console.log("closestFraction in findClosestFraction", closestFraction);
   return closestFraction;
 };
-
 
 //returns array of units of same type that are smaller than remainingmLs, starting from largest unit
 const findPossibleUnits = (remainingmLs, targetUnitType)=> {
@@ -131,34 +142,3 @@ const findPossibleUnits = (remainingmLs, targetUnitType)=> {
   }
   return possible.reverse()
 }
-
-
-//trying a difference approach, saving this for convenience if it doesn't work
-// export const convertRemainder = (remainingmLs, targetUnitType) => {
-//   // console.log(
-//   //   `CONVERT Remainder: ${remainingmLs} targetUnitType: ${targetUnitType}`
-//   // );
-//   let possibleUnits = findPossibleUnits(remainingmLs, targetUnitType)
-  
-//   // console.log("possibleUnits", possibleUnits);
-//   let result = [];
-//   //while mLs is greater than smallest unit (drop) conversion
-//   let i = possibleUnits.length - 1;
-//   while (remainingmLs > 0.0513429) {
-//     console.log(
-//       `first while loop, i=${i}, possibleUnits[i]: ${possibleUnits[i]}`
-//     );
-//     while (remainingmLs - possibleUnits[i][1] >= 0 && i>-1) {
-//       if (result[-1][0]==possibleUnits[i][0])) {
-//         result[possibleUnits[i][0]] += 1;
-//       } else {
-//         result[possibleUnits[i][0]] = 1;
-//       }
-//       remainingmLs -= possibleUnits[i][1];
-    
-//     i -= 1;
-//   }
-  
-//   console.log("result: ", result);
-//   return result
-// };
