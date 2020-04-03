@@ -35,15 +35,16 @@ export default function ConversionForm(props) {
       return;
     }
     if (isSimple) {
-      let convertedAmount = convertSimple(
+      const convertedAmount = convertSimple(
         isAmount,
         inputs.unitFrom,
         inputs.unitTo
       );
-      let converted = `${isAmount} ${inputs.unitFrom} = ${convertedAmount} ${inputs.ingredient}`
+      const original = `${isAmount} ${inputs.unitFrom} ${inputs.ingredient}`
+      const converted = `${convertedAmount} ${inputs.ingredient}`
       console.log("converted", converted);
       if (converted) {
-        setConvertedIngredients([ ...convertedIngredients, converted ]);
+        setConvertedIngredients([ ...convertedIngredients, [converted, original ]]);
       } else {
         setErrors({...errors, conversion: true})
 
