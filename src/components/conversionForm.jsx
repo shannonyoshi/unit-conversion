@@ -1,5 +1,9 @@
-import React, { useState } from "react";
-import { convertSimple, validateAmount, checkIfSimple } from "../util/utilFunctions";
+import React, { useState, useEffect } from "react";
+import {
+  convertSimple,
+  validateAmount,
+  checkIfSimple,
+} from "../util/utilFunctions";
 import { unitDict } from "../util/units";
 
 const unitKeys = Object.keys(unitDict);
@@ -11,27 +15,54 @@ export default function ConversionForm(props) {
     amount: "",
     unitFrom: "",
     unitTo: "",
-    ingredient: ""
+    ingredient: "",
   });
-  const [errors, setErrors] = useState({ amount: false, ingredient: false, conversion: false});
-
+  const [errors, setErrors] = useState({
+    amount: "",
+    ingredient: "",
+    conversion: "",
+    general: "",
+  });
+  const [showErrors, setShowErrors] = useState(true);
+  // console.log("showErrors", showErrors)
+  // console.log("errors", errors)
   //should check for type of conversion, validate amount
   //if a simple conversion, use function from util file to perform the conversion, then set to state converted list to display
   //if not a simple conversion (vol=>vol or weight=>weight), validate ingredient
   //perform API call to BE(not yet set up)
 
   // TODO: finish handleSubmit for complex conversions once backend is functional. BE should check if item is in DB forInStatement, if not perform additional API call
-  const handleSubmit = e => {
+
+  useEffect(() => {
+    const errorVals = Object.values(errors);
+    let count = 0;
+    errorVals.forEach((error) => {
+      if (error.length > 0) {
+        count += 1;
+      }
+    });
+    if (count > 0 && showErrors === false) {
+      setShowErrors(true);
+    }
+    if (count===0 && showErrors === true) {
+      setShowErrors(false)
+    }
+  }, [errors]);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     // console.log("submitted");
-    setErrors({ amount: false, ingredient: false });
+    setErrors({ amount: "", ingredient: "" });
 
     let isSimple = checkIfSimple(inputs.unitFrom, inputs.unitTo);
     console.log("simpleConversion?", isSimple);
     let isAmount = validateAmount(inputs.amount.trim());
     console.log("amount valid?", isAmount);
     if (!isAmount) {
-      setErrors({ ...errors, amount: true });
+      setErrors({
+        ...errors,
+        amount: "Unable to validate amount, see examples",
+      });
       return;
     }
     if (isSimple) {
@@ -40,21 +71,30 @@ export default function ConversionForm(props) {
         inputs.unitFrom,
         inputs.unitTo
       );
-      const original = `${isAmount} ${inputs.unitFrom} ${inputs.ingredient}`
-      const converted = `${convertedAmount} ${inputs.ingredient}`
+      const original = `${isAmount} ${inputs.unitFrom} ${inputs.ingredient}`;
+      const converted = `${convertedAmount} ${inputs.ingredient}`;
       console.log("converted", converted);
       if (converted) {
-        setConvertedIngredients([ ...convertedIngredients, [converted, original ]]);
+        setConvertedIngredients([
+          ...convertedIngredients,
+          [converted, original],
+        ]);
       } else {
-        setErrors({...errors, conversion: true})
-
+        setErrors({ ...errors, conversion: "Unable to convert" });
       }
+    } else {
+      //if not a simple conversion
+      setErrors({
+        ...errors,
+        general:
+          "Currently only able to convert volume -> volume or weight -> weight",
+      });
     }
   };
-  const handleInputChange = e => {
+  const handleInputChange = (e) => {
     e.persist();
     // console.log("event.target", e.target, "event.target.value",e.target.value)
-    setInputs(inputs => ({ ...inputs, [e.target.name]: e.target.value }));
+    setInputs((inputs) => ({ ...inputs, [e.target.name]: e.target.value }));
   };
 
   return (
@@ -79,7 +119,7 @@ export default function ConversionForm(props) {
           value={inputs.unitFrom}
           onChange={handleInputChange}
         >
-          {unitKeys.map(unit => (
+          {unitKeys.map((unit) => (
             <option value={unit} key={`unitFrom${unit}`}>
               {unit}
             </option>
@@ -92,7 +132,7 @@ export default function ConversionForm(props) {
           name="unitTo"
           onChange={handleInputChange}
         >
-          {unitKeys.map(unit => (
+          {unitKeys.map((unit) => (
             <option value={unit} key={`unitTo${unit}`}>
               {unit}
             </option>
@@ -109,6 +149,20 @@ export default function ConversionForm(props) {
         ></input>
         <button type="submit">Convert</button>
       </form>
+      {showErrors === true ? (
+        <div className="errors">
+          <p>Errors:</p>
+          <ul>
+            {Object.entries(errors).map(([key, value]) => (
+              <li key={key}>
+                {key}:{value}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

@@ -1,7 +1,5 @@
 import React from "react";
 
-// import conversionForm from "./conversionForm"
-
 export default function ConvertedList(props) {
 
     const ingredients = props.ingredients
