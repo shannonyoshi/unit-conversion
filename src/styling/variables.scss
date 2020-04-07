@@ -1,0 +1,19 @@
+$colors: (
+dark:#19647E,
+darker: darken(#19647E, 10%),
+medium:#45BDC1,
+light: #FFFFD3,
+accent: #FF9115,
+alert: #931621,
+white: #FFF
+);
+
+@function color($color-name) {
+    @return map-get($colors, $color-name)
+}
+
+$xxs-padding:5px;
+$xs-padding:.5rem;
+$s-padding: 1rem;
+$m-padding: 2rem;
+$lg-padding: 3rem;

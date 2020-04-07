@@ -44,8 +44,8 @@ export default function ConversionForm(props) {
     if (count > 0 && showErrors === false) {
       setShowErrors(true);
     }
-    if (count===0 && showErrors === true) {
-      setShowErrors(false)
+    if (count === 0 && showErrors === true) {
+      setShowErrors(false);
     }
   }, [errors]);
 
@@ -98,71 +98,81 @@ export default function ConversionForm(props) {
   };
 
   return (
-    <div className="formWrapper">
-      <h2>Unit Converter</h2>
-      <form onSubmit={handleSubmit}>
-        <label for="amount">Amount</label>
-        <input
-          required
-          type="text"
-          id="amount"
-          placeholder="3 1/2"
-          name="amount"
-          value={inputs.amount}
-          onChange={handleInputChange}
-        />
-        <label for="unitFrom">From</label>
-        <select
-          required
-          id="unitFrom"
-          name="unitFrom"
-          value={inputs.unitFrom}
-          onChange={handleInputChange}
-        >
-          {unitKeys.map((unit) => (
-            <option value={unit} key={`unitFrom${unit}`}>
-              {unit}
-            </option>
-          ))}
-        </select>
-        <label for="unitTo">To</label>
-        <select
-          value={inputs.unitTo}
-          id="unitTo"
-          name="unitTo"
-          onChange={handleInputChange}
-        >
-          {unitKeys.map((unit) => (
-            <option value={unit} key={`unitTo${unit}`}>
-              {unit}
-            </option>
-          ))}
-        </select>
-        <label for="ingredient">Ingredient</label>
-        <input
-          type="text"
-          id="ingredient"
-          name="ingredient"
-          placeholder="flour"
-          value={inputs.ingredient}
-          onChange={handleInputChange}
-        ></input>
-        <button type="submit">Convert</button>
-      </form>
-      {showErrors === true ? (
-        <div className="errors">
-          <p>Errors:</p>
-          <ul>
-            {Object.entries(errors).map(([key, value]) => (
-              <li key={key}>
-                {key}:{value}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <></>
-      )}
+    <div className="card">
+      <div className="form-wrapper">
+        <h1 className="card-title">Unit Converter</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="form-section">
+            <label for="amount">Amount</label>
+            <input
+              required
+              type="text"
+              id="amount"
+              placeholder="3 1/2"
+              name="amount"
+              value={inputs.amount}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="form-section">
+            <label for="unitFrom">From</label>
+            <select
+              required
+              id="unitFrom"
+              name="unitFrom"
+              value={inputs.unitFrom}
+              onChange={handleInputChange}
+            >
+              {unitKeys.map((unit) => (
+                <option value={unit} key={`unitFrom${unit}`}>
+                  {unit}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="form-section">
+            <label for="unitTo">To</label>
+            <select
+              value={inputs.unitTo}
+              id="unitTo"
+              name="unitTo"
+              onChange={handleInputChange}
+            >
+              {unitKeys.map((unit) => (
+                <option value={unit} key={`unitTo${unit}`}>
+                  {unit}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="form-section">
+            <label for="ingredient">Ingredient</label>
+            <input
+              type="text"
+              id="ingredient"
+              name="ingredient"
+              placeholder="flour"
+              value={inputs.ingredient}
+              onChange={handleInputChange}
+            />
+          </div>
+          <button type="submit">Convert</button>
+        </form>
+        {showErrors === true ? (
+          <div className="errors">
+            <p>Errors:</p>
+            <ul>
+              {Object.entries(errors).map(([key, value]) => (
+                <li key={key}>
+                  {key}:{value}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
     </div>
   );
 }

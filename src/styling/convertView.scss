@@ -1,0 +1,66 @@
+@import "variables";
+
+.page-wrapper{
+    display:flex;
+}
+
+.card {
+  width: 32vw;
+  margin: $s-padding;
+  padding-top: $s-padding;
+  padding-bottom: $m-padding;
+  background: rgb(251, 251, 246);
+  background: linear-gradient(
+    0deg,
+    rgba(251, 251, 246, 1) 0%,
+    rgba(255, 255, 211, 1) 100%
+  );
+  border-radius: 5px;
+  box-shadow: 6px 6px 29px 0px rgba(0,0,0,0.75);
+}
+.card-title {
+  font-size: 2em;
+  padding: $m-padding;
+  color: color(dark);
+}
+
+//form component styling
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  .form-section {
+    padding: $s-padding;
+    text-align: left;
+    input {
+      background-color: color(white);
+      border: none;
+      padding: $xxs-padding;
+    }
+
+    label {
+      width: 100px;
+      display: inline-block;
+      color: color(dark);
+      font-size: 1.25em;
+    }
+    input {
+      width: 150px;
+      &::placeholder{
+          color:color(dark)
+      }
+    }
+    select {
+      width: 150px;
+    }
+  }
+  button {
+    padding: $xs-padding $lg-padding;
+    margin: 10px;
+    background-color: color(medium);
+    border: none;
+    border-radius: 5px;
+    font-size: 1.25em;
+  }
+}
+//list component styling

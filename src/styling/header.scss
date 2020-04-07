@@ -1,0 +1,60 @@
+@import "variables";
+
+.App-logo {
+  height: 10vmin;
+  pointer-events: none;
+}
+
+.header {
+  background-color: color(darker);
+  min-height: 10vh;
+  min-height: 100px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  font-size: calc(10px + 2vmin);
+  color: color(medium);
+  box-sizing: border-box;
+  &-left {
+    display: flex;
+    align-items: center;
+    font-size: 1.2em;
+    padding: $s-padding;
+    width: auto;
+    max-width: 500px;
+  }
+  &-logo-icon {
+    //   color: color(medium);
+    font-size: 2.5em;
+  }
+  &-logo-text {
+    line-height: 1.4em;
+    font-size: 1em;
+    padding-left: $s-padding;
+  }
+}
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 50vw;
+  padding-bottom: $s-padding;
+  padding-right: $m-padding;
+
+  .inactive-nav-link {
+    text-decoration: none;
+    color: color(light);
+    outline: none;
+    font-size: 1em;
+  }
+  .active-nav-link {
+    text-decoration: none;
+    color: color(medium);
+    outline: none;
+    border-bottom: 2px solid color(medium);
+  }
+}
+
+.App-link {
+  color: #61dafb;
+}
