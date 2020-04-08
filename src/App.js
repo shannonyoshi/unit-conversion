@@ -9,9 +9,9 @@ import SuggestView from "./views/suggestView"
 import SiteInfoView from "./views/siteInfoView"
 
 import {library } from '@fortawesome/fontawesome-svg-core'
-import {faTrashAlt, faBalanceScale} from '@fortawesome/free-solid-svg-icons'
+import {faTrashAlt, faBalanceScale, faChevronDown} from '@fortawesome/free-solid-svg-icons'
 
-library.add(faTrashAlt, faBalanceScale);
+library.add(faTrashAlt, faBalanceScale, faChevronDown);
 function App() {
   
 // ingredient ex. {"amount": "3", "unitFrom": "cups", "unitTo": "grams", "ingredient": "flour", "id": 0}

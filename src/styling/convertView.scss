@@ -1,27 +1,11 @@
 @import "variables";
 
-.page-wrapper{
-    display:flex;
+.page-wrapper {
+  display: flex;
 }
 
 .card {
-  width: 32vw;
-  margin: $s-padding;
-  padding-top: $s-padding;
-  padding-bottom: $m-padding;
-  background: rgb(251, 251, 246);
-  background: linear-gradient(
-    0deg,
-    rgba(251, 251, 246, 1) 0%,
-    rgba(255, 255, 211, 1) 100%
-  );
-  border-radius: 5px;
-  box-shadow: 6px 6px 29px 0px rgba(0,0,0,0.75);
-}
-.card-title {
-  font-size: 2em;
-  padding: $m-padding;
-  color: color(dark);
+  @include card
 }
 
 //form component styling
@@ -33,8 +17,8 @@
     padding: $s-padding;
     text-align: center;
     input {
-     @include input-mixin;
-      padding: $xxs-padding;
+      @include input-mixin;
+
     }
 
     label {
@@ -42,19 +26,46 @@
       display: inline-block;
       color: color(dark);
       font-size: 1.25em;
-      text-align:left;
+      text-align: left;
     }
+    
     select {
-      @include input-mixin
+      @include select-mixin;
+
     }
   }
-  button {
-    padding: $xs-padding $lg-padding;
-    margin: 10px;
-    background-color: color(medium);
-    border: none;
-    border-radius: 5px;
-    font-size: 1.25em;
+  button{
+    @include submit-button
   }
 }
 //list component styling
+ul{
+  padding:$xs-padding;
+
+}
+.list-item{
+  margin: 0 auto;
+  font-size:1em;
+  // height:2em;
+  color:color(dark);
+  display:flex;
+  justify-content: space-between;
+  width:90%;
+  padding:$xxs-padding;
+  border-bottom: 2px solid color(medium);
+  .delete-item{
+    color: color(alert);
+    font-size:1em;
+  }
+  // &::after{
+  //   content:"";
+  //   height:2px;
+  //   background-color: color(medium);
+  //   position:absolute;
+  //   width:100%;
+  // }
+}
+.no-items{
+  color: color(dark)
+}
+

@@ -7,16 +7,18 @@ import {
 import { unitDict } from "../util/units";
 
 const unitKeys = Object.keys(unitDict);
+const initialInputState={
+  amount: "",
+  unitFrom: "",
+  unitTo: "",
+  ingredient: "",
+}
+
 
 export default function ConversionForm(props) {
   const setConvertedIngredients = props.setIngredients;
   const convertedIngredients = props.ingredients;
-  const [inputs, setInputs] = useState({
-    amount: "",
-    unitFrom: "",
-    unitTo: "",
-    ingredient: "",
-  });
+  const [inputs, setInputs] = useState(initialInputState);
   const [errors, setErrors] = useState({
     amount: "",
     ingredient: "",
@@ -79,6 +81,7 @@ export default function ConversionForm(props) {
           ...convertedIngredients,
           [converted, original],
         ]);
+        setInputs({...initialInputState})
       } else {
         setErrors({ ...errors, conversion: "Unable to convert" });
       }
@@ -101,7 +104,7 @@ export default function ConversionForm(props) {
     <div className="card">
       <div className="form-wrapper">
         <h1 className="card-title">Unit Converter</h1>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} autoComplete="off">
           <div className="form-section">
             <label for="amount">Amount</label>
             <input
@@ -116,40 +119,44 @@ export default function ConversionForm(props) {
           </div>
           <div className="form-section">
             <label for="unitFrom">From</label>
-            <select
-              required
-              id="unitFrom"
-              name="unitFrom"
-              value={inputs.unitFrom}
-              onChange={handleInputChange}
-            >
-              <option value="" disabled selected>
-                Select Unit
-              </option>
-              {unitKeys.map((unit) => (
-                <option value={unit} key={`unitFrom${unit}`}>
-                  {unit}
+            {/* <div className="select-wrapper"> */}
+              <select
+                required
+                id="unitFrom"
+                name="unitFrom"
+                value={inputs.unitFrom}
+                onChange={handleInputChange}
+              >
+                <option value="" disabled defaultValue>
+                  Select Unit
                 </option>
-              ))}
-            </select>
+                {unitKeys.map((unit) => (
+                  <option value={unit} key={`unitFrom${unit}`}>
+                    {unit}
+                  </option>
+                ))}
+              </select>
+            {/* </div> */}
           </div>
           <div className="form-section">
             <label for="unitTo">To</label>
-            <select
-              value={inputs.unitTo}
-              id="unitTo"
-              name="unitTo"
-              onChange={handleInputChange}
-            >
-              <option value="" disabled selected>
-                Select Unit
-              </option>
-              {unitKeys.map((unit) => (
-                <option value={unit} key={`unitTo${unit}`}>
-                  {unit}
+            {/* <div className="select-wrapper"> */}
+              <select
+                value={inputs.unitTo}
+                id="unitTo"
+                name="unitTo"
+                onChange={handleInputChange}
+              >
+                <option value="" disabled defaultValue>
+                  Select Unit
                 </option>
-              ))}
-            </select>
+                {unitKeys.map((unit) => (
+                  <option value={unit} key={`unitTo${unit}`}>
+                    {unit}
+                  </option>
+                ))}
+              </select>
+            {/* </div> */}
           </div>
           <div className="form-section">
             <label for="ingredient">Ingredient</label>
