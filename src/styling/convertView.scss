@@ -31,10 +31,9 @@
   flex-direction: column;
   .form-section {
     padding: $s-padding;
-    text-align: left;
+    text-align: center;
     input {
-      background-color: color(white);
-      border: none;
+     @include input-mixin;
       padding: $xxs-padding;
     }
 
@@ -43,15 +42,10 @@
       display: inline-block;
       color: color(dark);
       font-size: 1.25em;
-    }
-    input {
-      width: 150px;
-      &::placeholder{
-          color:color(dark)
-      }
+      text-align:left;
     }
     select {
-      width: 150px;
+      @include input-mixin
     }
   }
   button {

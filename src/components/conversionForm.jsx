@@ -123,6 +123,9 @@ export default function ConversionForm(props) {
               value={inputs.unitFrom}
               onChange={handleInputChange}
             >
+              <option value="" disabled selected>
+                Select Unit
+              </option>
               {unitKeys.map((unit) => (
                 <option value={unit} key={`unitFrom${unit}`}>
                   {unit}
@@ -138,6 +141,9 @@ export default function ConversionForm(props) {
               name="unitTo"
               onChange={handleInputChange}
             >
+              <option value="" disabled selected>
+                Select Unit
+              </option>
               {unitKeys.map((unit) => (
                 <option value={unit} key={`unitTo${unit}`}>
                   {unit}
