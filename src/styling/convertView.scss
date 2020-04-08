@@ -53,6 +53,9 @@ ul{
   width:90%;
   padding:$xxs-padding;
   border-bottom: 2px solid color(medium);
+  //.delete-button{
+    // visibility:hidden;
+  //}
   .delete-item{
     color: color(alert);
     font-size:1em;

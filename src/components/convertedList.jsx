@@ -3,12 +3,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function ConvertedList(props) {
   const ingredients = props.ingredients;
+  const setIngredients = props.setIngredients;
   console.log(
     "Ingredients in convertedList",
     ingredients,
     "ingredients.length",
     ingredients.length
   );
+  const removeIngredient = (e, index) => {
+    e.preventDefault();
+    console.log("removeIngredient index:", index);
+
+    let newIngredientsArray = ingredients;
+    newIngredientsArray.splice(index, 1);
+    setIngredients([...newIngredientsArray]);
+  };
   //   if (ingredients.length > 0) {
   return (
     <>
@@ -21,7 +30,12 @@ export default function ConvertedList(props) {
                 <li className="converted" key={`C${index}`}>
                   {ingredient[0]}
                 </li>
-                <FontAwesomeIcon icon="trash-alt" className="delete-item" />
+
+                <FontAwesomeIcon
+                  icon="trash-alt"
+                  className="delete-item"
+                  onClick={(e) => removeIngredient(e, index)}
+                />
               </div>
             ))}
           </ul>
@@ -38,7 +52,11 @@ export default function ConvertedList(props) {
                 <li className="original" key={`O${index}`}>
                   {ingredient[1]}
                 </li>
-                <FontAwesomeIcon icon="trash-alt" className="delete-item" />
+                <FontAwesomeIcon
+                  icon="trash-alt"
+                  className="delete-item"
+                  onClick={(e) => removeIngredient(e, index)}
+                />
               </div>
             ))}
           </ul>
