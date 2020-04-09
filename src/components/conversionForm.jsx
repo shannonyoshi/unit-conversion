@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
-  convertSimple,
   validateAmount,
   checkIfSimple,
 } from "../util/utilFunctions";
+import {convertSimple} from "../util/conversionFunctions"
 import { unitDict } from "../util/units";
 
 const unitKeys = Object.keys(unitDict);
