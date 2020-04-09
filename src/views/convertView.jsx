@@ -15,7 +15,7 @@ export default function ConvertView() {
   const [inputs, setInputs] = useState(initialInputState);
 
   return (
-    <div className="page-wrapper">
+    <div className="convert-page-wrapper">
       <ConversionForm
         setIngredients={setIngredients}
         ingredients={ingredients}

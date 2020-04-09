@@ -33,7 +33,7 @@ export default function ConvertedList(props) {
   //   if (ingredients.length > 0) {
   return (
     <>
-      <div className="card">
+      <div className="card-small">
         <h1 className="card-title">Converted List</h1>
         {ingredients.length > 0 ? (
           <ul className="list">
@@ -55,7 +55,7 @@ export default function ConvertedList(props) {
           <p className="no-items">No Ingredients Converted</p>
         )}
       </div>
-      <div className="card">
+      <div className="card-small">
         <h1 className="card-title">Original List</h1>
         {ingredients.length > 0 ? (
           <ul className="list">

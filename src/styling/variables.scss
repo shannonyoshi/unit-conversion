@@ -18,6 +18,7 @@ $xs-padding: 0.5rem;
 $s-padding: 1rem;
 $m-padding: 2rem;
 $lg-padding: 3rem;
+$xlg-padding: 10%;
 
 @mixin input-mixin {
   background-color: color(white);
@@ -66,11 +67,27 @@ $lg-padding: 3rem;
   }
 }
 
-@mixin card {
-    width: 32vw;
-    margin: $s-padding;
-    padding-top: $s-padding;
-    padding-bottom: $m-padding;
+@mixin card-small{
+  @include card-general;
+  width: 31vw;
+  margin:$m-padding $xs-padding 0px;
+  padding-top: $s-padding;
+  padding-bottom: $m-padding;
+  min-height:395px;
+  min-width:400px;
+}
+
+@mixin card-large{
+  @include card-general;
+  width: 80vw;
+  height:50vh;
+  padding: $lg-padding;
+  // padding-top: $m-padding;
+  // padding-bottom: $m-padding;
+  margin:$lg-padding;
+}
+
+@mixin card-general {
     background: rgb(251, 251, 246);
     background: linear-gradient(
       0deg,
@@ -84,6 +101,9 @@ $lg-padding: 3rem;
     font-size: 2em;
     padding: $m-padding;
     color: color(dark);
+  }
+  .full{
+    width:90vw;
   }
 }
 

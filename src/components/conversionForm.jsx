@@ -96,7 +96,7 @@ export default function ConversionForm(props) {
   };
 
   return (
-    <div className="card">
+    <div className="card-small">
       <div className="form-wrapper">
         <h1 className="card-title">Unit Converter</h1>
         <form onSubmit={handleSubmit} autoComplete="off">

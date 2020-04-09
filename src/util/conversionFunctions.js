@@ -1,4 +1,4 @@
-import { unitDict, allFractions } from "./units";
+import { unitDict} from "./units";
 import {checkPluralUnit, calcTolerancemLs, findClosestFraction, findClosestCommonFractions, findPossibleUnits} from "./utilFunctions"
 
 //performs simple conversion, returns string of converted amount + unit
@@ -97,7 +97,7 @@ const convertRemainder = (
     }
   }
 
-  if (result.length === 1 && result[0][1] == startingUnitName) {
+  if (result.length === 1 && result[0][1] === startingUnitName) {
     return null;
   }
   let resultingString = "";

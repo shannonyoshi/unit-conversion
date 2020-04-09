@@ -86,7 +86,9 @@ export const findClosestCommonFractions = (remainder) => {
   return fractionsArray.reduce((result, fraction, index) => {
     if (commonFractions[index] <= remainder && fraction >= remainder) {
       result.push(commonFractions[index], fraction);
+      
     }
+    return result
   }, []);
 };
 

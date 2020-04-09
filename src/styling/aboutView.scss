@@ -1,0 +1,15 @@
+@import "variables";
+
+.page-wrapper{
+    height:auto;
+    width:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-large{
+    @include card-large;
+    line-height: 3em;
+  
+}

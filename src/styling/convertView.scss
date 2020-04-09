@@ -1,11 +1,13 @@
 @import "variables";
 
-.page-wrapper {
+.convert-page-wrapper {
   display: flex;
+  justify-content: space-evenly;
+  flex-wrap:wrap;
 }
 
-.card {
-  @include card
+.card-small {
+  @include card-small
 }
 
 //form component styling
