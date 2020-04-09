@@ -40,107 +40,125 @@
   
   //unit: {type: mL or g, conversion: in mL/grams, output: fractions/decimal, unit:metric/US}
   export const unitDict = {
-    "drop(s)": {
+    "drops": {
       type: "mL",
       conversion: 0.0513429,
       output: "fraction",
-      unit: "US"
+      unit: "US",
+      singular:"drop"
+
     },
-    "smidge(s)": {
+    "smidges": {
       type: "mL",
       conversion: 0.115522,
       output: "fraction",
-      unit: "US"
+      unit: "US",
+      singular:"smidge"
     },
-    "pinch(es)": {
+    "pinches": {
       type: "mL",
       conversion: 0.231043,
       output: "fraction",
-      unit: "US"
+      unit: "US",
+      singular:"pinch"
     },
-    "dash(es)": {
+    "dashes": {
       type: "mL",
       conversion: 0.462086,
       output: "fraction",
-      unit: "US"
+      unit: "US",
+      singular:"dash"
     },
-    "teaspoon(s)": {
+    "teaspoons": {
       type: "mL",
       conversion: 4.92892,
       output: "fraction",
-      unit: "US"
+      unit: "US",
+      singular:"teaspoon"
     },
-    "tablespoon(s)": {
+    "tablespoons": {
       type: "mL",
       conversion: 14.7868,
       output: "fraction",
-      unit: "US"
+      unit: "US",
+      singular:"tablespoon"
     },
-    "fluid ounce(s)": {
+    "fluid ounces": {
       type: "mL",
       conversion: 29.5735,
       output: "fraction",
-      unit: "US"
+      unit: "US",
+      singular:"fluid ounce"
     },
-    "cup(s)": {
+    "cups": {
       type: "mL",
       conversion: 236.588,
       output: "fraction",
-      unit: "US"
+      unit: "US",
+      singular:"cup"
     },
-    "pint(s)": {
+    "pints": {
       type: "mL",
       conversion: 473.176,
       output: "fraction",
-      unit: "US"
+      unit: "US",
+      singular:"pint"
     },
-    "quart(s)": {
+    "quarts": {
       type: "mL",
       conversion: 946.353,
       output: "fraction",
-      unit: "US"
+      unit: "US",
+      singular:"quart"
     },
-    "gallon(s)": {
+    "gallons": {
       type: "mL",
       conversion: 3785.41,
       output: "fraction",
-      unit: "US"
+      unit: "US",
+      singular:"gallon"
     },
-    "milliliter(s)": {
+    "milliliters": {
       type: "mL",
       conversion: 1,
       output: "decimal",
-      unit: "metric"
+      unit: "metric",
+      singular:"mililiter"
     },
-    "liter(s)": {
+    "liters": {
       type: "mL",
       conversion: 1000,
       output: "decimal",
-      unit: "metric"
+      unit: "metric",
+      singular:"liter"
     },
-    "ounce(s)": {
+    "ounces": {
       type: "g",
       conversion: 28.3495,
       output: "decimal",
-      unit: "metric"
+      unit: "metric",
+      singular:"ounce"
     },
-    "pound(s)": {
+    "pounds": {
       type: "g",
       conversion: 453.592,
       output: "decimal",
-      unit: "metric"
+      unit: "metric",
+      singular:"pound"
     },
-    "gram(s)": {
+    "grams": {
       type: "g",
       conversion: 1,
       output: "decimal",
-      unit: "metric"
+      unit: "metric",
+      singular:"gram"
     },
-    "kilogram(s)": {
+    "kilograms": {
       type: "g",
       conversion: 1000,
       output: "decimal",
-      unit: "metric"
+      unit: "metric",
+      singular:"kilogram"
     }
   };
   

@@ -7,18 +7,13 @@ import {
 import { unitDict } from "../util/units";
 
 const unitKeys = Object.keys(unitDict);
-const initialInputState={
-  amount: "",
-  unitFrom: "",
-  unitTo: "",
-  ingredient: "",
-}
-
 
 export default function ConversionForm(props) {
   const setConvertedIngredients = props.setIngredients;
   const convertedIngredients = props.ingredients;
-  const [inputs, setInputs] = useState(initialInputState);
+  const inputs=props.inputs;
+  const setInputs = props.setInputs
+  const initialInputState=props.initialInputState
   const [errors, setErrors] = useState({
     amount: "",
     ingredient: "",

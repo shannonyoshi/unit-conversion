@@ -50,10 +50,20 @@ export const checkIfSimple = (unitFrom, unitTo) => {
   return false;
 };
 
+const checkPluralUnit = (amount, endUnitName) => {
+
+  let returnString = endUnitName;
+  if (amount <= 1) {
+    returnString = unitDict[endUnitName].singular;
+  }
+  console.log(`CheckPlural amount(${amount}) returnString(${returnString}), endUnitName(${endUnitName})`)
+  return returnString;
+};
+
 //performs simple conversion, returns string of converted amount + unit
-export const convertSimple = (amount, startingUnitName, endUnit) => {
+export const convertSimple = (amount, startingUnitName, endUnitName) => {
   let startingUnit = unitDict[startingUnitName];
-  let targetUnit = unitDict[endUnit];
+  let targetUnit = unitDict[endUnitName];
   const amountInmLs = amount * startingUnit.conversion;
   const targetUnitInDecimal = amountInmLs / targetUnit.conversion;
   const targetUnitInteger = Math.floor(targetUnitInDecimal);
@@ -61,12 +71,14 @@ export const convertSimple = (amount, startingUnitName, endUnit) => {
 
   //returns whole numbers + unit
   if (decimalRemainder <= 0.015) {
-    return `${Math.floor(targetUnitInDecimal)} ${endUnit}`;
+    let unitString = checkPluralUnit(targetUnitInteger, endUnitName);
+    return `${targetUnitInteger} ${unitString}`;
   }
   //returns amount with 2 decimal places for unit types that commonly use decimal (mostly metric)
   if (targetUnit.output === "decimal") {
     let amountTo2Decimal = Math.floor(targetUnitInDecimal * 100) / 100;
-    return `${amountTo2Decimal.toString(10)} ${endUnit}`;
+    let unitString = checkPluralUnit(amountTo2Decimal);
+    return `${amountTo2Decimal.toString(10)} ${unitString}`;
   }
   //ex. fraction = ["1/10", 0.1, false] means [fraction string, fraction in decimal, boolean if regular baking fraction]
   const fraction = findClosestFraction(decimalRemainder);
@@ -74,9 +86,10 @@ export const convertSimple = (amount, startingUnitName, endUnit) => {
   //fraction[2] =true  means this is a common fraction used for baking
   if (fraction[2] === true) {
     if (targetUnitInteger === 0) {
-      return `${fraction[0]} ${endUnit}`;
+      let unitString = checkPluralUnit(fraction[1], endUnitName);
+      return `${fraction[0]} ${unitString}`;
     } else {
-      return `${targetUnitInteger} ${fraction[0]} ${endUnit}`;
+      return `${targetUnitInteger} ${fraction[0]} ${endUnitName}`;
     }
   } else {
     let remainingmLs = amountInmLs - targetUnitInteger * targetUnit.conversion;
@@ -89,16 +102,17 @@ export const convertSimple = (amount, startingUnitName, endUnit) => {
       startingUnitName
     );
     if (targetUnitInteger === 0) {
+      let unitString = checkPluralUnit(fraction[1], endUnitName);
       if (converted) {
-        return `${fraction[0]} ${endUnit} or ${converted}`;
+        return `${fraction[0]} ${unitString} or ${converted}`;
       } else {
-        return `${fraction[0]} ${endUnit}`;
+        return `${fraction[0]} ${unitString}`;
       }
     } else {
       if (converted) {
-        return `${targetUnitInteger} ${fraction[0]} ${endUnit} or ${targetUnitInteger} ${endUnit} plus ${converted}`;
+        return `${targetUnitInteger} ${fraction[0]} ${endUnitName} or ${targetUnitInteger} ${endUnitName} plus ${converted}`;
       } else {
-        return `${targetUnitInteger} ${fraction[0]} ${endUnit}`;
+        return `${targetUnitInteger} ${fraction[0]} ${endUnitName}`;
       }
     }
   }
@@ -110,7 +124,6 @@ const calcTolerancemLs = (amountInmLs) => {
   return upperLimitmLs;
 };
 
-//temporarily exporting to test
 const convertRemainder = (
   remainingmLs,
   targetUnitType,
@@ -120,6 +133,7 @@ const convertRemainder = (
   let possibleUnits = findPossibleUnits(remainingmLs, targetUnitType);
   let mLs = remainingmLs;
   let result = [];
+
   for (let i = 0; i < possibleUnits.length; i++) {
     let unitmLs = possibleUnits[i][1];
     if (mLs >= unitmLs) {
@@ -127,6 +141,18 @@ const convertRemainder = (
       while (mLs + mLsTolerance >= unitmLs) {
         count += 1;
         mLs -= unitmLs;
+      }
+
+      let closestCmnFracs = findClosestCommonFractions(mLs / unitmLs);
+      if (closestCmnFracs) {
+        let higher = closestCmnFracs[1][1] * unitmLs;
+        if (higher - mLs <= mLsTolerance) {
+          count = `${count} ${closestCmnFracs[1][0]}`;
+          mLs = mLs - higher;
+        } else {
+          count = `${count} ${closestCmnFracs[0][0]}`;
+          mLs = mLs - closestCmnFracs[0][1];
+        }
       }
       result.push([count, possibleUnits[i][0]]);
     }
@@ -141,9 +167,8 @@ const convertRemainder = (
   }
   let resultingString = "";
   for (let i = 0; i < result.length; i++) {
-    resultingString = resultingString.concat(
-      ` ${result[i][0]} ${result[i][1]},`
-    );
+    let unitString = checkPluralUnit(result[i][0], result[i][1]);
+    resultingString = resultingString.concat(` ${result[i][0]} ${unitString},`);
   }
   return resultingString.slice(0, -1);
 };
@@ -153,6 +178,24 @@ const findClosestFraction = (remainder) => {
     Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder) ? curr : prev
   );
   return closestFraction;
+};
+
+const getCommonFractions = () => {
+  return allFractions.filter((fraction) => fraction[2] === true);
+};
+
+//removes first item in array, so commonFractionsindex] is 1 fraction lower than "fraction"
+const findClosestCommonFractions = (remainder) => {
+  const commonFractions = getCommonFractions();
+  if (remainder < commonFractions[0][1]) {
+    return null;
+  }
+  let fractionsArray = commonFractions.splice(0, 1);
+  return fractionsArray.reduce((result, fraction, index) => {
+    if (commonFractions[index] <= remainder && fraction >= remainder) {
+      result.push(commonFractions[index], fraction);
+    }
+  }, []);
 };
 
 //returns array of units of same type that are smaller than remainingmLs, starting from largest unit

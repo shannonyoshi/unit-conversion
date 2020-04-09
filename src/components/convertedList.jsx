@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function ConvertedList(props) {
   const ingredients = props.ingredients;
   const setIngredients = props.setIngredients;
+  const setInputs=props.setInputs;
   console.log(
     "Ingredients in convertedList",
     ingredients,
@@ -12,12 +13,15 @@ export default function ConvertedList(props) {
   );
   const removeIngredient = (e, index) => {
     e.preventDefault();
-    console.log("removeIngredient index:", index);
-
     let newIngredientsArray = ingredients;
     newIngredientsArray.splice(index, 1);
     setIngredients([...newIngredientsArray]);
   };
+
+  const editIngredient = (e,index) => {
+    e.preventDefault();
+    console.log("edit ingredient",ingredients[index])
+  }
   //   if (ingredients.length > 0) {
   return (
     <>
@@ -52,11 +56,12 @@ export default function ConvertedList(props) {
                 <li className="original" key={`O${index}`}>
                   {ingredient[1]}
                 </li>
-                <FontAwesomeIcon
+                {/* <FontAwesomeIcon
                   icon="trash-alt"
                   className="delete-item"
                   onClick={(e) => removeIngredient(e, index)}
-                />
+                /> */}
+                <FontAwesomeIcon icon="edit" className="edit-item" onClick={(e) => editIngredient(e, index)}/>
               </div>
             ))}
           </ul>
