@@ -68,13 +68,13 @@ export default function ConversionForm(props) {
         inputs.unitFrom,
         inputs.unitTo
       );
-      const original = `${isAmount} ${inputs.unitFrom} ${inputs.ingredient}`;
       const converted = `${convertedAmount} ${inputs.ingredient}`;
       console.log("converted", converted);
       if (converted) {
+        let convertedFullInfo = {amount:isAmount, unitFrom:inputs.unitFrom, unitTo:inputs.unitTo, ingredientName:inputs.ingredient, convertedString:converted}
         setConvertedIngredients([
           ...convertedIngredients,
-          [converted, original],
+          convertedFullInfo,
         ]);
         setInputs({...initialInputState})
       } else {

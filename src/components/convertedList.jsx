@@ -5,12 +5,12 @@ export default function ConvertedList(props) {
   const ingredients = props.ingredients;
   const setIngredients = props.setIngredients;
   const setInputs = props.setInputs;
-  console.log(
-    "Ingredients in convertedList",
-    ingredients,
-    "ingredients.length",
-    ingredients.length
-  );
+  // console.log(
+  //   "Ingredients in convertedList",
+  //   ingredients,
+  //   "ingredients.length",
+  //   ingredients.length
+  // );
 
   const deleteIngredient = (index) => {
     let newIngredientsArray = ingredients;
@@ -25,8 +25,9 @@ export default function ConvertedList(props) {
 
   const editIngredient = (e, index) => {
     e.preventDefault();
-    let ingredientToEdit = ingredients[index]
+    let toEdit = ingredients[index]
     deleteIngredient(index)
+    setInputs({amount: toEdit.amount, unitFrom: toEdit.unitFrom, unitTo: toEdit.unitTo, ingredient: toEdit.ingredientName})
     
   };
   //   if (ingredients.length > 0) {
@@ -39,7 +40,7 @@ export default function ConvertedList(props) {
             {ingredients.map((ingredient, index) => (
               <div className="list-item">
                 <li className="converted" key={`C${index}`}>
-                  {ingredient[0]}
+                  {ingredient.convertedString}
                 </li>
 
                 <FontAwesomeIcon
@@ -61,7 +62,7 @@ export default function ConvertedList(props) {
             {ingredients.map((ingredient, index) => (
               <div className="list-item">
                 <li className="original" key={`O${index}`}>
-                  {ingredient[1]}
+                  {`${ingredient.amount} ${ingredient.unitFrom} ${ingredient.ingredientName}`}
                 </li>
                 {/* <FontAwesomeIcon
                   icon="trash-alt"
