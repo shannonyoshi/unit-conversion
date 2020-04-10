@@ -1,13 +1,14 @@
 @import "variables";
+@import "mixins";
 
 .convert-page-wrapper {
   display: flex;
   justify-content: space-evenly;
-  flex-wrap:wrap;
+  flex-wrap: wrap;
 }
 
 .card-small {
-  @include card-small
+  @include card-small;
 }
 
 //form component styling
@@ -20,47 +21,42 @@
     text-align: center;
     input {
       @include input-mixin;
-
+      width: 150px;
     }
 
-    label {
+    .convert-label {
+      @include form-label;
       width: 100px;
-      display: inline-block;
-      color: color(dark);
-      font-size: 1.25em;
-      text-align: left;
     }
-    
+
     select {
       @include select-mixin;
-
     }
   }
-  button{
-    @include submit-button
+  button {
+    @include submit-button;
   }
 }
 //list component styling
-ul{
-  padding:$xs-padding;
-
+ul {
+  padding: $xs-padding;
 }
-.list-item{
+.list-item {
   margin: 0 auto;
-  font-size:1em;
+  font-size: 1em;
   // height:2em;
-  color:color(dark);
-  display:flex;
+  color: color(dark);
+  display: flex;
   justify-content: space-between;
-  width:90%;
-  padding:$xxs-padding;
+  width: 90%;
+  padding: $xxs-padding;
   border-bottom: 2px solid color(medium);
   //.delete-button{
-    // visibility:hidden;
+  // visibility:hidden;
   //}
-  .delete-item{
+  .delete-item {
     color: color(alert);
-    font-size:1em;
+    font-size: 1em;
   }
   // &::after{
   //   content:"";
@@ -70,7 +66,6 @@ ul{
   //   width:100%;
   // }
 }
-.no-items{
-  color: color(dark)
+.no-items {
+  color: color(dark);
 }
-

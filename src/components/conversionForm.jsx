@@ -101,7 +101,7 @@ export default function ConversionForm(props) {
         <h1 className="card-title">Unit Converter</h1>
         <form onSubmit={handleSubmit} autoComplete="off">
           <div className="form-section">
-            <label for="amount">Amount</label>
+            <label htmlFor="amount" className="convert-label">Amount</label>
             <input
               required
               type="text"
@@ -113,7 +113,7 @@ export default function ConversionForm(props) {
             />
           </div>
           <div className="form-section">
-            <label for="unitFrom">From</label>
+            <label htmlFor="unitFrom" className="convert-label">From</label>
             {/* <div className="select-wrapper"> */}
               <select
                 required
@@ -134,7 +134,7 @@ export default function ConversionForm(props) {
             {/* </div> */}
           </div>
           <div className="form-section">
-            <label for="unitTo">To</label>
+            <label htmlFor="unitTo" className="convert-label">To</label>
             {/* <div className="select-wrapper"> */}
               <select
                 value={inputs.unitTo}
@@ -154,7 +154,7 @@ export default function ConversionForm(props) {
             {/* </div> */}
           </div>
           <div className="form-section">
-            <label for="ingredient">Ingredient</label>
+            <label htmlFor="ingredient" className="convert-label">Ingredient</label>
             <input
               type="text"
               id="ingredient"
