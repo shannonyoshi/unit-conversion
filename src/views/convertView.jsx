@@ -3,7 +3,9 @@ import ConversionForm from "../components/conversionForm";
 import ConvertedList from "../components/convertedList";
 import "../styling/convertView.scss";
 
+//name is used as a honeypot to weed out bots submitting the form
 const initialInputState={
+  name: "",
   amount: "",
   unitFrom: "",
   unitTo: "",

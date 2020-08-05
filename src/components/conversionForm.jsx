@@ -50,6 +50,10 @@ export default function ConversionForm(props) {
     e.preventDefault();
     // console.log("submitted");
     setErrors({ amount: "", ingredient: "" });
+    //assumes if name is filled out (it's hidden from view), the form was completed by a bot. It is only "visible" to people using screen readers
+    if (inputs.name.length>0) {
+      return
+    }
 
     let isSimple = checkIfSimple(inputs.unitFrom, inputs.unitTo);
     console.log("simpleConversion?", isSimple);
@@ -101,6 +105,8 @@ export default function ConversionForm(props) {
         <h1 className="card-title">Unit Converter</h1>
         <form onSubmit={handleSubmit} autoComplete="off">
           <div className="form-section">
+            <label htmlFor="name" className="honey">Leave this blank</label>
+            <input className="honey" type="text" placeholder="Do not fill this out" name="name" value = {inputs.name} onChange={handleInputChange}/>
             <label htmlFor="amount" className="convert-label">Amount</label>
             <input
               required

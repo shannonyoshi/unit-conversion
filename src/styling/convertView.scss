@@ -23,6 +23,15 @@
       @include input-mixin;
       width: 150px;
     }
+    .honey {
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 0;
+      width: 0;
+      z-index: -1;
+    }
 
     .convert-label {
       @include form-label;
