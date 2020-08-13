@@ -20,6 +20,13 @@
   }
 }
 
+@mixin hover-raise {
+  transition-duration: 0.2s;
+  &:hover {
+    transform: translate(0px, -5px);
+  }
+}
+
 @mixin select-mixin {
   @include input-mixin;
   -webkit-appearance: none;
@@ -49,6 +56,7 @@
 }
 
 @mixin submit-button {
+  @include hover-raise;
   padding: $xs-padding $lg-padding;
   margin: 10px;
   background-color: color(medium);
@@ -57,11 +65,12 @@
   font-size: 1.25em;
   width: 50%;
   color: color(darker);
-  transition-duration: 0.4s;
+  // transition-duration: 0.2s;
   box-shadow: inset 0px 0px 1px 1px rgba(25, 100, 126, 0.5);
-  &:hover {
-    background-color: color(lighter-medium);
-  }
+  
+  // &:hover {
+  //   transform: translate(0px, -5px);
+  // }
 }
 
 @mixin form-label {

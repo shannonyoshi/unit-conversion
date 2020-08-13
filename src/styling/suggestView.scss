@@ -1,42 +1,46 @@
 @import "variables";
 @import "mixins";
 
-.page-wrapper{
-    height:auto;
-    width:100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .card-med-large{
-        @include card-large;
-        line-height: 3em;
-        width:60vw;
-        text-align:center;
-
-    }
+.page-wrapper {
+  height: auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .card-med-large {
+    @include card-large;
+    line-height: 3em;
+    width: 60vw;
+    text-align: center;
+  }
 }
 
 //suggestion form component
-.suggestion-form-wrapper{
-    display:inline-block;
-    width:auto;
+.suggestion-form-wrapper {
+  display: inline-block;
+  width: auto;
+
+  .submit-button {
+    @include submit-button;
+  }
 }
 .suggestion-form-section {
-    padding: $m-padding;
-    text-align: left;
-    display:flex;
-    align-items: flex-start;
-    .suggestion-label {
-        @include form-label;
-        width:150px;
-    }
-    textarea {
-        @include input-mixin;
-        min-width:300px;
-        width:50%;
-    }
-    .email-input {
-        @include input-mixin;
-        width: 300px;
-    }
+  padding: $m-padding;
+  text-align: left;
+  display: flex;
+  align-items: flex-start;
+
+  .suggestion-label {
+    @include form-label;
+    width: 150px;
+  }
+  textarea {
+    @include input-mixin;
+    min-width: 300px;
+    width: 50%;
+  }
+  .email-input {
+    @include input-mixin;
+    width: 300px;
+  }
 }

@@ -1,4 +1,4 @@
-import React from "react";
+
 
 export const postSuggestion = async (suggestionString)=> {
     const request = {
