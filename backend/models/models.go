@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+// SuggestionInput for incoming suggestions
 type SuggestionInput struct {
 	Name    string `json:"name"`
 	Email   string `json:"email"`
@@ -9,12 +10,7 @@ type SuggestionInput struct {
 	IsError bool   `json:"isError"`
 }
 
-type IngredientInput struct {
-	IngredientName string `json:"ingredientName"`
-	CurrentUnit    string `json:"currentUnit"`
-	TargetUnit     string `json:"targetUnit"`
-}
-
+// Suggestion for output of suggestions table queries
 type Suggestion struct {
 	ID        int
 	Name      string
@@ -25,8 +21,26 @@ type Suggestion struct {
 	ViewedAt  *time.Time
 }
 
+// IngredientInput for receiving ingredients from users
+type IngredientInput struct {
+	Name            string  `json:"ingredientName"`
+	CurrentAmount   float64 `json:"currentAmount"`
+	CurrentUnit     string  `json:"currentUnit"`
+	CurrentUnitType string  `json:"currentUnitType`
+	TargetUnit      string  `json:"targetUnit"`
+}
+
+// Ingredient for ingredients table entries
 type Ingredient struct {
 	ID    int
 	Name  string
 	Ratio float64
+}
+
+// IngredientInfo for receiving info from API calls to third party service
+type IngredientInfo struct {
+	SourceAmount float64 `json:"sourceAmount,omitempty"`
+	SourceUnit   string  `json:"sourceUnit,omitempty"`
+	TargetAmount float64 `json:"targetAmount,omitempty"`
+	TargetUnit   string  `json:"targetUnit,omitempty"`
 }
