@@ -24,7 +24,7 @@ type Suggestion struct {
 // IngredientInput for receiving ingredients from users
 type IngredientInput struct {
 	Name            string  `json:"ingredientName"`
-	CurrentAmount   float64 `json:"currentAmount"`
+	CurrentAmount   float64 `json:"currentAmount,string"`
 	CurrentUnit     string  `json:"currentUnit"`
 	CurrentUnitType string  `json:"currentUnitType`
 	TargetUnit      string  `json:"targetUnit"`

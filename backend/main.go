@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/jackc/pgx"
@@ -52,26 +53,41 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 		requestInfo(ingredient)
 	}
 
-	fmt.Println(ingredient)
+	fmt.Println(record)
 	fmt.Fprintln(w, ingredient)
 }
 
-func requestInfo(input IngredientInput) {
+func requestInfo(input models.IngredientInput) {
 	baseURL := "https://api.spoonacular.com/recipes/convert"
-	client := &http.Client{Timeout: 100 * time.Microsecond}
+	client := &http.Client{Timeout: 1 * time.Second}
 	req, err := http.NewRequest("GET", baseURL, nil)
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	req.Header.Set("Content-Type", "application/json")
+
 	q := req.URL.Query()
 
 	q.Add("ingredientName", input.Name)
-	q.Add("sourceAmount", input.CurrentAmount)
+	q.Add("sourceAmount", fmt.Sprintf("%f", input.CurrentAmount))
 	q.Add("sourceUnit", input.CurrentUnit)
 	q.Add("targetUnit", input.TargetUnit)
-	q.Add("apiKey")
+	q.Add("apiKey", os.Getenv("SPOONTACULAR_API_KEY"))
 	req.URL.RawQuery = q.Encode()
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
+	decoder := json.NewDecoder(resp.Body)
+	var APIIngredient models.IngredientInfo
+	err = decoder.Decode(&APIIngredient)
+	if err != nil {
+		fmt.Println(err)
+	}
 	fmt.Println(req.URL.String())
+	fmt.Println(APIIngredient)
+
 }
 
 // func viewAllSuggestions(w http.ResponseWriter, r *http.Request) {
