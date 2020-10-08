@@ -47,9 +47,14 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	fmt.Printf("Input ingredient: %+v\n", ingredient)
 	record, err := models.GetIngredient(ingredient.Name)
+	if err != nil && err != pgx.ErrNoRows {
+		fmt.Println(err)
+	}
+	//TODO: write conversion handler to put here
+
 	if err == pgx.ErrNoRows {
-		//makes 3rd party API call to get ingredient information
 		requestInfo(ingredient)
 	}
 
@@ -57,6 +62,7 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, ingredient)
 }
 
+// requestInfo gets new ingredients information from a 3rd party API
 func requestInfo(input models.IngredientInput) {
 	baseURL := "https://api.spoonacular.com/recipes/convert"
 	client := &http.Client{Timeout: 1 * time.Second}
@@ -90,6 +96,11 @@ func requestInfo(input models.IngredientInput) {
 
 }
 
+func convert(ingr models.Ingredient) float64 {
+	//
+}
+
+//viewAllSuggestions returns all suggestion records
 // func viewAllSuggestions(w http.ResponseWriter, r *http.Request) {
 // 	records, err := models.AllSuggestions()
 // 	if err != nil {
