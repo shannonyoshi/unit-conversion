@@ -1,6 +1,10 @@
 import { unitDict, allFractions } from "./units";
 //returns parsed amount in decimal or false if amount is unable to be parsed
 export const validateAmount = (amount) => {
+  if ( typeof amount === "number") {
+    return amount
+  }
+
   let amountArray = amount.split(" ").map((item) => item.trim());
   if (!amount.includes(".") && !amount.includes("/")) {
     const parsedWholeNum = parseInt(amountArray.join(""));

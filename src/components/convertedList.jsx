@@ -19,15 +19,17 @@ export default function ConvertedList(props) {
   };
 
   const removeIngredient = (e, index) => {
-    e.preventDefault();
+    // e.preventDefault();
     deleteIngredient(index);
   };
 
+  //adds ingredient to form, removes from both lists
   const editIngredient = (e, index) => {
     e.preventDefault();
     let toEdit = ingredients[index]
+    console.log('CONVERTED LIST EDIT toEdit', toEdit)
     deleteIngredient(index)
-    setInputs({amount: toEdit.amount, unitFrom: toEdit.unitFrom, unitTo: toEdit.unitTo, ingredient: toEdit.ingredientName})
+    setInputs({name: "", amount: toEdit.amount, unitFrom: toEdit.unitFrom, unitTo: toEdit.unitTo, ingredientName : toEdit.ingredientName})
     
   };
   //   if (ingredients.length > 0) {
@@ -38,8 +40,8 @@ export default function ConvertedList(props) {
         {ingredients.length > 0 ? (
           <ul className="list">
             {ingredients.map((ingredient, index) => (
-              <div className="list-item">
-                <li className="converted" key={`C${index}`}>
+              <div className="list-item" key={`C${index}`}>
+                <li className="converted" >
                   {ingredient.convertedString}
                 </li>
 
@@ -60,15 +62,15 @@ export default function ConvertedList(props) {
         {ingredients.length > 0 ? (
           <ul className="list">
             {ingredients.map((ingredient, index) => (
-              <div className="list-item">
-                <li className="original" key={`O${index}`}>
+              <div className="list-item"  key={`O${index}`} >
+                <li className="original">
                   {`${ingredient.amount} ${ingredient.unitFrom} ${ingredient.ingredientName}`}
                 </li>
-                {/* <FontAwesomeIcon
+                <FontAwesomeIcon
                   icon="trash-alt"
                   className="delete-item"
                   onClick={(e) => removeIngredient(e, index)}
-                /> */}
+                />
                 <FontAwesomeIcon
                   icon="edit"
                   className="edit-item"
