@@ -26,11 +26,16 @@ export default function ConvertedList(props) {
   //adds ingredient to form, removes from both lists
   const editIngredient = (e, index) => {
     e.preventDefault();
-    let toEdit = ingredients[index]
-    console.log('CONVERTED LIST EDIT toEdit', toEdit)
-    deleteIngredient(index)
-    setInputs({name: "", amount: toEdit.amount, unitFrom: toEdit.unitFrom, unitTo: toEdit.unitTo, ingredientName : toEdit.ingredientName})
-    
+    let toEdit = ingredients[index];
+    console.log("CONVERTED LIST EDIT toEdit", toEdit);
+    deleteIngredient(index);
+    setInputs({
+      name: "",
+      amount: toEdit.amount,
+      unitFrom: toEdit.unitFrom,
+      unitTo: toEdit.unitTo,
+      ingredientName: toEdit.ingredientName,
+    });
   };
   //   if (ingredients.length > 0) {
   return (
@@ -41,9 +46,7 @@ export default function ConvertedList(props) {
           <ul className="list">
             {ingredients.map((ingredient, index) => (
               <div className="list-item" key={`C${index}`}>
-                <li className="converted" >
-                  {ingredient.convertedString}
-                </li>
+                <li className="converted">{ingredient.convertedString}</li>
 
                 <FontAwesomeIcon
                   icon="trash-alt"
@@ -62,20 +65,23 @@ export default function ConvertedList(props) {
         {ingredients.length > 0 ? (
           <ul className="list">
             {ingredients.map((ingredient, index) => (
-              <div className="list-item"  key={`O${index}`} >
+              <div className="list-item" key={`O${index}`}>
+                {console.log("ingredient", ingredient)}
                 <li className="original">
                   {`${ingredient.amount} ${ingredient.unitFrom} ${ingredient.ingredientName}`}
                 </li>
-                <FontAwesomeIcon
-                  icon="trash-alt"
-                  className="delete-item"
-                  onClick={(e) => removeIngredient(e, index)}
-                />
-                <FontAwesomeIcon
-                  icon="edit"
-                  className="edit-item"
-                  onClick={(e) => editIngredient(e, index)}
-                />
+                <div>
+                  <FontAwesomeIcon
+                    icon="trash-alt"
+                    className="delete-item"
+                    onClick={(e) => removeIngredient(e, index)}
+                  />
+                  <FontAwesomeIcon
+                    icon="edit"
+                    className="edit-item"
+                    onClick={(e) => editIngredient(e, index)}
+                  />
+                </div>
               </div>
             ))}
           </ul>

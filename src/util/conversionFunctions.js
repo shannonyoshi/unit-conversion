@@ -6,14 +6,16 @@ export const convertSimple = (amount, startingUnitName, endUnitName) => {
   let startingUnit = unitDict[startingUnitName];
   let targetUnit = unitDict[endUnitName];
   const amountInmLs = amount * startingUnit.conversion;
+  console.log('amountInmLs in convertSimple', amountInmLs)
   const targetUnitInDecimal = amountInmLs / targetUnit.conversion;
+  console.log('targetUnitInDecimal', targetUnitInDecimal)
   const targetUnitInteger = Math.floor(targetUnitInDecimal);
   const decimalRemainder = targetUnitInDecimal - targetUnitInteger;
 
   //returns whole numbers + unit
-  if (decimalRemainder <= 0.015) {
+  if (decimalRemainder <= 0.015|| decimalRemainder >=0.985) {
     let unitString = checkPluralUnit(targetUnitInteger, endUnitName);
-    return `${targetUnitInteger} ${unitString}`;
+    return `${Math.round(targetUnitInDecimal)} ${unitString}`;
   }
   //returns amount with 2 decimal places for unit types that commonly use decimal (mostly metric)
   if (targetUnit.output === "decimal") {

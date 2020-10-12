@@ -54,9 +54,9 @@ export default function ConversionForm(props) {
     }
 
     let isSimple = checkIfSimple(inputs.unitFrom, inputs.unitTo);
-    console.log("simpleConversion?", isSimple);
+    // console.log("simpleConversion?", isSimple);
     let isAmount = validateAmount(inputs.amount);
-    console.log("amount valid?", isAmount);
+    // console.log("amount valid?", isAmount);
     if (!isAmount) {
       setErrors({
         ...errors,
@@ -70,14 +70,14 @@ export default function ConversionForm(props) {
         inputs.unitFrom,
         inputs.unitTo
       );
-      const converted = `${convertedAmount} ${inputs.ingredientName}`;
-      console.log("converted", converted);
+      const converted = `${convertedAmount} ${inputs.ingredientName? inputs.ingredientName:""}`;
+      // console.log("converted", converted);
       if (converted) {
         let convertedFullInfo = {
           amount: isAmount,
           unitFrom: inputs.unitFrom,
           unitTo: inputs.unitTo,
-          ingredientName: inputs.ingredient,
+          ingredientName: inputs.ingredientName,
           convertedString: converted,
         };
         setConvertedIngredients([...convertedIngredients, convertedFullInfo]);

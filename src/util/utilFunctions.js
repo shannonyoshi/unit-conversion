@@ -65,7 +65,9 @@ export const checkPluralUnit = (amount, endUnitName) => {
 
 //returns tolerance of 2.5% in mLs
 export const calcTolerancemLs = (amountInmLs) => {
-  const upperLimitmLs = amountInmLs * 1.025 - amountInmLs;
+  // const upperLimitmLs = amountInmLs * 1.025 - amountInmLs;
+  const upperLimitmLs = amountInmLs * 1.05 - amountInmLs;
+
   return upperLimitmLs;
 };
 
