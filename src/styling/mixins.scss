@@ -65,12 +65,12 @@
   font-size: 1.25em;
   width: 50%;
   color: color(darker);
-  // transition-duration: 0.2s;
   box-shadow: inset 0px 0px 1px 1px rgba(25, 100, 126, 0.5);
+  @media(max-width: 600px)  {
+    width:80%;
+  }
   
-  // &:hover {
-  //   transform: translate(0px, -5px);
-  // }
+
 }
 
 @mixin form-label {
@@ -78,6 +78,10 @@
   color: color(dark);
   font-size: 1.25em;
   text-align: left;
+  @media( max-width: 600px){
+    font-size:1em;
+    font-weight: bold;
+  }
 }
 
 
@@ -87,15 +91,25 @@
   background: linear-gradient(
     0deg,
     rgba(251, 251, 246, 1) 0%,
-    rgba(255, 255, 211, 1) 100%
+    rgba(255, 255, 211, .4) 100%
   );
   border-radius: 5px;
-  box-shadow: 6px 6px 29px 0px rgba(0, 0, 0, 0.75);
-
+  box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.4);
+  @media( max-width: 600px){
+    min-width:250px;
+    width:90vw;
+    min-height:300px;
+  }
   .card-title {
     font-size: 2em;
     padding: $m-padding;
     color: color(dark);
+    @media( max-width: 600px){
+      padding: $xs-padding;
+      font-size:1em;
+      font-weight: bold;
+      margin:0;
+    }
   }
   .full {
     width: 90vw;
@@ -110,6 +124,8 @@
   padding-bottom: $m-padding;
   min-height: 395px;
   min-width: 400px;
+
+
 }
 
 @mixin card-large {

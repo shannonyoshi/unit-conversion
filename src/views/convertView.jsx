@@ -15,7 +15,6 @@ const initialInputState={
 export default function ConvertView() {
   const [ingredients, setIngredients] = useState([]);
   const [inputs, setInputs] = useState(initialInputState);
-console.log('inputs in ConvertView', inputs)
   return (
     <div className="convert-page-wrapper">
       <ConversionForm

@@ -50,7 +50,7 @@ export default function ConvertedList(props) {
 
                 <FontAwesomeIcon
                   icon="trash-alt"
-                  className="delete-item"
+                  className="delete-item icon-btn"
                   onClick={(e) => removeIngredient(e, index)}
                 />
               </div>
@@ -72,14 +72,14 @@ export default function ConvertedList(props) {
                 </li>
                 <div>
                   <FontAwesomeIcon
-                    icon="trash-alt"
-                    className="delete-item"
-                    onClick={(e) => removeIngredient(e, index)}
+                    icon="edit"
+                    className="edit-item icon-btn"
+                    onClick={(e) => editIngredient(e, index)}
                   />
                   <FontAwesomeIcon
-                    icon="edit"
-                    className="edit-item"
-                    onClick={(e) => editIngredient(e, index)}
+                    icon="trash-alt"
+                    className="delete-item icon-btn"
+                    onClick={(e) => removeIngredient(e, index)}
                   />
                 </div>
               </div>
