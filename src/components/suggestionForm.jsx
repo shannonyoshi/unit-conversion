@@ -68,7 +68,7 @@ export default function SuggestionForm() {
           />
         </div>
 
-        <div className="suggestion-form-section">
+        <div className="suggestion-form-section checkbox">
           <input
             type="checkbox"
             id="reporting-error?"
