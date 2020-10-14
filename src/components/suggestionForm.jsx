@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { postSuggestion } from "../util/crudFuncs";
 const initialSuggestionState = {
-  text: "hello",
+  text: "",
   email: "",
   isErrorReport: false,
 };
@@ -65,6 +65,7 @@ export default function SuggestionForm() {
             name="text"
             value={suggestion.text}
             onChange={handleInputChange}
+            placeholder="Your suggestion here!"
           />
         </div>
 

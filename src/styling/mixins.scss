@@ -107,7 +107,7 @@
     color: color(dark);
     @media( max-width: 600px){
       padding: $xs-padding;
-      font-size:1em;
+      font-size:1.25em;
       font-weight: bold;
       margin:0;
     }
@@ -132,7 +132,6 @@
 @mixin card-large {
   @include card-general;
   width: 80vw;
-  height: auto;
   padding: $lg-padding;
   margin: $lg-padding;
   @media(max-width: 1100px){
