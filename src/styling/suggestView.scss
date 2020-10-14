@@ -13,6 +13,9 @@
     width: 60vw;
     text-align: center;
   }
+  form{
+    max-width:100vw;
+  }
 }
 
 //suggestion form component
@@ -33,6 +36,7 @@
   .suggestion-label {
     @include form-label;
     width: 150px;
+    max-width:100%;
   }
   textarea {
     @include input-mixin;
