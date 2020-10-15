@@ -20,7 +20,7 @@ func GetIngredient(iName string) (Ingredient, error) {
 		return record, errors.New("400. Ingredient name missing. Bad Request")
 	}
 	row := conn.QueryRow(context.Background(), "SELECT id, name, ratio FROM ingredients WHERE name=$1", iName)
-	err := row.Scan(&record.ID, &record.Name, &record.Ratio)
+	err := row.Scan(&record.ID, &record.Name, &record.GramPerML)
 	return record, err
 }
 
