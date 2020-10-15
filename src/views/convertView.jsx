@@ -18,8 +18,8 @@ export default function ConvertView() {
   return (
     <div className="convert-page-wrapper">
       <ConversionForm
-        setIngredients={setIngredients}
-        ingredients={ingredients}
+        setConvertedIngredients={setIngredients}
+        convertedIngredients={ingredients}
         inputs={inputs}
         setInputs={setInputs}
         initialInputState={initialInputState}

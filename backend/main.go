@@ -54,12 +54,12 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 	}
 	//TODO: write conversion handler to put here
 
-	if err == pgx.ErrNoRows {
-		requestAPIInfo(ingredient)
-	}
+	// if err == pgx.ErrNoRows {
+	// 	requestAPIInfo(ingredient)
+	// }
 
-	fmt.Println(record)
-	fmt.Fprintln(w, ingredient)
+	fmt.Printf("Record: %+v\n", record)
+	// fmt.Fprintln(w, ingredient)
 }
 
 // requestAPIInfo gets new ingredients information from a 3rd party API
@@ -96,9 +96,9 @@ func requestAPIInfo(input models.IngredientInput) {
 
 }
 
-func convert(ingr models.Ingredient) float64 {
-	//
-}
+// func convert(ingr models.Ingredient) float64 {
+//
+// }
 
 //viewAllSuggestions returns all suggestion records
 // func viewAllSuggestions(w http.ResponseWriter, r *http.Request) {
@@ -110,7 +110,6 @@ func convert(ingr models.Ingredient) float64 {
 // }
 
 func main() {
-
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/api/suggest", suggestionPage)

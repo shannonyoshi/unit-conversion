@@ -29,7 +29,7 @@ func AddIngredient(ingr Ingredient) (int, error) {
 	if len(ingr.Name) == 0 {
 		return 0, errors.New("400.Bad request. Missing ingredient name")
 	}
-	row := conn.QueryRow(context.Background(), "INSERT INTO ingredients (name, ratio) VALUES ($1, $2) RETURNING id", ingr.Name, ingr.Ratio)
+	row := conn.QueryRow(context.Background(), "INSERT INTO ingredients (name, ratio) VALUES ($1, $2) RETURNING id", ingr.Name, ingr.GramPerML)
 	var id int
 	err := row.Scan(&id)
 	if err != nil {

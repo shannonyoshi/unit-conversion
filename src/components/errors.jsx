@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function ShowErrors({ errors }) {
-  console.log("errors", errors);
+
   let show = false;
   const errorVals = Object.values(errors);
   let i = 0;
@@ -12,7 +12,7 @@ export default function ShowErrors({ errors }) {
     }
     i++;
   }
-  console.log("show", show);
+
   if (show === true) {
     return (
       <div className="errors">

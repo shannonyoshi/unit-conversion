@@ -1,4 +1,4 @@
-const baseURL = "http://localhost:8080";
+const baseURL = "http://localhost:8080/api/";
 
 export const postSuggestion = async (suggestionString) => {
   const request = {
@@ -9,7 +9,7 @@ export const postSuggestion = async (suggestionString) => {
     },
     body: JSON.stringify({ suggestion: suggestionString }),
   };
-  const response = await fetch(baseURL, request);
+  const response = await fetch(`${baseURL}suggest`, request);
   if (!response.ok) {
     console.log(response);
   }
@@ -29,10 +29,11 @@ export const postConversion = async (ingredient) => {
     },
     body: JSON.stringify(ingredient),
   };
-  const response = await fetch(baseURL, request)
+  console.log('request', request)
+  const response = await fetch(`${baseURL}convert`, request)
   if (!response.ok) {
       console.log('response', response)
   }
-  const data = await response.json();
-  console.log('returned conversion data', data)
+//   const data = await response.json();
+//   console.log('returned conversion data', data)
 };
