@@ -77,3 +77,18 @@ ul {
 .no-items {
   color: color(dark);
 }
+div.errors{
+  h3{
+    font-size: 1.5em;
+    font-weight: bold;
+    color: color(alert);
+    text-align:left;
+    padding-left: $s-padding;
+  }
+  li{
+    color:color(alert)
+  }
+  b{
+    font-weight: bold;
+  }
+}

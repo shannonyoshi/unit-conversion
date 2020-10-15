@@ -55,15 +55,15 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 	//TODO: write conversion handler to put here
 
 	if err == pgx.ErrNoRows {
-		requestInfo(ingredient)
+		requestAPIInfo(ingredient)
 	}
 
 	fmt.Println(record)
 	fmt.Fprintln(w, ingredient)
 }
 
-// requestInfo gets new ingredients information from a 3rd party API
-func requestInfo(input models.IngredientInput) {
+// requestAPIInfo gets new ingredients information from a 3rd party API
+func requestAPIInfo(input models.IngredientInput) {
 	baseURL := "https://api.spoonacular.com/recipes/convert"
 	client := &http.Client{Timeout: 1 * time.Second}
 	req, err := http.NewRequest("GET", baseURL, nil)

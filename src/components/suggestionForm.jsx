@@ -11,12 +11,6 @@ export default function SuggestionForm() {
 
   const handleInputChange = (e) => {
     e.persist();
-    console.log(
-      "eventoday, we are going to be using the random user API. Within this API, it has randomly generated user data, basically like Lorem Ipsum, but for imaginary users. It has data within the API like phone numbers, email addresses, names and pictures for each user. We don’t want all the data, but we’ll use certain.target",
-      e.target,
-      "event.target.value",
-      e.target.value
-    );
     if (e.target.name === "isErrorReport") {
       setSuggestion((suggestion) => ({
         ...suggestion,

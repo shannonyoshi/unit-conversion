@@ -17,7 +17,7 @@
     box-shadow: inset 0px 0px 1px 2px rgba(69, 189, 193, 0.65);
   }
   &::placeholder {
-    color: color(dark);
+    color: color(medium);
   }
 }
 
@@ -35,7 +35,7 @@
   -ms-appearance: none;
   -o-appearance: none;
   appearance: none;
-  color: color(dark);
+  color: color(medium);
 
   &:-moz-focusring {
     color: transparent;

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { validateAmount, checkIfSimple } from "../util/utilFunctions";
 import { convertSimple } from "../util/conversionFunctions";
 import { unitDict } from "../util/units";
+import {postConversion} from "../util/crudFuncs";
+import ShowErrors from "./errors"
 
 const unitKeys = Object.keys(unitDict);
 
@@ -11,56 +13,56 @@ export default function ConversionForm(props) {
   const inputs = props.inputs;
   const setInputs = props.setInputs;
   const initialInputState = props.initialInputState;
-  const [errors, setErrors] = useState({
-    amount: "",
-    ingredientName: "",
-    conversion: "",
-    general: "",
-  });
-  const [showErrors, setShowErrors] = useState(true);
+  const initialErrorState = {
+    "Amount": "",
+    "Ingredient Name": "",
+    "Conversion": "",
+    "General": "",
+  }
+  const [errors, setErrors] = useState(initialErrorState);
+  // const [showErrors, setShowErrors] = useState(true);
   // console.log("showErrors", showErrors)
   // console.log("errors", errors)
-  //should check for type of conversion, validate amount
+  //should check is conversion is "simple" (vol=>vol or weight=>weight), validate amount
   //if a simple conversion, use function from util file to perform the conversion, then set to state converted list to display
-  //if not a simple conversion (vol=>vol or weight=>weight), validate Name
+  //if not a simple conversion , validate Name
   //perform API call to BE(not yet set up)
 
   // TODO: finish handleSubmit for complex conversions once backend is functional. BE should check if item is in DB forInStatement, if not perform additional API call
 
-  useEffect(() => {
-    const errorVals = Object.values(errors);
-    let count = 0;
-    errorVals.forEach((error) => {
-      if (error.length > 0) {
-        count += 1;
-      }
-    });
-    if (count > 0 && showErrors === false) {
-      setShowErrors(true);
-    }
-    if (count === 0 && showErrors === true) {
-      setShowErrors(false);
-    }
-  }, [errors]);
+  // useEffect(() => {
+  //   const errorVals = Object.values(errors);
+  //   // let count = 0;
+  //   let i=0
+  //   while (i < errorVals.length){
+  //     if (errorVals[i].length > 0 ){
+  //       setShowErrors(true)
+  //       return
+  //     }
+  //     i++
+  //   }
+  //     setShowErrors(false);
+
+  // }, [errors]);
 
   const handleSubmit = (e) => {
     console.log('SUBMIT inputs', inputs)
     e.preventDefault();
-    // console.log("submitted");
-    setErrors({ amount: "", ingredient: "" });
+    setErrors(initialErrorState);
+    // setShowErrors(false)
     //assumes if name is filled out (it's hidden from view), the form was completed by a bot. It is only "visible" to people using screen readers
     if (inputs.name && inputs.name.length > 0) {
       return;
     }
 
-    let isSimple = checkIfSimple(inputs.unitFrom, inputs.unitTo);
+    const isSimple = checkIfSimple(inputs.unitFrom, inputs.unitTo);
     // console.log("simpleConversion?", isSimple);
-    let isAmount = validateAmount(inputs.amount);
+    const isAmount = validateAmount(inputs.amount);
     // console.log("amount valid?", isAmount);
     if (!isAmount) {
       setErrors({
         ...errors,
-        amount: "Unable to validate amount, see examples",
+        amount: "Unable to validate amount, either use decimal amounts (1.5) or fractions (1 1/2)",
       });
       return;
     }
@@ -83,15 +85,25 @@ export default function ConversionForm(props) {
         setConvertedIngredients([...convertedIngredients, convertedFullInfo]);
         setInputs({ ...initialInputState });
       } else {
-        setErrors({ ...errors, conversion: "Unable to convert" });
+        setErrors({ ...errors, conversion: "Unable to convert given ingredient" });
       }
     } else {
       //if not a simple conversion
-      setErrors({
-        ...errors,
-        general:
-          "Currently only able to convert volume -> volume or weight -> weight",
-      });
+      if (inputs.ingredientName.length<0) {
+
+        let complexIngr = {
+          ingredientName: inputs.ingredientName,
+          currentAmount: isAmount,
+          currentUnit: inputs.unitFrom,
+          altUnit: unitDict[inputs.unitFrom].type,
+          altAmount: unitDict[inputs.unitFrom].conversion,
+          targetUnit: inputs.unitTo,
+        }
+        postConversion(complexIngr)
+        console.log('complexIngr', complexIngr)
+      } else {
+        setErrors({...errors, "Ingredient Name": "Can't complete this type of conversion without specifying an ingredient name"})
+      }
     }
   };
   const handleInputChange = (e) => {
@@ -115,8 +127,6 @@ export default function ConversionForm(props) {
               className="honey"
               type="text"
               placeholder="Do not fill this out"
-              name="name"
-              value={inputs.name}
               onChange={handleInputChange}
             />
             <label htmlFor="amount" className="convert-label">
@@ -136,7 +146,7 @@ export default function ConversionForm(props) {
             <label htmlFor="unitFrom" className="convert-label">
               From
             </label>
-            {/* <div className="select-wrapper"> */}
+        
             <select
               required
               id="unitFrom"
@@ -152,13 +162,13 @@ export default function ConversionForm(props) {
                 </option>
               ))}
             </select>
-            {/* </div> */}
+       
           </div>
           <div className="form-section">
             <label htmlFor="unitTo" className="convert-label">
               To
             </label>
-            {/* <div className="select-wrapper"> */}
+       
             <select
               value={inputs.unitTo}
               id="unitTo"
@@ -173,7 +183,7 @@ export default function ConversionForm(props) {
                 </option>
               ))}
             </select>
-            {/* </div> */}
+  
           </div>
           <div className="form-section">
             <label htmlFor="ingredientName" className="convert-label">
@@ -188,22 +198,23 @@ export default function ConversionForm(props) {
               onChange={handleInputChange}
             />
           </div>
+          <ShowErrors errors = {errors}/>
           <button type="submit">Convert</button>
         </form>
-        {showErrors === true ? (
+        {/* {showErrors === true ? (
           <div className="errors">
-            <p>Errors:</p>
+            <h3>Errors:</h3>
             <ul>
-              {Object.entries(errors).map(([key, value]) => (
+              {Object.entries(errors).map(([key, value]) => (value!==""?
                 <li key={key}>
-                  {key}:{value}
-                </li>
+                  {key.charAt(0).toUpperCase()+key.slice(1)}: {value}
+                </li>: null
               ))}
             </ul>
           </div>
         ) : (
           <></>
-        )}
+        )} */}
       </div>
     </div>
   );

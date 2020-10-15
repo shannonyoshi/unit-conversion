@@ -23,18 +23,19 @@ type Suggestion struct {
 
 // IngredientInput for receiving ingredients from users
 type IngredientInput struct {
-	Name            string  `json:"ingredientName"`
-	CurrentAmount   float64 `json:"currentAmount,string"`
-	CurrentUnit     string  `json:"currentUnit"`
-	CurrentUnitType string  `json:"currentUnitType`
-	TargetUnit      string  `json:"targetUnit"`
+	Name          string  `json:"ingredientName"`
+	CurrentAmount float64 `json:"currentAmount,string"`
+	CurrentUnit   string  `json:"currentUnit"`
+	AltUnit       string  `json:"altUnit"`
+	AltAmount     float64 `json:"altAmount,string"`
+	TargetUnit    string  `json:"targetUnit"`
 }
 
 // Ingredient for ingredients table entries
 type Ingredient struct {
-	ID    int
-	Name  string
-	Ratio float64
+	ID        int
+	Name      string
+	GramPerML float64
 }
 
 // IngredientInfo for receiving info from API calls to third party service
