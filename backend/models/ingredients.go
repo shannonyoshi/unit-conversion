@@ -2,7 +2,12 @@ package models
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"net/http"
+	"os"
+	"time"
 )
 
 /*
@@ -36,4 +41,68 @@ func AddIngredient(ingr Ingredient) (int, error) {
 		return id, errors.New("500. Internal Server Error" + err.Error())
 	}
 	return id, nil
+}
+
+// RequestAPIInfo gets new ingredients information from a 3rd party API
+func RequestAPIInfo(input IngredientInput) (IngredientInfo, error) {
+	baseURL := "https://api.spoonacular.com/recipes/convert"
+	client := &http.Client{Timeout: 1 * time.Second}
+	req, err := http.NewRequest("GET", baseURL, nil)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	q := req.URL.Query()
+
+	q.Add("ingredientName", input.Name)
+	q.Add("sourceAmount", fmt.Sprintf("%f", input.CurrentAmount))
+	q.Add("sourceUnit", input.CurrentUnit)
+	q.Add("targetUnit", input.TargetUnit)
+	q.Add("apiKey", os.Getenv("SPOONTACULAR_API_KEY"))
+	req.URL.RawQuery = q.Encode()
+	resp, err := client.Do(req)
+	var APIIngredient IngredientInfo
+	if err != nil {
+		return APIIngredient, err
+		// fmt.Println(err)
+	}
+	decoder := json.NewDecoder(resp.Body)
+	err = decoder.Decode(&APIIngredient)
+	// fmt.Printf("Error?: %v\n", err)
+	if err != nil {
+		return APIIngredient, err
+		// fmt.Println(err)
+	}
+	// fmt.Printf("Query URL: %v\n", req.URL.String())
+	// fmt.Println(APIIngredient)
+	// fmt.Printf("API Ingredient: %+v\n", APIIngredient)
+	return APIIngredient, nil
+}
+
+// ConvertToRatio takes the info returned from the API and from the client and converts it the the ratio of grams/mL to be stored
+//Ratio=grams/mL
+func ConvertToRatio(input IngredientInput, info IngredientInfo) Ingredient {
+	var toAdd = Ingredient{Name: input.Name}
+
+	switch input.AltUnit {
+	case "mL":
+		toAdd.GramPerML = info.TargetAmount * input.TargetConv / input.AltAmount
+	case "g":
+		toAdd.GramPerML = input.AltAmount / (info.TargetAmount * input.TargetConv)
+	}
+	return toAdd
+}
+
+// Convert handles the conversion for ingredients already in the Ingredients table
+func Convert(input IngredientInput, ingr Ingredient) float64 {
+	var targetAmount float64
+	switch input.AltUnit {
+	case "mL":
+		targetAmount = input.AltAmount * ingr.GramPerML / input.TargetConv
+	case "g":
+		targetAmount = input.AltAmount * (1 / ingr.GramPerML) / input.TargetConv
+	}
+	return targetAmount
 }

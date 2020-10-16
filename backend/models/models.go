@@ -29,6 +29,7 @@ type IngredientInput struct {
 	AltUnit       string  `json:"altUnit"`
 	AltAmount     float64 `json:"altAmount"`
 	TargetUnit    string  `json:"targetUnit"`
+	TargetConv    float64 `json:"targetConversion"`
 }
 
 // Ingredient for ingredients table entries

@@ -4,14 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
-	"time"
 
 	"github.com/jackc/pgx/v4"
 
-	"github.com/rs/cors"
+	"github.com/shannonyoshi/unit-conversion/backend/models"
 
-	"./models"
+	"github.com/rs/cors"
 )
 
 func suggestionPage(w http.ResponseWriter, r *http.Request) {
@@ -32,7 +30,7 @@ func suggestionPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("err: ", err)
 	}
-	fmt.Println(id)
+	fmt.Printf(id, suggestion)
 	fmt.Fprintln(w, suggestion)
 }
 
@@ -42,63 +40,38 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	decoder := json.NewDecoder(r.Body)
-	var ingredient models.IngredientInput
-	err := decoder.Decode(&ingredient)
+	var ingrInput models.IngredientInput
+	err := decoder.Decode(&ingrInput)
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("Input ingredient: %+v\n", ingredient)
-	record, err := models.GetIngredient(ingredient.Name)
-	if err != nil && err != pgx.ErrNoRows {
-		fmt.Println(err)
-	}
-	//TODO: write conversion handler to put here
+	fmt.Printf("Input ingrInput: %+v\n", ingrInput)
+	record, err := models.GetIngredient(ingrInput.Name)
 
-	// if err == pgx.ErrNoRows {
-	// 	requestAPIInfo(ingredient)
-	// }
+	if err != nil {
+		if err == pgx.ErrNoRows {
+			fmt.Printf("ErrNoRows \n")
+			APIIngredient, err := models.RequestAPIInfo(ingrInput)
+			if err != nil {
+				fmt.Printf("ERROR, %v\n", err)
+			}
+			newIngr := models.ConvertToRatio(ingrInput, APIIngredient)
+			_, err = models.AddIngredient(newIngr)
+			if err != nil {
+				fmt.Printf("ERROR, %v\n", err)
+			}
+			// fmt.println(w, APIIngredient.TargetAmount)
+			fmt.Printf("APIIngredient: %+v\n", APIIngredient)
+			// return
+		} else {
+			fmt.Println(err)
+		}
+	}
+	target := models.Convert(ingrInput, record)
 
 	fmt.Printf("Record: %+v\n", record)
-	// fmt.Fprintln(w, ingredient)
+	// fmt.Fprintln(w, ingrInput)
 }
-
-// requestAPIInfo gets new ingredients information from a 3rd party API
-func requestAPIInfo(input models.IngredientInput) {
-	baseURL := "https://api.spoonacular.com/recipes/convert"
-	client := &http.Client{Timeout: 1 * time.Second}
-	req, err := http.NewRequest("GET", baseURL, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-
-	q := req.URL.Query()
-
-	q.Add("ingredientName", input.Name)
-	q.Add("sourceAmount", fmt.Sprintf("%f", input.CurrentAmount))
-	q.Add("sourceUnit", input.CurrentUnit)
-	q.Add("targetUnit", input.TargetUnit)
-	q.Add("apiKey", os.Getenv("SPOONTACULAR_API_KEY"))
-	req.URL.RawQuery = q.Encode()
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-	}
-	decoder := json.NewDecoder(resp.Body)
-	var APIIngredient models.IngredientInfo
-	err = decoder.Decode(&APIIngredient)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println(req.URL.String())
-	fmt.Println(APIIngredient)
-
-}
-
-// func convert(ingr models.Ingredient) float64 {
-//
-// }
 
 //viewAllSuggestions returns all suggestion records
 // func viewAllSuggestions(w http.ResponseWriter, r *http.Request) {
