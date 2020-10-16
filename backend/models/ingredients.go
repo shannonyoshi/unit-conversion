@@ -46,10 +46,12 @@ func AddIngredient(ingr Ingredient) (int, error) {
 // RequestAPIInfo gets new ingredients information from a 3rd party API
 func RequestAPIInfo(input IngredientInput) (IngredientInfo, error) {
 	baseURL := "https://api.spoonacular.com/recipes/convert"
-	client := &http.Client{Timeout: 1 * time.Second}
+	client := &http.Client{Timeout: 15 * time.Second}
 	req, err := http.NewRequest("GET", baseURL, nil)
+	var APIIngredient IngredientInfo
 	if err != nil {
 		fmt.Println(err)
+		return APIIngredient, err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -63,7 +65,6 @@ func RequestAPIInfo(input IngredientInput) (IngredientInfo, error) {
 	q.Add("apiKey", os.Getenv("SPOONTACULAR_API_KEY"))
 	req.URL.RawQuery = q.Encode()
 	resp, err := client.Do(req)
-	var APIIngredient IngredientInfo
 	if err != nil {
 		return APIIngredient, err
 		// fmt.Println(err)
@@ -89,14 +90,18 @@ func ConvertToRatio(input IngredientInput, info IngredientInfo) Ingredient {
 	switch input.AltUnit {
 	case "mL":
 		toAdd.GramPerML = info.TargetAmount * input.TargetConv / input.AltAmount
+		fmt.Printf("mL toAdd GramPerML: (info.TargetAmount) %v * (input.TargetConv) %v / (input.AltAmount) %v", info.TargetAmount, input.TargetConv, input.AltAmount)
 	case "g":
 		toAdd.GramPerML = input.AltAmount / (info.TargetAmount * input.TargetConv)
+		fmt.Printf("g toAdd GramPerML: %v", toAdd.GramPerML)
+
 	}
+	fmt.Printf("toAdd in ConvertTRatio: %+v", toAdd)
 	return toAdd
 }
 
 // Convert handles the conversion for ingredients already in the Ingredients table
-func Convert(input IngredientInput, ingr Ingredient) float64 {
+func Convert(input IngredientInput, ingr Ingredient) IngredientInfo {
 	var targetAmount float64
 	switch input.AltUnit {
 	case "mL":
@@ -104,5 +109,7 @@ func Convert(input IngredientInput, ingr Ingredient) float64 {
 	case "g":
 		targetAmount = input.AltAmount * (1 / ingr.GramPerML) / input.TargetConv
 	}
-	return targetAmount
+	output := IngredientInfo{SourceAmount: input.CurrentAmount, SourceUnit: input.CurrentUnit, TargetAmount: targetAmount, TargetUnit: input.TargetUnit}
+	fmt.Printf("TargetAmount in Convert: %+v\n", output)
+	return output
 }

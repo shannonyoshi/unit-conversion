@@ -25,12 +25,12 @@ func suggestionPage(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	var id int
-	id, err = models.AddSuggestion(suggestion)
+	// var id int
+	_, err = models.AddSuggestion(suggestion)
 	if err != nil {
 		fmt.Println("err: ", err)
 	}
-	fmt.Printf(id, suggestion)
+	// fmt.Printf(id, suggestion)
 	fmt.Fprintln(w, suggestion)
 }
 
@@ -45,7 +45,9 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("Input ingrInput: %+v\n", ingrInput)
+	w.Header().Set("Content-Type", "application/json")
+
+	fmt.Printf("\n\nInput ingrInput: %+v\n", ingrInput)
 	record, err := models.GetIngredient(ingrInput.Name)
 
 	if err != nil {
@@ -54,15 +56,20 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 			APIIngredient, err := models.RequestAPIInfo(ingrInput)
 			if err != nil {
 				fmt.Printf("ERROR, %v\n", err)
+				return
 			}
 			newIngr := models.ConvertToRatio(ingrInput, APIIngredient)
+
 			_, err = models.AddIngredient(newIngr)
 			if err != nil {
 				fmt.Printf("ERROR, %v\n", err)
 			}
-			// fmt.println(w, APIIngredient.TargetAmount)
 			fmt.Printf("APIIngredient: %+v\n", APIIngredient)
-			// return
+			err = json.NewEncoder(w).Encode(APIIngredient)
+			if err != nil {
+				fmt.Printf("ERROR, %v\n", err)
+			}
+
 		} else {
 			fmt.Println(err)
 		}
@@ -70,7 +77,11 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 	target := models.Convert(ingrInput, record)
 
 	fmt.Printf("Record: %+v\n", record)
-	// fmt.Fprintln(w, ingrInput)
+	fmt.Printf("targetAmount: %+v\n", target)
+	err = json.NewEncoder(w).Encode(target)
+	if err != nil {
+		fmt.Printf("ERROR, %v\n", err)
+	}
 }
 
 //viewAllSuggestions returns all suggestion records
