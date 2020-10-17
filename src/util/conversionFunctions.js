@@ -1,20 +1,43 @@
-import { unitDict} from "./units";
-import {checkPluralUnit, calcTolerancemLs, findClosestFraction, findClosestCommonFractions, findPossibleUnits} from "./utilFunctions"
+import { postConversion } from "./crudFuncs";
+import { unitDict } from "./units";
+import {
+  checkPluralUnit,
+  calcNormalizedTolerance,
+  findClosestFraction,
+  findClosestCommonFractions,
+  findPossibleUnits,
+} from "./utilFunctions";
 
 //performs simple conversion, returns string of converted amount + unit
-export const convertSimple = (amount, startingUnitName, endUnitName) => {
+export const convertSimple = (amount, startingUnitName, targetUnitName) => {
   let startingUnit = unitDict[startingUnitName];
-  let targetUnit = unitDict[endUnitName];
-  const amountInmLs = amount * startingUnit.conversion;
-  console.log('amountInmLs in convertSimple', amountInmLs)
-  const targetUnitInDecimal = amountInmLs / targetUnit.conversion;
-  console.log('targetUnitInDecimal', targetUnitInDecimal)
+  let targetUnit = unitDict[targetUnitName];
+  const normalizedAmount = amount * startingUnit.conversion;
+  const targetUnitInDecimal = normalizedAmount / targetUnit.conversion;
+  const prettyConvertedString = prettifyRemainder(
+    targetUnitInDecimal,
+    startingUnitName,
+    targetUnitName,
+    targetUnit,
+    normalizedAmount
+  );
+  return prettyConvertedString;
+};
+
+const prettifyRemainder = (
+  targetUnitInDecimal,
+  startingUnitName,
+  targetUnitName,
+  targetUnit,
+  normalizedAmount
+) => {
+  // console.log('prettifyRemainder')
   const targetUnitInteger = Math.floor(targetUnitInDecimal);
   const decimalRemainder = targetUnitInDecimal - targetUnitInteger;
 
   //returns whole numbers + unit
-  if (decimalRemainder <= 0.015|| decimalRemainder >=0.985) {
-    let unitString = checkPluralUnit(targetUnitInteger, endUnitName);
+  if (decimalRemainder <= 0.015 || decimalRemainder >= 0.985) {
+    let unitString = checkPluralUnit(targetUnitInteger, targetUnitName);
     return `${Math.round(targetUnitInDecimal)} ${unitString}`;
   }
   //returns amount with 2 decimal places for unit types that commonly use decimal (mostly metric)
@@ -26,26 +49,40 @@ export const convertSimple = (amount, startingUnitName, endUnitName) => {
   //ex. fraction = ["1/10", 0.1, false] means [fraction string, fraction in decimal, boolean if regular baking fraction]
   const fraction = findClosestFraction(decimalRemainder);
 
-  //fraction[2] =true  means this is a common fraction used for baking
-  if (fraction[2] === true) {
+  const divisor = fraction[0].split("/")[1];
+  //excludeFrac ensures units of fluid ounce or smaller and that are US units do not get split into thirds
+  let excludeFrac =
+    targetUnit.unit === "US" &&
+    targetUnit.conversion <= 29.5735 &&
+    divisor % 3 !== 0
+      ? true
+      : false;
+
+  //returns fractions that are common to baking if not a US unit too small for thirds, where this fraction is a third
+  if (fraction[2] === true && excludeFrac === false) {
+    // console.log('IF fraction[2] && excludeFrac')
     if (targetUnitInteger === 0) {
-      let unitString = checkPluralUnit(fraction[1], endUnitName);
+      let unitString = checkPluralUnit(fraction[1], targetUnitName);
       return `${fraction[0]} ${unitString}`;
     } else {
-      return `${targetUnitInteger} ${fraction[0]} ${endUnitName}`;
+      return `${targetUnitInteger} ${fraction[0]} ${targetUnitName}`;
     }
   } else {
-    let remainingmLs = amountInmLs - targetUnitInteger * targetUnit.conversion;
-    const mLsTolerance = calcTolerancemLs(amountInmLs);
+    //if fraction is not common
+    let remainingmLs =
+      normalizedAmount - targetUnitInteger * targetUnit.conversion;
+    const normalizedTolerance = calcNormalizedTolerance(normalizedAmount);
 
     let converted = convertRemainder(
       remainingmLs,
       targetUnit.unit,
-      mLsTolerance,
-      startingUnitName
+      normalizedTolerance,
+      startingUnitName,
+      targetUnitInDecimal
     );
+    // console.log('converted', converted)
     if (targetUnitInteger === 0) {
-      let unitString = checkPluralUnit(fraction[1], endUnitName);
+      let unitString = checkPluralUnit(fraction[1], targetUnitName);
       if (converted) {
         return `${fraction[0]} ${unitString} or ${converted}`;
       } else {
@@ -53,37 +90,51 @@ export const convertSimple = (amount, startingUnitName, endUnitName) => {
       }
     } else {
       if (converted) {
-        return `${targetUnitInteger} ${fraction[0]} ${endUnitName} or ${targetUnitInteger} ${endUnitName} plus ${converted}`;
+        // console.log('converted', converted)
+        return `${targetUnitInteger} ${fraction[0]} ${targetUnitName} or ${targetUnitInteger} ${targetUnitName} plus ${converted}`;
       } else {
-        return `${targetUnitInteger} ${fraction[0]} ${endUnitName}`;
+        return `${targetUnitInteger} ${fraction[0]} ${targetUnitName}`;
       }
     }
   }
 };
-
+//convertRemainder is called when the closest fraction is not commonly used for baking
+//returns a human readable alternative conversion string
 const convertRemainder = (
   remainingmLs,
   targetUnitType,
-  mLsTolerance,
-  startingUnitName
+  normalizedTolerance,
+  startingUnitName,
+  targetUnitInDecimal
 ) => {
-  let possibleUnits = findPossibleUnits(remainingmLs, targetUnitType);
+  //Gets list of units of same type as target that are smaller than the remaining normalized amount
+  let possibleUnits = findPossibleUnits(
+    remainingmLs + normalizedTolerance,
+    targetUnitType
+  );
+  // console.log('CONVERT REMAINDER')
   let mLs = remainingmLs;
   let result = [];
-
+  //iterate over unit list, starting with the largest unit
   for (let i = 0; i < possibleUnits.length; i++) {
     let unitmLs = possibleUnits[i][1];
-    if (mLs >= unitmLs) {
-      let count = 0;
-      while (mLs + mLsTolerance >= unitmLs) {
-        count += 1;
-        mLs -= unitmLs;
-      }
-
-      let closestCmnFracs = findClosestCommonFractions(mLs / unitmLs);
+    //if the remaining amount(plus the tolerance) is greater than the current unit size
+    if (mLs + normalizedTolerance >= unitmLs) {
+      //calculate how many of that unit (+tolerance)
+      let count = Math.floor((mLs + normalizedTolerance) / unitmLs);
+      mLs = mLs - count * unitmLs;
+      // Ensures that any US units of fluid ounce or smaller does not use thirds as fractions
+      let excludeThirds =
+        targetUnitType === "US" && unitmLs <= 29.5735 ? true : false;
+      // console.log('excludeThirds', excludeThirds)
+      let closestCmnFracs = findClosestCommonFractions(
+        mLs / unitmLs,
+        excludeThirds
+      );
+      // console.log('closestCmnFracs', closestCmnFracs)
       if (closestCmnFracs) {
         let higher = closestCmnFracs[1][1] * unitmLs;
-        if (higher - mLs <= mLsTolerance) {
+        if (higher - mLs <= normalizedTolerance) {
           count = `${count} ${closestCmnFracs[1][0]}`;
           mLs = mLs - higher;
         } else {
@@ -91,15 +142,27 @@ const convertRemainder = (
           mLs = mLs - closestCmnFracs[0][1];
         }
       }
+
       result.push([count, possibleUnits[i][0]]);
     }
     //ends loop if total amount is within +/- 2.5% of total
-    if (Math.abs(mLs) <= mLsTolerance) {
+    if (Math.abs(mLs) <= normalizedTolerance) {
       break;
     }
   }
+  console.log('targetUnitInDecimal', targetUnitInDecimal)
+  console.log('result', result)
+  console.log('result.length', result.length)
+  console.log('result[0][1]===startingUnitName', result[0][1]===startingUnitName)
+  console.log('targetUnitInDecimal<1', targetUnitInDecimal<1)
+  if (
+    result.length === 1 &&
+    result[0][1] === startingUnitName &&
+    targetUnitInDecimal <= 1
+  ) {
+    // console.log('IF:')
+    // console.log('result.length===1', result.length===1)
 
-  if (result.length === 1 && result[0][1] === startingUnitName) {
     return null;
   }
   let resultingString = "";
@@ -108,4 +171,31 @@ const convertRemainder = (
     resultingString = resultingString.concat(` ${result[i][0]} ${unitString},`);
   }
   return resultingString.slice(0, -1);
+};
+
+export const convertComplex = async (inputs, isAmount) => {
+  if (inputs.ingredientName.length === 0) {
+    return {
+      errorMessage:
+        "Can't complete complex conversions (weight <=> volume) without an ingredient name",
+    };
+  }
+  const complexIngr = {
+    ingredientName: inputs.ingredientName,
+    currentAmount: isAmount,
+    currentUnit: inputs.unitFrom,
+    altUnit: unitDict[inputs.unitFrom].type,
+    altAmount: unitDict[inputs.unitFrom].conversion * isAmount,
+    targetUnit: inputs.unitTo,
+    targetConv: unitDict[inputs.unitTo].conversion,
+  };
+  const newIngredient = await postConversion(complexIngr);
+  const formattedIngr = {
+    amount: inputs.amount,
+    unitFrom: inputs.unitFrom,
+    unitTo: inputs.unitTo,
+    ingredientName: inputs.ingredientName,
+    convertedString: `${newIngredient.targetAmount} ${newIngredient.targetUnit} ${inputs.ingredientName}`,
+  };
+  return formattedIngr;
 };

@@ -1,12 +1,15 @@
 import { unitDict, allFractions } from "./units";
 //returns parsed amount in decimal or false if amount is unable to be parsed
 export const validateAmount = (amount) => {
-  if ( typeof amount === "number") {
-    return amount
+  //probably will never catch anything with this one
+  if (typeof amount === "number") {
+    return amount;
   }
-
+//split amount on white space, then remove excess white space
   let amountArray = amount.split(" ").map((item) => item.trim());
-  if (!amount.includes(".") && !amount.includes("/")) {
+  amountArray=amountArray.filter(item=> item!="")
+  
+  if (!amount.includes(".") && !amount.includes("/") && !amount.includes(",")) {
     const parsedWholeNum = parseInt(amountArray.join(""));
     // console.log("parsedWholeNum", parsedWholeNum);
     if (isNaN(parsedWholeNum)) {
@@ -15,13 +18,23 @@ export const validateAmount = (amount) => {
       return parsedWholeNum;
     }
   }
+  console.log('amountArray', amountArray)
   if (amount.includes("/")) {
     // parses whole number
-    const parsed = parseInt(amountArray[0], 10);
+    let parsed = 0
+    let fraction=amountArray[0]
+    if (amountArray.length>1) {
+      parsed = parseInt(amountArray[0], 10);
+      fraction = amountArray[-1]
+    }
+    console.log('parsed', parsed)
     if (isNaN(parsed)) {
       return false;
     } else {
-      const fraction = amountArray[1];
+      // console.log('amountArray', amountArray)
+      // const fraction = amountArray[-1];
+      
+      
       let slashIndex = fraction.indexOf("/");
       const dividend = parseInt(fraction.slice(0, slashIndex), 10);
       const divisor = parseInt(fraction.slice(slashIndex + 1), 10);
@@ -33,7 +46,7 @@ export const validateAmount = (amount) => {
       }
     }
   }
-  if (amount.includes(".") && amountArray.length === 1) {
+  if ((amount.includes(".")||amount.includes(",")) && amountArray.length === 1) {
     const parsedFl = parseFloat(amount, 10);
     if (isNaN(parsedFl)) {
       return false;
@@ -46,8 +59,6 @@ export const validateAmount = (amount) => {
 
 //checks if the conversion is weight=>weight or vol=>vol
 export const checkIfSimple = (unitFrom, unitTo) => {
-  // console.log("in simpleConvert unitFrom", unitDict[unitFrom]);
-  // console.log("in simpleConvert unitTo", unitDict[unitTo].type);
   if (unitDict[unitFrom].type === unitDict[unitTo].type) {
     return true;
   }
@@ -55,18 +66,17 @@ export const checkIfSimple = (unitFrom, unitTo) => {
 };
 
 export const checkPluralUnit = (amount, endUnitName) => {
-
   let returnString = endUnitName;
-  if (amount <= 1) {
+  if (0<amount && amount <=1) {
     returnString = unitDict[endUnitName].singular;
   }
   return returnString;
 };
 
-//returns tolerance of 2.5% in mLs
-export const calcTolerancemLs = (amountInmLs) => {
-  // const upperLimitmLs = amountInmLs * 1.025 - amountInmLs;
-  const upperLimitmLs = amountInmLs * 1.05 - amountInmLs;
+//returns tolerance in mLs of 2.5%
+export const calcNormalizedTolerance = (normalizedAmount) => {
+  // const upperLimitmLs = normalizedAmount * 1.025 - normalizedAmount;
+  const upperLimitmLs = normalizedAmount * 1.025 - normalizedAmount;
 
   return upperLimitmLs;
 };
@@ -78,24 +88,41 @@ export const findClosestFraction = (remainder) => {
   return closestFraction;
 };
 
-export const getCommonFractions = () => {
+//returns "common fractions," including thirds when unit is tablespoon or smaller
+export const getCommonFractions = (excludeThirds) => {
+  if (excludeThirds) {
+    let fractions = allFractions.filter(
+      (fraction) => fraction[2] === true && fraction[0].split("/")[1] % 3 != 0
+    );
+    return fractions;
+  }
+
   return allFractions.filter((fraction) => fraction[2] === true);
 };
 
-//removes first item in array, so commonFractionsindex] is 1 fraction lower than "fraction"
-export const findClosestCommonFractions = (remainder) => {
-  const commonFractions = getCommonFractions();
-  if (remainder < commonFractions[0][1]) {
+//removes first item in array, so commonFractions[Index] is 1 fraction lower than "fraction"
+export const findClosestCommonFractions = (decimal, excludeThirds=false) => {
+  // console.log('findClosestCommonFraction')
+  // console.log('decimal', decimal)
+  const commonFractions = getCommonFractions(excludeThirds);
+  // console.log('commonFractions[0][1]', commonFractions[0][1])
+  if (decimal < commonFractions[0][1]) {
+    // console.log('decimal < commonFractions[0[[1]', decimal < commonFractions[0][1])
     return null;
   }
   let fractionsArray = commonFractions.splice(0, 1);
-  return fractionsArray.reduce((result, fraction, index) => {
-    if (commonFractions[index] <= remainder && fraction >= remainder) {
+  // console.log('fractionsArray', fractionsArray)
+  let resultArray= fractionsArray.reduce((result, fraction, index) => {
+    if (commonFractions[index] <= decimal && fraction >= decimal) {
       result.push(commonFractions[index], fraction);
-      
     }
-    return result
+    return result;
   }, []);
+  if (resultArray.length>0) {
+    return resultArray
+  }else {
+    return null
+  }
 };
 
 //returns array of units of same type that are smaller than remainingmLs, starting from largest unit
@@ -108,3 +135,4 @@ export const findPossibleUnits = (remainingmLs, targetUnitType) => {
   }
   return possible.reverse();
 };
+

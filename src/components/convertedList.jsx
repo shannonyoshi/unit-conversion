@@ -1,10 +1,10 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export default function ConvertedList(props) {
-  const ingredients = props.ingredients;
-  const setIngredients = props.setIngredients;
-  const setInputs = props.setInputs;
+export default function ConvertedList({ingredients, setIngredients, setInputs}) {
+  // const ingredients = props.ingredients;
+  // const setIngredients = props.setIngredients;
+  // const setInputs = props.setInputs;
   // console.log(
   //   "Ingredients in convertedList",
   //   ingredients,

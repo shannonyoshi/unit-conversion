@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { validateAmount, checkIfSimple } from "../util/utilFunctions";
-import { convertSimple } from "../util/conversionFunctions";
+import { convertComplex, convertSimple } from "../util/conversionFunctions";
 import { unitDict } from "../util/units";
 import { postConversion } from "../util/crudFuncs";
 import ShowErrors from "./errors";
@@ -29,7 +29,7 @@ export default function ConversionForm({
 
   // TODO: finish handleSubmit for complex conversions once backend is functional. BE should check if item is in DB forInStatement, if not perform additional API call
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors(initialErrorState);
     //assumes if name is filled out (it's hidden from view), the form was completed by a bot. It is only "visible" to people using screen readers
@@ -55,12 +55,13 @@ export default function ConversionForm({
         inputs.unitFrom,
         inputs.unitTo
       );
+      console.log("convertedAmount", convertedAmount);
       const converted = `${convertedAmount} ${
         inputs.ingredientName ? inputs.ingredientName : ""
       }`;
       if (converted) {
         let convertedFullInfo = {
-          amount: isAmount,
+          amount: inputs.amount,
           unitFrom: inputs.unitFrom,
           unitTo: inputs.unitTo,
           ingredientName: inputs.ingredientName,
@@ -76,24 +77,20 @@ export default function ConversionForm({
       }
     } else {
       //if not a simple conversion
-      if (inputs.ingredientName.length > 0) {
-        let complexIngr = {
-          ingredientName: inputs.ingredientName,
-          currentAmount: isAmount,
-          currentUnit: inputs.unitFrom,
-          altUnit: unitDict[inputs.unitFrom].type,
-          altAmount: unitDict[inputs.unitFrom].conversion*isAmount,
-          targetUnit: inputs.unitTo,
-        };
-        console.log("complexIngr", complexIngr);
-        postConversion(complexIngr);
-      } else {
-        setErrors({
-          ...errors,
-          "Ingredient Name":
-            "Can't complete this type of conversion without specifying an ingredient name",
-        });
+      const convertedIngr = await convertComplex(inputs, isAmount);
+      console.log("convertedIngr", convertedIngr);
+      if (convertedIngr.errorType) {
+        setErrors({ ...errors, "Ingredient Name": convertedIngr.message });
       }
+      setConvertedIngredients([...convertedIngredients, convertedIngr]);
+      setInputs(initialInputState);
+      // } else {
+      //   setErrors({
+      //     ...errors,
+      //     "Ingredient Name":
+      //       "Can't complete this type of conversion without specifying an ingredient name",
+      //   });
+      // }
     }
   };
   const handleInputChange = (e) => {

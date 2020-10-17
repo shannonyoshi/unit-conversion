@@ -34,6 +34,7 @@ export const postConversion = async (ingredient) => {
   if (!response.ok) {
       console.log('response', response)
   }
-//   const data = await response.json();
-//   console.log('returned conversion data', data)
+  const data = await response.json();
+  console.log('returned conversion data', data)
+  return data
 };
