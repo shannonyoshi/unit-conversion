@@ -83,10 +83,9 @@ export const checkPluralUnit = (amount, endUnitName) => {
 
 //returns tolerance in mLs of 2.5%
 export const calcNormalizedTolerance = (normalizedAmount) => {
-  // const upperLimitmLs = normalizedAmount * 1.025 - normalizedAmount;
-  const upperLimitmLs = normalizedAmount * 1.025 - normalizedAmount;
+  const twoPointFivePercent = normalizedAmount * 1.025 - normalizedAmount;
 
-  return upperLimitmLs;
+  return twoPointFivePercent;
 };
 
 export const findClosestFraction = (remainder) => {

@@ -23,7 +23,7 @@ export const convertSimple = (amount, startingUnitName, targetUnitName) => {
   );
   return prettyConvertedString;
 };
-
+//receives the converted amount in decimal, and returns a human readable string with the converted amount and target unit
 const prettifyRemainder = (
   targetUnitInDecimal,
   startingUnitName,
@@ -31,36 +31,36 @@ const prettifyRemainder = (
   targetUnit,
   normalizedAmount
 ) => {
-  // console.log('prettifyRemainder')
   const targetUnitInteger = Math.floor(targetUnitInDecimal);
   const decimalRemainder = targetUnitInDecimal - targetUnitInteger;
 
-  //returns whole numbers + unit
+  //returns whole numbers (within buffer of |.015|) + unit
   if (decimalRemainder <= 0.015 || decimalRemainder >= 0.985) {
     let unitString = checkPluralUnit(targetUnitInteger, targetUnitName);
     return `${Math.round(targetUnitInDecimal)} ${unitString}`;
   }
-  //returns amount with 2 decimal places for unit types that commonly use decimal (mostly metric)
+  //returns rounded amount to 2 decimal places for unit types that commonly use decimal (mostly metric)
   if (targetUnit.output === "decimal") {
     let amountTo2Decimal = Math.floor(targetUnitInDecimal * 100) / 100;
-    let unitString = checkPluralUnit(amountTo2Decimal);
+    let unitString = checkPluralUnit(amountTo2Decimal, targetUnitName);
     return `${amountTo2Decimal.toString(10)} ${unitString}`;
   }
   //ex. fraction = ["1/10", 0.1, false] means [fraction string, fraction in decimal, boolean if regular baking fraction]
   const fraction = findClosestFraction(decimalRemainder);
 
   const divisor = fraction[0].split("/")[1];
-  //excludeFrac ensures units of fluid ounce or smaller and that are US units do not get split into thirds
+
+  //excludeFrac returns true if fraction should not be used if unit us "US", unit is fluid ounce or smaller
   let excludeFrac =
-    targetUnit.unit === "US" &&
+    (targetUnit.unit === "US" &&
     targetUnit.conversion <= 29.5735 &&
-    divisor % 3 !== 0
+    divisor % 3 === 0)
       ? true
       : false;
-
+      
   //returns fractions that are common to baking if not a US unit too small for thirds, where this fraction is a third
   if (fraction[2] === true && excludeFrac === false) {
-    // console.log('IF fraction[2] && excludeFrac')
+    console.log('finish conversion')
     if (targetUnitInteger === 0) {
       let unitString = checkPluralUnit(fraction[1], targetUnitName);
       return `${fraction[0]} ${unitString}`;
@@ -68,7 +68,8 @@ const prettifyRemainder = (
       return `${targetUnitInteger} ${fraction[0]} ${targetUnitName}`;
     }
   } else {
-    //if fraction is not common
+    console.log('continue conversion with convertRemainder')
+    //fraction found by findClosestFraction is not human readable
     let remainingmLs =
       normalizedAmount - targetUnitInteger * targetUnit.conversion;
     const normalizedTolerance = calcNormalizedTolerance(normalizedAmount);

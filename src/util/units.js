@@ -122,7 +122,7 @@ export const unitDict = {
     conversion: 1,
     output: "decimal",
     unit: "metric",
-    singular: "mililiter",
+    singular: "milliliter",
   },
   liters: {
     type: "mL",
@@ -134,14 +134,14 @@ export const unitDict = {
   ounces: {
     type: "g",
     conversion: 28.3495,
-    output: "decimal",
-    unit: "metric",
+    output: "fraction",
+    unit: "US",
     singular: "ounce",
   },
   pounds: {
     type: "g",
     conversion: 453.592,
-    output: "decimal",
+    output: "fraction",
     unit: "metric",
     singular: "pound",
   },
