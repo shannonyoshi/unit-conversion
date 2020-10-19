@@ -27,8 +27,6 @@ export default function ConversionForm({
   //else, validate ingredientName, do post request
   //perform API call to BE(not yet set up)
 
-  // TODO: finish handleSubmit for complex conversions once backend is functional. BE should check if item is in DB forInStatement, if not perform additional API call
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors(initialErrorState);

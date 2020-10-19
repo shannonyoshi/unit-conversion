@@ -2,56 +2,64 @@ import { unitDict, allFractions } from "./units";
 //returns parsed amount in decimal or false if amount is unable to be parsed
 export const validateAmount = (amount) => {
   //probably will never catch anything with this one
+  let result = false;
   if (typeof amount === "number") {
     return amount;
   }
-//split amount on white space, then remove excess white space
+  //split amount on white space, then remove excess white space
   let amountArray = amount.split(" ").map((item) => item.trim());
-  amountArray=amountArray.filter(item=> item!="")
-  
+  amountArray = amountArray.filter((item) => item !== "");
+  //if whole number
   if (!amount.includes(".") && !amount.includes("/") && !amount.includes(",")) {
     const parsedWholeNum = parseInt(amountArray.join(""));
     // console.log("parsedWholeNum", parsedWholeNum);
-    if (isNaN(parsedWholeNum)) {
-      return false;
-    } else {
-      return parsedWholeNum;
+    if (typeof parsedWholeNum == "number") {
+      result = parsedWholeNum;
     }
   }
-  console.log('amountArray', amountArray)
+  //if amount is/has fraction
   if (amount.includes("/")) {
-    // parses whole number
-    let parsed = 0
-    let fraction=amountArray[0]
-    if (amountArray.length>1) {
-      parsed = parseInt(amountArray[0], 10);
-      fraction = amountArray[-1]
-    }
-    console.log('parsed', parsed)
-    if (isNaN(parsed)) {
-      return false;
-    } else {
-      // console.log('amountArray', amountArray)
-      // const fraction = amountArray[-1];
-      
-      
-      let slashIndex = fraction.indexOf("/");
-      const dividend = parseInt(fraction.slice(0, slashIndex), 10);
-      const divisor = parseInt(fraction.slice(slashIndex + 1), 10);
-      if (isNaN(dividend) || isNaN(divisor)) {
-        return false;
-      } else {
-        const quotient = Math.floor((dividend / divisor) * 1000) / 1000;
-        return parsed + quotient;
-      }
+    result = validateFraction(amountArray);
+  }
+  if (
+    (amount.includes(".") || amount.includes(",")) &&
+    amountArray.length === 1
+  ) {
+    const parsedFl = parseFloat(amountArray[0], 10);
+    if (typeof parsedFl === "number") {
+      result = parsedFl;
     }
   }
-  if ((amount.includes(".")||amount.includes(",")) && amountArray.length === 1) {
-    const parsedFl = parseFloat(amount, 10);
-    if (isNaN(parsedFl)) {
-      return false;
-    } else {
-      return parsedFl;
+  console.log("result", result);
+  return result;
+};
+
+const validateFraction = (amountArray) => {
+  let fracIndex = [];
+  const fraction = amountArray.filter((string, index) => {
+    if (string.includes("/")) {
+      fracIndex.push(index);
+      return true;
+    }
+  });
+  //if one fraction was found
+  if (fracIndex.length === 1) {
+    fracIndex = fracIndex[0];
+    let parsed = 0;
+    // for numbers >1
+    if (fracIndex > 0) {
+      parsed = parseInt(amountArray.slice(0, fracIndex).join(""), 10);
+    }
+    const fracArray = fraction[0].split("/");
+    const dividend = parseInt(fracArray[0], 10);
+    const divisor = parseInt(fracArray[1], 10);
+    if (
+      typeof dividend == "number" &&
+      typeof divisor == "number" &&
+      typeof parsed == "number"
+    ) {
+      const quotient = Math.floor((dividend / divisor) * 1000) / 1000;
+      return parsed + quotient;
     }
   }
   return false;
@@ -67,7 +75,7 @@ export const checkIfSimple = (unitFrom, unitTo) => {
 
 export const checkPluralUnit = (amount, endUnitName) => {
   let returnString = endUnitName;
-  if (0<amount && amount <=1) {
+  if (0 < amount && amount <= 1) {
     returnString = unitDict[endUnitName].singular;
   }
   return returnString;
@@ -92,7 +100,7 @@ export const findClosestFraction = (remainder) => {
 export const getCommonFractions = (excludeThirds) => {
   if (excludeThirds) {
     let fractions = allFractions.filter(
-      (fraction) => fraction[2] === true && fraction[0].split("/")[1] % 3 != 0
+      (fraction) => fraction[2] === true && fraction[0].split("/")[1] % 3 !== 0
     );
     return fractions;
   }
@@ -101,7 +109,7 @@ export const getCommonFractions = (excludeThirds) => {
 };
 
 //removes first item in array, so commonFractions[Index] is 1 fraction lower than "fraction"
-export const findClosestCommonFractions = (decimal, excludeThirds=false) => {
+export const findClosestCommonFractions = (decimal, excludeThirds = false) => {
   // console.log('findClosestCommonFraction')
   // console.log('decimal', decimal)
   const commonFractions = getCommonFractions(excludeThirds);
@@ -112,16 +120,16 @@ export const findClosestCommonFractions = (decimal, excludeThirds=false) => {
   }
   let fractionsArray = commonFractions.splice(0, 1);
   // console.log('fractionsArray', fractionsArray)
-  let resultArray= fractionsArray.reduce((result, fraction, index) => {
+  let resultArray = fractionsArray.reduce((result, fraction, index) => {
     if (commonFractions[index] <= decimal && fraction >= decimal) {
       result.push(commonFractions[index], fraction);
     }
     return result;
   }, []);
-  if (resultArray.length>0) {
-    return resultArray
-  }else {
-    return null
+  if (resultArray.length > 0) {
+    return resultArray;
+  } else {
+    return null;
   }
 };
 
@@ -135,4 +143,3 @@ export const findPossibleUnits = (remainingmLs, targetUnitType) => {
   }
   return possible.reverse();
 };
-
