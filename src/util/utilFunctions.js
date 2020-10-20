@@ -67,7 +67,7 @@ const validateFraction = (amountArray) => {
 
 //checks if the conversion is weight=>weight or vol=>vol
 export const checkIfSimple = (unitFrom, unitTo) => {
-  if (unitDict[unitFrom].type === unitDict[unitTo].type) {
+  if (unitDict[unitFrom].normUnit === unitDict[unitTo].normUnit) {
     return true;
   }
   return false;
@@ -88,55 +88,52 @@ export const calcNormalizedTolerance = (normalizedAmount) => {
   return twoPointFivePercent;
 };
 
-export const findClosestFraction = (remainder) => {
-  let closestFraction = allFractions.reduce((prev, curr) =>
-    Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder) ? curr : prev
-  );
-  return closestFraction;
-};
-
-//returns "common fractions," including thirds when unit is tablespoon or smaller
-export const getCommonFractions = (excludeThirds) => {
-  if (excludeThirds) {
-    let fractions = allFractions.filter(
+//filters fractions, remainder should be in decimal
+export const filterFractions = (type, remainder=null)=>{
+switch (type){
+  case "all":
+    return allFractions
+  case "common":
+    return allFractions.filter((fraction) => fraction[2] === true);
+  case "commonNoThirds":
+    return allFractions.filter(
       (fraction) => fraction[2] === true && fraction[0].split("/")[1] % 3 !== 0
     );
-    return fractions;
-  }
-
-  return allFractions.filter((fraction) => fraction[2] === true);
-};
-
-//removes first item in array, so commonFractions[Index] is 1 fraction lower than "fraction"
-export const findClosestCommonFractions = (decimal, excludeThirds = false) => {
-  // console.log('findClosestCommonFraction')
-  // console.log('decimal', decimal)
-  const commonFractions = getCommonFractions(excludeThirds);
-  // console.log('commonFractions[0][1]', commonFractions[0][1])
-  if (decimal < commonFractions[0][1]) {
-    // console.log('decimal < commonFractions[0[[1]', decimal < commonFractions[0][1])
-    return null;
-  }
-  let fractionsArray = commonFractions.splice(0, 1);
-  // console.log('fractionsArray', fractionsArray)
-  let resultArray = fractionsArray.reduce((result, fraction, index) => {
-    if (commonFractions[index] <= decimal && fraction >= decimal) {
-      result.push(commonFractions[index], fraction);
+  case "allClosest":
+    return allFractions.reduce((prev, curr) =>
+    Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder) ? curr : prev
+  );
+  case "commonClosest":
+      return allFractions.reduce((prev, curr) =>
+      (Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder)&& curr[2]===true) ? curr : prev
+    );
+  case "commonClosest2":
+    // TODO:finish this filter
+    const common = filterFractions("common")
+    //adds additional fraction to the end ["", 1.00, "true"]
+    common.push([common[0][0], common[0][1]+1, common[0][2]])
+    let i=0
+    let next = common[1]
+    let curr = common[i]
+    while (i+1<common.length && next[1] < remainder) {
+      curr=common[i]
+      next=common[i+1]
+      i+=1
     }
-    return result;
-  }, []);
-  if (resultArray.length > 0) {
-    return resultArray;
-  } else {
-    return null;
-  }
-};
+    return [curr,next]
 
-//returns array of units of same type that are smaller than remainingmLs, starting from largest unit
-export const findPossibleUnits = (remainingmLs, targetUnitType) => {
+  default:
+      return null
+}
+
+}
+
+
+//returns array of units in [[name, conversion],[name, conversion]] format of same type that are smaller than remainingmLs, starting from largest unit
+export const findPossibleUnits = (remainingmLs, targetUnitType, targetNormUnit) => {
   let possible = [];
   for (let [key, value] of Object.entries(unitDict)) {
-    if (value.unit === targetUnitType && value.conversion <= remainingmLs) {
+    if (value.type === targetUnitType && value.conversion <= remainingmLs && value.normUnit===targetNormUnit) {
       possible.push([key, value.conversion]);
     }
   }
