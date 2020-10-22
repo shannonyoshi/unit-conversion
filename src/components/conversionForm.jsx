@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { validateAmount, checkIfSimple } from "../util/utilFunctions";
 import { convertComplex, convertSimple } from "../util/conversionFunctions";
 import { unitDict } from "../util/units";
-import { postConversion } from "../util/crudFuncs";
+
 import ShowErrors from "./errors";
 
 const unitKeys = Object.keys(unitDict);
@@ -47,49 +47,54 @@ export default function ConversionForm({
     }
 
     const isSimple = checkIfSimple(inputs.unitFrom, inputs.unitTo);
+    let convertedIngr = {};
     if (isSimple) {
-      const convertedAmount = convertSimple(
-        isAmount,
-        inputs.unitFrom,
-        inputs.unitTo
-      );
-      console.log("convertedAmount", convertedAmount);
-      const converted = `${convertedAmount} ${
-        inputs.ingredientName ? inputs.ingredientName : ""
-      }`;
-      if (converted) {
-        let convertedFullInfo = {
-          amount: inputs.amount,
-          unitFrom: inputs.unitFrom,
-          unitTo: inputs.unitTo,
-          ingredientName: inputs.ingredientName,
-          convertedString: converted,
-        };
-        setConvertedIngredients([...convertedIngredients, convertedFullInfo]);
-        setInputs(initialInputState);
-      } else {
-        setErrors({
-          ...errors,
-          Conversion: "Unable to convert given ingredient",
-        });
-      }
+      convertedIngr = convertSimple(isAmount, inputs);
     } else {
-      //if not a simple conversion
-      const convertedIngr = await convertComplex(inputs, isAmount);
-      console.log("convertedIngr", convertedIngr);
+      convertedIngr = await convertComplex(inputs, isAmount);
       if (convertedIngr.errorType) {
         setErrors({ ...errors, "Ingredient Name": convertedIngr.message });
       }
-      setConvertedIngredients([...convertedIngredients, convertedIngr]);
-      setInputs(initialInputState);
-      // } else {
-      //   setErrors({
-      //     ...errors,
-      //     "Ingredient Name":
-      //       "Can't complete this type of conversion without specifying an ingredient name",
-      //   });
-      // }
     }
+    setConvertedIngredients([...convertedIngredients, convertedIngr]);
+    setInputs(initialInputState);
+
+    // console.log("convertedAmount", convertedAmount);
+    // const converted = `${convertedAmount} ${
+    //   inputs.ingredientName ? inputs.ingredientName : ""
+    // }`;
+    // if (converted) {
+    //   let convertedFullInfo = {
+    //     amount: inputs.amount,
+    //     unitFrom: inputs.unitFrom,
+    //     unitTo: inputs.unitTo,
+    //     ingredientName: inputs.ingredientName,
+    //     convertedString: converted,
+    //   };
+    //   setConvertedIngredients([...convertedIngredients, convertedFullInfo]);
+    //   setInputs(initialInputState);
+    // } else {
+    //   setErrors({
+    //     ...errors,
+    //     Conversion: "Unable to convert given ingredient",
+    //   });
+    // }
+    // } else {
+    //   //if not a simple conversion
+    //   const convertedIngr = await convertComplex(inputs, isAmount);
+    //   console.log("convertedIngr", convertedIngr);
+    //   if (convertedIngr.errorType) {
+    //     setErrors({ ...errors, "Ingredient Name": convertedIngr.message });
+    //   }
+    //   setConvertedIngredients([...convertedIngredients, convertedIngr]);
+    //   setInputs(initialInputState);
+    // } else {
+    //   setErrors({
+    //     ...errors,
+    //     "Ingredient Name":
+    //       "Can't complete this type of conversion without specifying an ingredient name",
+    //   });
+    // }
   };
   const handleInputChange = (e) => {
     e.persist();

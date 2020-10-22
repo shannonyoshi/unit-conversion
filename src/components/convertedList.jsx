@@ -2,25 +2,12 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function ConvertedList({ingredients, setIngredients, setInputs}) {
-  // const ingredients = props.ingredients;
-  // const setIngredients = props.setIngredients;
-  // const setInputs = props.setInputs;
-  // console.log(
-  //   "Ingredients in convertedList",
-  //   ingredients,
-  //   "ingredients.length",
-  //   ingredients.length
-  // );
+console.log('ingredients', ingredients)
 
   const deleteIngredient = (index) => {
     let newIngredientsArray = ingredients;
     newIngredientsArray.splice(index, 1);
     setIngredients([...newIngredientsArray]);
-  };
-
-  const removeIngredient = (e, index) => {
-    // e.preventDefault();
-    deleteIngredient(index);
   };
 
   //adds ingredient to form, removes from both lists
@@ -51,7 +38,7 @@ export default function ConvertedList({ingredients, setIngredients, setInputs}) 
                 <FontAwesomeIcon
                   icon="trash-alt"
                   className="delete-item icon-btn"
-                  onClick={(e) => removeIngredient(e, index)}
+                  onClick={(e) => deleteIngredient(e, index)}
                 />
               </div>
             ))}
@@ -74,12 +61,12 @@ export default function ConvertedList({ingredients, setIngredients, setInputs}) 
                   <FontAwesomeIcon
                     icon="edit"
                     className="edit-item icon-btn"
-                    onClick={(e) => editIngredient(e, index)}
+                    onClick={(e) => editIngredient(index)}
                   />
                   <FontAwesomeIcon
                     icon="trash-alt"
                     className="delete-item icon-btn"
-                    onClick={(e) => removeIngredient(e, index)}
+                    onClick={(e) => deleteIngredient(index)}
                   />
                 </div>
               </div>
