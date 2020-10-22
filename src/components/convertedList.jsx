@@ -2,19 +2,17 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function ConvertedList({ingredients, setIngredients, setInputs}) {
-console.log('ingredients', ingredients)
-
+  // removes ingredient from list
   const deleteIngredient = (index) => {
     let newIngredientsArray = ingredients;
     newIngredientsArray.splice(index, 1);
     setIngredients([...newIngredientsArray]);
   };
 
-  //adds ingredient to form, removes from both lists
+  //adds ingredient to form, removes from lists
   const editIngredient = (e, index) => {
     e.preventDefault();
     let toEdit = ingredients[index];
-    console.log("CONVERTED LIST EDIT toEdit", toEdit);
     deleteIngredient(index);
     setInputs({
       name: "",
@@ -24,7 +22,6 @@ console.log('ingredients', ingredients)
       ingredientName: toEdit.ingredientName,
     });
   };
-  //   if (ingredients.length > 0) {
   return (
     <>
       <div className="card-small">
@@ -53,7 +50,6 @@ console.log('ingredients', ingredients)
           <ul className="list">
             {ingredients.map((ingredient, index) => (
               <div className="list-item" key={`O${index}`}>
-                {console.log("ingredient", ingredient)}
                 <li className="original">
                   {`${ingredient.amount} ${ingredient.unitFrom} ${ingredient.ingredientName}`}
                 </li>

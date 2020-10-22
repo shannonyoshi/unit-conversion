@@ -14,7 +14,8 @@ export const postSuggestion = async (suggestionString) => {
     console.log(response);
   }
   const data = await response.json();
-  console.log("POST RESPONSE DATA: ", data);
+  return data
+  // console.log("POST RESPONSE DATA: ", data);
 };
 
 // example ingredient: ingredientName, currentAmount, currentUnit, altUnit, altAmount, targetUnit
@@ -29,12 +30,12 @@ export const postConversion = async (ingredient) => {
     },
     body: JSON.stringify(ingredient),
   };
-  console.log('request', request)
+  // console.log('request', request)
   const response = await fetch(`${baseURL}convert`, request)
   if (!response.ok) {
       console.log('response', response)
   }
   const data = await response.json();
-  console.log('returned conversion data', data)
+  // console.log('returned conversion data', data)
   return data
 };
