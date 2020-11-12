@@ -6,26 +6,39 @@ import (
 	"fmt"
 )
 
-//AddSuggestion() for suggestion post requests
-func AddSuggestion(s SuggestionInput) (int, error) {
+//AddSuggestion for suggestion post requests
+func AddSuggestion(s SuggestionInput) (Suggestion, error) {
+	var fullSug Suggestion
 	if len(s.Message) == 0 {
-		return 0, errors.New("400. Bad request. Message field can't be empty")
+		return fullSug, errors.New("400. Bad request. Message field can't be empty")
 	}
-	row := conn.QueryRow(context.Background(), "INSERT INTO suggestions(name, email, message, is_error) VALUES ($1, $2, $3, $4) RETURNING id", s.Name, s.Email, s.Message, s.IsError)
+	err := conn.QueryRow(context.Background(), "INSERT INTO suggestions(name, email, message, is_error) VALUES ($1, $2, $3, $4) RETURNING *", s.Name, s.Email, s.Message, s.IsError).Scan(&fullSug.ID, &fullSug.Name, &fullSug.Email, &fullSug.Message, &fullSug.IsError, &fullSug.CreatedAt, &fullSug.ViewedAt)
 
-	var id int
-	err := row.Scan(&id)
+	// err := row
 	if err != nil {
-		return 0, errors.New("500. Internal Server Error" + err.Error())
+		return fullSug, errors.New("500. Internal Server Error " + err.Error())
 	}
-	return id, nil
+	return fullSug, nil
 }
 
-//Below functions are not for use with regular API, just practice/to view suggestions eventually
+// UpdateSuggestion to update already added suggestions by ID
+func UpdateSuggestion(s Suggestion) (Suggestion, error) {
+	var updated Suggestion
+	if len(s.Message) == 0 {
+		return updated, errors.New("400. Bad request. Message field can't be empty")
+	}
+	err := conn.QueryRow(context.Background(), "UPDATE suggestions SET name=$1, email=$2, message=$3, is_error=$4 WHERE id=$5 RETURNING *", s.Name, s.Email, s.Message, s.IsError, s.ID).Scan(&updated.ID, &updated.Name, &updated.Email, &updated.Message, &updated.IsError, &updated.CreatedAt, &updated.ViewedAt)
+	if err != nil {
+		return updated, errors.New(err.Error())
+	}
+	return updated, nil
+}
+
+//AllSuggestions returns all suggestions on table
 func AllSuggestions() ([]Suggestion, error) {
 	rows, err := conn.Query(context.Background(), "select id, name, email, message, is_error, created_at, viewed_at from suggestions")
 	if err != nil {
-		return nil, err
+		return nil, errors.New("500. Internal Server Error" + err.Error())
 	}
 	defer rows.Close()
 	var records []Suggestion
@@ -41,7 +54,7 @@ func AllSuggestions() ([]Suggestion, error) {
 	return records, nil
 }
 
-//ConfirmViewed() to mark items after I see them in suggestions
+//ConfirmViewed to mark items after I see them in suggestions
 func ConfirmViewed(id int) error {
 	_, err := conn.Exec(context.Background(), "UPDATE suggestions SET viewed_at = CURRENT_DATE WHERE id = $1", id)
 	return err

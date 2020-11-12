@@ -13,28 +13,50 @@ import (
 )
 
 func suggestionPage(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
+	if r.Method != "POST" && r.Method != "PUT" {
 		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
 		return
 	}
 	decoder := json.NewDecoder(r.Body)
+	switch r.Method {
+	case "POST":
+		// if r.Method == "POST" {
+		var suggestion models.SuggestionInput
+		err := decoder.Decode(&suggestion)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Printf("suggestion: %+v\n", suggestion)
 
-	var suggestion models.SuggestionInput
-	err := decoder.Decode(&suggestion)
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Printf("suggestion: %+v\n", suggestion)
+		result, err := models.AddSuggestion(suggestion)
+		if err != nil {
+			fmt.Println("err: ", err)
+		}
+		w.WriteHeader(http.StatusCreated)
+		err = json.NewEncoder(w).Encode(result)
+		if err != nil {
+			fmt.Println(err)
+		}
+	// }
+	case "PUT":
+		var suggestion models.Suggestion
+		err := decoder.Decode(&suggestion)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Printf("suggestion: %+v\n", suggestion)
+		result, err := models.UpdateSuggestion(suggestion)
+		if err != nil {
+			fmt.Println("err: ", err)
+		}
+		w.WriteHeader(http.StatusAccepted)
+		err = json.NewEncoder(w).Encode(result)
+		if err != nil {
+			fmt.Println(err)
+		}
 
-	_, err = models.AddSuggestion(suggestion)
-	if err != nil {
-		fmt.Println("err: ", err)
 	}
-	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(suggestion)
-	if err != nil {
-		fmt.Println(err)
-	}
+
 }
 
 func conversionPage(w http.ResponseWriter, r *http.Request) {
