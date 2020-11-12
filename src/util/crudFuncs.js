@@ -1,21 +1,24 @@
 const baseURL = "http://localhost:8080/api/";
 
-export const postSuggestion = async (suggestionString) => {
+export const postSuggestion = async (suggestion) => {
   const request = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: "none",
     },
-    body: JSON.stringify({ suggestion: suggestionString }),
+    body: JSON.stringify(suggestion),
   };
+   console.log('request', request)
   const response = await fetch(`${baseURL}suggest`, request);
+  console.log('response', response)
+  console.log('response.status', response.status)
   if (!response.ok) {
     console.log(response);
   }
   const data = await response.json();
-  return data
-  // console.log("POST RESPONSE DATA: ", data);
+  console.log("POST RESPONSE DATA: ", data);
+  // return data
 };
 
 // example ingredient: ingredientName, currentAmount, currentUnit, altUnit, altAmount, targetUnit
@@ -30,7 +33,7 @@ export const postConversion = async (ingredient) => {
     },
     body: JSON.stringify(ingredient),
   };
-  // console.log('request', request)
+  
   const response = await fetch(`${baseURL}convert`, request)
   if (!response.ok) {
       console.log('response', response)

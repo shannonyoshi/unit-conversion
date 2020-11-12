@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { postSuggestion } from "../util/crudFuncs";
 const initialSuggestionState = {
-  text: "",
+  name: "",
+  message: "",
   email: "",
-  isErrorReport: false,
+  isError: false,
 };
 
 export default function SuggestionForm() {
@@ -27,13 +28,25 @@ export default function SuggestionForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("handleSubmitSuggestionForm doesn't do anything right now.");
-    postSuggestion(suggestion.text);
+    postSuggestion(suggestion);
     setSuggestion(initialSuggestionState);
   };
 
   return (
     <div className="suggestion-form-wrapper">
       <form onSubmit={handleSubmit}>
+        <div className="suggestion-form-section">
+          <label className="suggestion-label">Name</label>
+          <input
+            className="email-input"
+            type="text"
+            id="name"
+            name="name"
+            value={suggestion.name}
+            onChange={handleInputChange}
+            placeholder="Jane Smith"
+          />
+        </div>
         <div className="suggestion-form-section">
           <label htmlFor="contact" className="suggestion-label">
             E-mail
@@ -54,9 +67,9 @@ export default function SuggestionForm() {
           </label>
           <textarea
             required
-            type="text"
+            type="message"
             id="suggestion"
-            name="text"
+            name="message"
             value={suggestion.text}
             onChange={handleInputChange}
             placeholder="Your suggestion here!"
@@ -75,10 +88,9 @@ export default function SuggestionForm() {
             Please check this box if you are reporting an error or issue
           </span>
         </div>
-          <button type="submit" className="submit-button">
-            Submit
-          </button>
-     
+        <button type="submit" className="submit-button">
+          Submit
+        </button>
       </form>
     </div>
   );

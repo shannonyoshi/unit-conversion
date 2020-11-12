@@ -24,14 +24,17 @@ func suggestionPage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	fmt.Printf("suggestion: %+v\n", suggestion)
 
-	// var id int
 	_, err = models.AddSuggestion(suggestion)
 	if err != nil {
 		fmt.Println("err: ", err)
 	}
-	// fmt.Printf(id, suggestion)
-	fmt.Fprintln(w, suggestion)
+	w.WriteHeader(http.StatusCreated)
+	err = json.NewEncoder(w).Encode(suggestion)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func conversionPage(w http.ResponseWriter, r *http.Request) {
@@ -84,21 +87,27 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-//viewAllSuggestions returns all suggestion records
-// func viewAllSuggestions(w http.ResponseWriter, r *http.Request) {
-// 	records, err := models.AllSuggestions()
-// 	if err != nil {
-// 		fmt.Fprintln(w, err)
-// 	}
-// 	fmt.Fprintln(w, records)
-// }
+// viewAllSuggestions() returns all suggestion records
+func viewAllSuggestions(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("viewAllSuggestions")
+	if r.Method != "GET" {
+		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
+		return
+	}
+	records, err := models.AllSuggestions()
+	if err != nil {
+		fmt.Fprintln(w, err)
+	}
+	fmt.Printf("Records: %+v\n", records)
+	fmt.Fprintln(w, records)
+}
 
 func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/api/suggest", suggestionPage)
+	mux.HandleFunc("/api/view-suggestions", viewAllSuggestions)
 	mux.HandleFunc("/api/convert", conversionPage)
-	// mux.HandleFunc("/api/suggest/all", viewAllSuggestions)
 
 	c := cors.AllowAll()
 
