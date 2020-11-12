@@ -13,14 +13,9 @@ import (
 )
 
 func suggestionPage(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" && r.Method != "PUT" {
-		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
-		return
-	}
 	decoder := json.NewDecoder(r.Body)
 	switch r.Method {
 	case "POST":
-		// if r.Method == "POST" {
 		var suggestion models.SuggestionInput
 		err := decoder.Decode(&suggestion)
 		if err != nil {
@@ -37,7 +32,6 @@ func suggestionPage(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-	// }
 	case "PUT":
 		var suggestion models.Suggestion
 		err := decoder.Decode(&suggestion)
@@ -54,6 +48,9 @@ func suggestionPage(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
+	default:
+		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
+		return
 
 	}
 
