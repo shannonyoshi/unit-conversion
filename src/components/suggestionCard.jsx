@@ -27,45 +27,45 @@ export default function SuggestionCard({
 
   console.log("suggestion in SUGGESTION CARD", suggestion);
   return (
-    <div className="suggestion-form-wrapper">
+    <div className="suggestion-wrapper">
       <p className="warning">{message}</p>
       {deleted ? <button onClick={reset}>Reset the form</button> : <></>}
-      <div className="suggestion-form-section">
+      <div className="suggestion-section">
         <p className="suggestion-label">Name</p>
         <p className="suggestion-text">{suggestion.Name}</p>
       </div>
-      <div className="suggestion-form-section">
+      <div className="suggestion-section">
         <p className="suggestion-label">E-mail</p>
         <p className="suggestion-text">{suggestion.Email}</p>
       </div>
-      <div className="suggestion-form-section">
+      <div className="suggestion-section">
         <p className="suggestion-label">Suggestion</p>
         <p className="suggestion-text">{suggestion.Message}</p>
       </div>
-      <div className="suggestion-form-section">
-        <p className="suggestion-IsError">
+      <div className="suggestion-section">
+        <p className={`suggestion-${suggestion.IsError?"isError":"isNotError"}`}>
           {suggestion.IsError
-            ? "This submission has been marked as an Error Report."
-            : "This submission has not been marked as an Error Report."}
+            ? "This submission IS an Error Report."
+            : "This submission is NOT an Error Report."}
         </p>
+      </div>
         {deleted ? (
           <></>
         ) : (
           <div>
             <FontAwesomeIcon
               icon="edit"
-              className="icon-btn"
+              className="icon-btn edit-icon"
               onClick={(e) => toggleEdit(e)}
             />
 
             <FontAwesomeIcon
               icon="trash-alt"
-              className="icon-btn"
+              className="icon-btn del-icon"
               onClick={(e) => removeSug(e)}
             />
           </div>
         )}
-      </div>
     </div>
   );
 }

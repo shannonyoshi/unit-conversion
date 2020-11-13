@@ -70,8 +70,11 @@
   @media(max-width: 600px)  {
     width:80%;
   }
-  
+}
 
+@mixin edit-button {
+  @include hover-raise;
+  color:color(dark)
 }
 
 @mixin form-label {
@@ -126,22 +129,26 @@
   min-height: 395px;
   min-width: 400px;
 
-
 }
 
 @mixin card-large {
   @include card-general;
-  width: 80vw;
+  min-height:500px;
+  width: 70vw;
   padding: $lg-padding;
   margin: $lg-padding;
-  @media(max-width: 1100px){
-    padding:$s-padding;
-    margin:$s-padding;
-  }
+  // @media(max-width: 1100px){
+  //   padding:$m-padding;
+  //   margin:$m-padding;
+  // }
   @media (max-width:800px) {
+    padding:$m-padding;
+    margin:$m-padding;
     width:90vw;
   }
   @media(max-width:600px) {
+    padding:$xs-padding;
+    margin:$xs-padding;
     width:95vw;
   }
 }

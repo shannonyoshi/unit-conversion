@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 export default function SuggestionForm({ suggestion, setSuggestion, isEdit, submitForm}) {
   console.log('suggestion', suggestion)
@@ -24,12 +24,12 @@ export default function SuggestionForm({ suggestion, setSuggestion, isEdit, subm
   };
 
   return (
-    <div className="suggestion-form-wrapper">
+    <div className="suggestion-wrapper">
       <form onSubmit={handleSubmit}>
-        <div className="suggestion-form-section">
+        <div className="suggestion-section">
           <label className="suggestion-label">Name</label>
           <input
-            className="email-input"
+            className="string-input"
             type="text"
             id="name"
             name="Name"
@@ -38,12 +38,12 @@ export default function SuggestionForm({ suggestion, setSuggestion, isEdit, subm
             placeholder="Jane Smith"
           />
         </div>
-        <div className="suggestion-form-section">
+        <div className="suggestion-section">
           <label htmlFor="contact" className="suggestion-label">
             E-mail
           </label>
           <input
-            className="email-input"
+            className="string-input"
             type="email"
             id="contact"
             name="Email"
@@ -52,7 +52,7 @@ export default function SuggestionForm({ suggestion, setSuggestion, isEdit, subm
             placeholder="something@probably-gmail.com"
           />
         </div>
-        <div className="suggestion-form-section">
+        <div className="suggestion-section">
           <label htmlFor="suggestion" className="suggestion-label">
             Suggestion
           </label>
@@ -67,7 +67,7 @@ export default function SuggestionForm({ suggestion, setSuggestion, isEdit, subm
           />
         </div>
 
-        <div className="suggestion-form-section checkbox">
+        <div className="suggestion-section checkbox">
           <input
             type="checkbox"
             id="reporting-error?"
