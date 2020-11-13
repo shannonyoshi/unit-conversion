@@ -66,6 +66,7 @@ const prettifyRemainder = (
   const normalizedTolerance = calcNormalizedTolerance(normalizedAmount);
   const decimalTolerance = normalizedTolerance / targetUnit.conversion;
   let targetUnitInt = Math.floor(targetUnitInDecimal);
+  let closestInt = Math.round(targetUnitInDecimal)
   const decimalRemainder = targetUnitInDecimal - targetUnitInt;
 
   //returns whole numbers within tolerance buffer
@@ -73,6 +74,10 @@ const prettifyRemainder = (
   if (targetUnitInDecimal - targetUnitInt <= decimalTolerance) {
     let unitString = checkPluralUnit(targetUnitInt, targetUnitName);
     return `${targetUnitInt} ${unitString}`;
+  }
+  if (closestInt-targetUnitInDecimal <=decimalTolerance) {
+    let unitString = checkPluralUnit(closestInt, targetUnitName);
+    return `${closestInt} ${unitString}`;
   }
 
   //returns rounded amount to 2 decimal places for unit types that commonly use decimal (mostly metric)

@@ -66,12 +66,14 @@ ul {
   padding: $xxs-padding;
   border-bottom: 2px solid color(medium);
   .icon-btn {
-    @include hover-raise;
     padding-left: .75em;
     font-size: 1.5em;
   }
+  .edit-item {
+    @include edit-btn
+  }
   .delete-item {
-    color: color(alert);
+    @include del-btn
   }
 }
 .no-items {

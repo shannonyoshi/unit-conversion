@@ -70,11 +70,24 @@
   @media(max-width: 600px)  {
     width:80%;
   }
+  &:focus {
+    outline:none;
+  }
 }
 
-@mixin edit-button {
+@mixin edit-btn {
   @include hover-raise;
-  color:color(dark)
+  color:color(dark);
+  &:hover {
+    color:color(dark-highlight)
+  }
+}
+@mixin del-btn {
+  @include hover-raise;
+  color:color(alert);
+  &:hover {
+    color:color(alert-orange)
+  }
 }
 
 @mixin form-label {
@@ -128,7 +141,6 @@
   padding-bottom: $m-padding;
   min-height: 395px;
   min-width: 400px;
-
 }
 
 @mixin card-large {
@@ -145,6 +157,9 @@
     padding:$m-padding;
     margin:$m-padding;
     width:90vw;
+  }
+  @media (max-width:700px) {
+    padding:$s-padding;
   }
   @media(max-width:600px) {
     padding:$xs-padding;
