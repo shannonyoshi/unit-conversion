@@ -48,6 +48,7 @@ func suggestionPage(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
+
 	default:
 		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
 	}

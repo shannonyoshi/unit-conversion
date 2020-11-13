@@ -37,6 +37,22 @@ export const putSuggestion = async (suggestion) => {
   return data;
 };
 
+export const delSuggestion = async (suggestionID)=> {
+  
+  const request = {
+    method: "DELETE",
+    headers: {"Content-Type": "application/json", Authorization: "none"},
+    body: JSON.stringify(suggestionID)
+  }
+
+  const response = await fetch(`${baseURL}suggest`, request);
+  if (!response.ok) {
+    console.log('response', response)
+    return false
+  }
+  return true
+}
+
 // example ingredient: ingredientName, currentAmount, currentUnit, altUnit, altAmount, targetUnit
 //altUnit and altAmount is the "type" and conversion of currentUnit.
 

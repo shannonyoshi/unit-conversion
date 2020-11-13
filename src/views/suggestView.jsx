@@ -34,6 +34,11 @@ export default function SuggestView() {
     setIsEdit(true)
   }
 
+  const reset = ()=> {
+    setSuggestion(blankSuggestion)
+    setShowCard(false)
+    setIsEdit(false)
+  }
 
   return (
     <div className="page-wrapper">
@@ -43,7 +48,7 @@ export default function SuggestView() {
           Page currently being constructed, check back soon!
         </h1> */}
         {showCard ? (
-          <SuggestionCard toggleEdit={toggleEdit} suggestion={suggestion} />
+          <SuggestionCard toggleEdit={toggleEdit} suggestion={suggestion} reset={reset}/>
         ) : (
           <SuggestionForm
             suggestion={suggestion}
