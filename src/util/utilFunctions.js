@@ -153,3 +153,8 @@ export const findPossibleUnits = (
   }
   return possible.reverse();
 };
+
+export const filterUnits = (filterType, filterString, units=unitDict)=> {
+  let result = units.filter(unit=> unit[filterType]===filterString)
+  return result
+}
