@@ -34,6 +34,15 @@ func UpdateSuggestion(s Suggestion) (Suggestion, error) {
 	return updated, nil
 }
 
+// DeleteSuggestion to remove suggestion by ID
+func DeleteSuggestion(id int) error {
+	_, err := conn.Exec(context.Background(), "DELETE from suggestions WHERE id=$1", id)
+	if err != nil {
+		return errors.New("500. Internal Server Error " + err.Error())
+	}
+	return nil
+}
+
 //AllSuggestions returns all suggestions on table
 func AllSuggestions() ([]Suggestion, error) {
 	rows, err := conn.Query(context.Background(), "select id, name, email, message, is_error, created_at, viewed_at from suggestions")

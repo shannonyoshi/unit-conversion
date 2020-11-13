@@ -43,11 +43,22 @@ func suggestionPage(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println("err: ", err)
 		}
-		w.WriteHeader(http.StatusAccepted)
+		w.WriteHeader(http.StatusOK)
 		err = json.NewEncoder(w).Encode(result)
 		if err != nil {
 			fmt.Println(err)
 		}
+	case "DELETE":
+		var id int
+		err := decoder.Decode(&id)
+		if err != nil {
+			fmt.Println(err)
+		}
+		err = models.DeleteSuggestion(id)
+		if err != nil {
+			fmt.Println(err)
+		}
+		w.WriteHeader(http.StatusNoContent)
 
 	default:
 		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
