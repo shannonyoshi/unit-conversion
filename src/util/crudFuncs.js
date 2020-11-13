@@ -9,16 +9,32 @@ export const postSuggestion = async (suggestion) => {
     },
     body: JSON.stringify(suggestion),
   };
-   console.log('request', request)
+  //  console.log('request', request)
   const response = await fetch(`${baseURL}suggest`, request);
-  console.log('response', response)
-  console.log('response.status', response.status)
+  // console.log('response', response)
+  // console.log('response.status', response.status)
   if (!response.ok) {
     console.log(response);
   }
   const data = await response.json();
   console.log("POST RESPONSE DATA: ", data);
-  // return data
+  return data;
+};
+
+export const putSuggestion = async (suggestion) => {
+  const request = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Authorization: "none" },
+    body: JSON.stringify(suggestion),
+  };
+  const response = await fetch(`${baseURL}suggest`, request);
+  if (!response.ok) {
+    console.log(response);
+  }
+  const data = await response.json();
+  console.log("PUT RESPONSE DATA: ", data);
+
+  return data;
 };
 
 // example ingredient: ingredientName, currentAmount, currentUnit, altUnit, altAmount, targetUnit
@@ -33,12 +49,12 @@ export const postConversion = async (ingredient) => {
     },
     body: JSON.stringify(ingredient),
   };
-  
-  const response = await fetch(`${baseURL}convert`, request)
+
+  const response = await fetch(`${baseURL}convert`, request);
   if (!response.ok) {
-      console.log('response', response)
+    console.log("response", response);
   }
   const data = await response.json();
   // console.log('returned conversion data', data)
-  return data
+  return data;
 };

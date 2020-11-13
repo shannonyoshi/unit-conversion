@@ -1,21 +1,14 @@
 import React, { useState } from "react";
-import { postSuggestion } from "../util/crudFuncs";
-const initialSuggestionState = {
-  name: "",
-  message: "",
-  email: "",
-  isError: false,
-};
 
-export default function SuggestionForm() {
-  const [suggestion, setSuggestion] = useState(initialSuggestionState);
+export default function SuggestionForm({ suggestion, setSuggestion, isEdit, submitForm}) {
+  console.log('suggestion', suggestion)
 
   const handleInputChange = (e) => {
     e.persist();
-    if (e.target.name === "isErrorReport") {
+    if (e.target.name === "IsError") {
       setSuggestion((suggestion) => ({
         ...suggestion,
-        isError: !suggestion.isErrorReport,
+        IsError: !suggestion.isError,
       }));
     } else {
       setSuggestion((suggestion) => ({
@@ -27,9 +20,7 @@ export default function SuggestionForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("handleSubmitSuggestionForm doesn't do anything right now.");
-    postSuggestion(suggestion);
-    setSuggestion(initialSuggestionState);
+  submitForm();
   };
 
   return (
@@ -41,8 +32,8 @@ export default function SuggestionForm() {
             className="email-input"
             type="text"
             id="name"
-            name="name"
-            value={suggestion.name}
+            name="Name"
+            value={suggestion.Name}
             onChange={handleInputChange}
             placeholder="Jane Smith"
           />
@@ -55,8 +46,8 @@ export default function SuggestionForm() {
             className="email-input"
             type="email"
             id="contact"
-            name="email"
-            value={suggestion.email}
+            name="Email"
+            value={suggestion.Email}
             onChange={handleInputChange}
             placeholder="something@probably-gmail.com"
           />
@@ -69,8 +60,8 @@ export default function SuggestionForm() {
             required
             type="message"
             id="suggestion"
-            name="message"
-            value={suggestion.text}
+            name="Message"
+            value={suggestion.Message}
             onChange={handleInputChange}
             placeholder="Your suggestion here!"
           />
@@ -80,8 +71,8 @@ export default function SuggestionForm() {
           <input
             type="checkbox"
             id="reporting-error?"
-            name="isErrorReport"
-            value={suggestion.isErrorReport}
+            name="IsError"
+            value={suggestion.IsError}
             onChange={handleInputChange}
           />
           <span>
@@ -89,13 +80,9 @@ export default function SuggestionForm() {
           </span>
         </div>
         <button type="submit" className="submit-button">
-          Submit
+          {isEdit? "Update":"Submit"}
         </button>
       </form>
     </div>
   );
 }
-
-//suggestion
-//issues
-//contact

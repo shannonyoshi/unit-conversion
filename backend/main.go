@@ -21,7 +21,7 @@ func suggestionPage(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Printf("suggestion: %+v\n", suggestion)
+		// fmt.Printf("suggestion: %+v\n", suggestion)
 
 		result, err := models.AddSuggestion(suggestion)
 		if err != nil {
@@ -38,7 +38,7 @@ func suggestionPage(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Printf("suggestion: %+v\n", suggestion)
+		// fmt.Printf("suggestion: %+v\n", suggestion)
 		result, err := models.UpdateSuggestion(suggestion)
 		if err != nil {
 			fmt.Println("err: ", err)
@@ -50,10 +50,7 @@ func suggestionPage(w http.ResponseWriter, r *http.Request) {
 		}
 	default:
 		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
-		return
-
 	}
-
 }
 
 func conversionPage(w http.ResponseWriter, r *http.Request) {
