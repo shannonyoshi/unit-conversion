@@ -59,6 +59,12 @@ const Navigation = ({ open, toggleOpen }) => {
         Suggestions
       </NavLink>
       <NavLink
+        to="/charts"
+        className="inactive-nav-link"
+        activeClassName="active-nav-link">
+        Charts
+      </NavLink>
+      <NavLink
         to="/about-me"
         className="inactive-nav-link"
         activeClassName="active-nav-link">

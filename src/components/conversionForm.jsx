@@ -25,7 +25,7 @@ export default function ConversionForm({
   //checks if conversion is "simple" (vol=>vol or weight=>weight), validate amount
   //if so, use function from util file to perform the conversion, then set to state converted list to display
   //else, validate ingredientName, do post request
-  //perform API call to BE(not yet set up)
+  //performs API call to BE
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,43 +58,6 @@ export default function ConversionForm({
     }
     setConvertedIngredients([...convertedIngredients, convertedIngr]);
     setInputs(initialInputState);
-
-    // console.log("convertedAmount", convertedAmount);
-    // const converted = `${convertedAmount} ${
-    //   inputs.ingredientName ? inputs.ingredientName : ""
-    // }`;
-    // if (converted) {
-    //   let convertedFullInfo = {
-    //     amount: inputs.amount,
-    //     unitFrom: inputs.unitFrom,
-    //     unitTo: inputs.unitTo,
-    //     ingredientName: inputs.ingredientName,
-    //     convertedString: converted,
-    //   };
-    //   setConvertedIngredients([...convertedIngredients, convertedFullInfo]);
-    //   setInputs(initialInputState);
-    // } else {
-    //   setErrors({
-    //     ...errors,
-    //     Conversion: "Unable to convert given ingredient",
-    //   });
-    // }
-    // } else {
-    //   //if not a simple conversion
-    //   const convertedIngr = await convertComplex(inputs, isAmount);
-    //   console.log("convertedIngr", convertedIngr);
-    //   if (convertedIngr.errorType) {
-    //     setErrors({ ...errors, "Ingredient Name": convertedIngr.message });
-    //   }
-    //   setConvertedIngredients([...convertedIngredients, convertedIngr]);
-    //   setInputs(initialInputState);
-    // } else {
-    //   setErrors({
-    //     ...errors,
-    //     "Ingredient Name":
-    //       "Can't complete this type of conversion without specifying an ingredient name",
-    //   });
-    // }
   };
   const handleInputChange = (e) => {
     e.persist();

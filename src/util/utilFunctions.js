@@ -111,9 +111,9 @@ export const filterFractions = (type, remainder = null) => {
     case "common":
       return allFractions.filter((fraction) => fraction[2] === true);
     case "commonClosestLower":
-      const commonFracs = filterFractions("common")
-      const close2Fracs = closest2(commonFracs)
-      return close2Fracs[0]
+      const commonFracs = filterFractions("common");
+      const close2Fracs = closest2(commonFracs);
+      return close2Fracs[0];
     case "allClosest":
       return allFractions.reduce((prev, curr) =>
         Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder)
@@ -153,8 +153,22 @@ export const findPossibleUnits = (
   }
   return possible.reverse();
 };
+//accepts unitDict OR array of unit names
+export const filterUnits = (filterType, filterString, units = unitDict) => {
+  
+  let result = [];
+  if (Array.isArray(units)) {
+    // console.log('array')
+    result = units.filter(unitName=>unitDict[unitName][filterType]===filterString)
+  } else {
+    for (let [key, value] of Object.entries(units)) {
+      if (value[filterType] === filterString) {
+        // console.log('filterType===filterString', filterType,filterString)
+        result.push(key);
+      }
+    }
+  }
 
-export const filterUnits = (filterType, filterString, units=unitDict)=> {
-  let result = units.filter(unit=> unit[filterType]===filterString)
-  return result
-}
+  console.log('2. filterString', filterString,'filterResults', result)
+  return result;
+};

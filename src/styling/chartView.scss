@@ -1,0 +1,32 @@
+.page-wrapper{
+  height:auto;
+    width:100%;
+  display:block;
+}
+
+table{
+  width:100%;
+  border: 1px solid black;
+  border-collapse: collapse
+  // thead, tbody, tr {
+  //   display:table;
+  //   width: 100%;
+  //   table-layout:fixed;
+  // }
+  // tbody {
+  //   display:block;
+  //   overflow:auto;
+  //   max-width:80vw;;
+  // }
+  th, td {
+    border: 1px solid black;
+  }
+  // display: inline-block;
+  // overflow:auto;
+  // margin-left:20px;
+
+  // tr div{
+  //   margin-left:-20px;
+  //   position:absolute;
+  // }
+}
