@@ -3,10 +3,10 @@ import { unitDict } from "../util/units";
 import { filterFractions, filterUnits } from "../util/utilFunctions";
 
 export default function ChartTables({ units }) {
-  console.log('3. RENDER CHART TABLES')
-  useEffect(()=> {
-    console.log('UseEffect')
-  },[units])
+  // console.log('3. RENDER CHART TABLES')
+  // useEffect(()=> {
+  //   console.log('UseEffect')
+  // },[units])
 
   let chartType = new Set();
   for (let i = 0; i < units.length; i++) {
@@ -20,9 +20,7 @@ export default function ChartTables({ units }) {
 
   if (chartType.size > 1) {
     let units1 = filterUnits("normUnit", "mL", units);
-    // console.log("units1", units1);
     let units2 = filterUnits("normUnit", "g", units);
-    // console.log("units2", units2);
     return (
       <div>
         <h1>Volume</h1>
@@ -59,9 +57,9 @@ function ChartTable({ units }) {
     }
     tData.push(currResult);
   }
-  // console.log("data", tData);
 
   return (
+    <div className="table-wrapper">
     <table>
       <thead>
         <tr>
@@ -69,7 +67,7 @@ function ChartTable({ units }) {
           {/* <th scope="col">Test</th> */}
           {units.map((unitName) => (
             <th colSpan="2" scope="col">
-              {unitName}
+              {unitName} ({unitDict[unitName].conversion} {unitDict[unitName].normUnit})
             </th>
           ))}
         </tr>
@@ -77,16 +75,19 @@ function ChartTable({ units }) {
       <tbody>
         {tData.map((row) => (
           <tr>
-            <td scope="row">
+            <th scope="row" className="freeze">
               {row.heading}
-            </td>
-            {row.rData.map((subU) => (<>
+            </th>
+        {row.rData.map((subU) => (Number.isInteger(subU.decimal)? <td colSpan="2">{subU.decimal===0? "": subU.decimal}</td>:
+              <>
               <td>{subU.decimal===0?"": subU.decimal}</td>
-              <td>{subU.decimal===0?"": subU.string}</td></>
+              <td nowrap>{subU.decimal===0?"": subU.string}</td>
+              </>
             ))}
           </tr>
         ))}
       </tbody>
     </table>
+    </div>
   );
 }

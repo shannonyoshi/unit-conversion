@@ -70,6 +70,13 @@ export const unitDict = {
     type: "US",
     singular: "dash",
   },
+  milliliters: {
+    normUnit: "mL",
+    conversion: 1,
+    output: "decimal",
+    type: "metric",
+    singular: "milliliter",
+  },
   teaspoons: {
     normUnit: "mL",
     conversion: 4.92892,
@@ -119,19 +126,19 @@ export const unitDict = {
     type: "US",
     singular: "gallon",
   },
-  milliliters: {
-    normUnit: "mL",
-    conversion: 1,
-    output: "decimal",
-    type: "metric",
-    singular: "milliliter",
-  },
   liters: {
     normUnit: "mL",
     conversion: 1000,
     output: "decimal",
     type: "metric",
     singular: "liter",
+  },
+  grams: {
+    normUnit: "g",
+    conversion: 1,
+    output: "decimal",
+    type: "metric",
+    singular: "gram",
   },
   ounces: {
     normUnit: "g",
@@ -146,13 +153,6 @@ export const unitDict = {
     output: "fraction",
     type: "US",
     singular: "pound",
-  },
-  grams: {
-    normUnit: "g",
-    conversion: 1,
-    output: "decimal",
-    type: "metric",
-    singular: "gram",
   },
   kilograms: {
     normUnit: "g",
