@@ -57,36 +57,46 @@
 }
 
 @mixin submit-button {
-  @include hover-raise;
+  &:not([disabled]){
+    @include hover-raise;
+    background-color: color(medium);
+    color: color(darker);
+    box-shadow: inset 0px 0px 1px 1px rgba(25, 100, 126, 0.5);
+    &:hover {
+      background-color: color(medium-highlight);
+      color: color(dark)
+    }
+
+  }
+  box-shadow: inset 0px 0px 1px 1px rgba(25, 100, 126, 0.2);
+  background-color: color(light);
+  color:color(medium);
   padding: $xs-padding $lg-padding;
   margin: 10px;
-  background-color: color(medium);
   border: none;
   border-radius: 5px;
   font-size: 1.25em;
   width: 50%;
-  color: color(darker);
-  box-shadow: inset 0px 0px 1px 1px rgba(25, 100, 126, 0.5);
-  @media(max-width: 600px)  {
-    width:80%;
+  @media (max-width: 600px) {
+    width: 80%;
   }
   &:focus {
-    outline:none;
+    outline: none;
   }
 }
 
 @mixin edit-btn {
   @include hover-raise;
-  color:color(dark);
+  color: color(dark);
   &:hover {
-    color:color(dark-highlight)
+    color: color(dark-highlight);
   }
 }
 @mixin del-btn {
   @include hover-raise;
-  color:color(alert);
+  color: color(alert);
   &:hover {
-    color:color(alert-orange)
+    color: color(alert-orange);
   }
 }
 
@@ -95,12 +105,11 @@
   color: color(dark);
   font-size: 1.25em;
   text-align: left;
-  @media( max-width: 600px){
-    font-size:1em;
+  @media (max-width: 600px) {
+    font-size: 1em;
     font-weight: bold;
   }
 }
-
 
 //card mixins
 @mixin card-general {
@@ -108,24 +117,24 @@
   background: linear-gradient(
     0deg,
     rgba(251, 251, 246, 1) 0%,
-    rgba(255, 255, 211, .4) 100%
+    rgba(255, 255, 211, 0.4) 100%
   );
   border-radius: 5px;
   box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.4);
-  @media( max-width: 600px){
-    min-width:250px;
-    width:90vw;
-    min-height:300px;
+  @media (max-width: 600px) {
+    min-width: 250px;
+    width: 90vw;
+    min-height: 300px;
   }
   .card-title {
     font-size: 2em;
     padding: $m-padding;
     color: color(dark);
-    @media( max-width: 600px){
+    @media (max-width: 600px) {
       padding: $xs-padding;
-      font-size:1.25em;
+      font-size: 1.25em;
       font-weight: bold;
-      margin:0;
+      margin: 0;
     }
   }
   .full {
@@ -145,7 +154,7 @@
 
 @mixin card-large {
   @include card-general;
-  min-height:500px;
+  min-height: 500px;
   width: 70vw;
   padding: $lg-padding;
   margin: $lg-padding;
@@ -153,17 +162,17 @@
   //   padding:$m-padding;
   //   margin:$m-padding;
   // }
-  @media (max-width:800px) {
-    padding:$m-padding;
-    margin:$m-padding;
-    width:90vw;
+  @media (max-width: 800px) {
+    padding: $m-padding;
+    margin: $m-padding;
+    width: 90vw;
   }
-  @media (max-width:700px) {
-    padding:$s-padding;
+  @media (max-width: 700px) {
+    padding: $s-padding;
   }
-  @media(max-width:600px) {
-    padding:$xs-padding;
-    margin:$xs-padding;
-    width:95vw;
+  @media (max-width: 600px) {
+    padding: $xs-padding;
+    margin: $xs-padding;
+    width: 95vw;
   }
 }

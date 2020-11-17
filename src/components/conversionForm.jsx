@@ -152,7 +152,7 @@ export default function ConversionForm({
             />
           </div>
           <ShowErrors errors={errors} />
-          <button type="submit">Convert</button>
+          <button type="submit" disabled={(inputs.amount>0||inputs.amount.length>0 )&& inputs.unitFrom.length>0 && inputs.unitTo.length>0?false: true}>Convert</button>
         </form>
       </div>
     </div>
