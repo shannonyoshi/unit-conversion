@@ -16,6 +16,9 @@
   font-size: calc(10px + 2vmin);
   color: color(medium);
   box-sizing: border-box;
+  @media(max-width:1100px) {
+    align-items: center;
+  }
   @media (max-width: 600px) {
     display: block;
     height: 60px;
@@ -69,6 +72,9 @@
     height: 60px;
   }
 }
+.nav-wrapper{
+  height:100%;
+}
 
 .hamburger {
   @media (max-width: 600px) {
@@ -89,7 +95,7 @@
       height: 2px;
       width: 20px;
       background-color: color(light);
-      transition: all 0.2s ease;
+      transition: all 0.3s ease-in-out;
       &.true {
         width: 20px;
         padding-left: 4px;
@@ -131,32 +137,38 @@ nav {
   justify-content: space-around;
   width: 50vw;
   padding-bottom: $s-padding;
-  padding-right: $m-padding;
+  padding-right: 0 $m-padding $s-padding 0;
   @media (max-width: 1100px) {
     max-width: 75vw;
     width: auto;
+    padding: 0 $m-padding 0 0 ;
   }
   @media (max-width: 600px) {
-    max-height: 0;
+    max-height: 0px;
     overflow:hidden;
-    // transition: max-height .3s ease;
+    transition: all .5s ease-in-out;
+    // transition: padding .5s ease-in-out;
+    justify-content: space-between;
+    padding: $s-padding;
+    background-color: color(darker);
+    position: absolute;
+    top: 60px;
+    left: 0;
+    height: 100%;
+    width: 50px;
+    flex-direction: column;
+    align-items: stretch;
+    opacity: 0.95;
+    padding: 0;
+    width:0;
+    z-index: 2;
     &.true {
       // display: flex;
-      width: 50vw;
-      flex-direction: column;
-      align-items: stretch;
       // align-content: space-between;
-      justify-content: space-between;
-      padding: $s-padding;
-      background-color: color(darker);
-      position: absolute;
-      top: 60px;
-      left: 0;
-      height: 100%;
-      opacity: 0.95;
+      width: 60vw;
       max-height: 200px;
-      transition: max-height 1s ease;
-      z-index: 2;
+      padding: $m-padding $s-padding;
+      // transition: max-height 1s ease-in-out;
     }
   }
 
