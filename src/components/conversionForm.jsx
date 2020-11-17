@@ -78,7 +78,7 @@ export default function ConversionForm({
             <input
               name="name"
               value={inputs.name}
-              className="honey"
+              className="checker"
               type="text"
               placeholder="Do not fill this out"
               onChange={handleInputChange}

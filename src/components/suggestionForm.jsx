@@ -1,7 +1,12 @@
 import React from "react";
 
-export default function SuggestionForm({ suggestion, setSuggestion, isEdit, submitForm}) {
-  console.log('suggestion', suggestion)
+export default function SuggestionForm({
+  suggestion,
+  setSuggestion,
+  isEdit,
+  submitForm,
+}) {
+  console.log("suggestion", suggestion);
 
   const handleInputChange = (e) => {
     e.persist();
@@ -20,13 +25,27 @@ export default function SuggestionForm({ suggestion, setSuggestion, isEdit, subm
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  submitForm();
+    if (suggestion.country && suggestion.country.length > 0) {
+      return;
+    }
+    submitForm();
   };
 
   return (
     <div className="suggestion-wrapper">
       <form onSubmit={handleSubmit}>
         <div className="suggestion-section">
+          <label htmlFor="name" className="checker">
+            Leave this blank
+          </label>
+          <input
+            name="country"
+            value={suggestion.country}
+            className="checker"
+            type="text"
+            placeholder="Do not fill this out"
+            onChange={handleInputChange}
+          />
           <label className="suggestion-label">Name</label>
           <input
             className="string-input"
@@ -80,7 +99,7 @@ export default function SuggestionForm({ suggestion, setSuggestion, isEdit, subm
           </span>
         </div>
         <button type="submit" className="submit-button">
-          {isEdit? "Update":"Submit"}
+          {isEdit ? "Update" : "Submit"}
         </button>
       </form>
     </div>

@@ -7,6 +7,7 @@ import SuggestionCard from "../components/suggestionCard"
 
 export default function SuggestView() {
   const blankSuggestion = {
+    country:"",
     Name: "",
     Message: "",
     Email: "",
@@ -16,6 +17,8 @@ export default function SuggestView() {
   const [showCard, setShowCard] = useState(false);
   const [isEdit, setIsEdit] = useState(false)
   const submitForm = async() => {
+    let sugToSubmit = suggestion
+    delete sugToSubmit["country"]
     let returnedSug={}
     if (isEdit) {
       returnedSug = await putSuggestion(suggestion)
