@@ -25,6 +25,7 @@ export const convertSimple = (amount, inputs) => {
     ingredientName: inputs.ingredientName,
     convertedString: `${prettyConvertedString} ${inputs.ingredientName}`,
   };
+  console.log("convertedIngr", convertedIngr);
   return convertedIngr;
 };
 
@@ -65,26 +66,31 @@ const prettifyRemainder = (
   const normalizedTolerance = calcNormalizedTolerance(normalizedAmount);
   const decimalTolerance = normalizedTolerance / targetUnit.conversion;
   let targetUnitInt = Math.floor(targetUnitInDecimal);
-  let closestInt = Math.round(targetUnitInDecimal)
+  let closestInt = Math.round(targetUnitInDecimal);
   const decimalRemainder = targetUnitInDecimal - targetUnitInt;
 
   //returns whole numbers within tolerance buffer
   //example return: 1 cup butter
   if (targetUnitInDecimal - targetUnitInt <= decimalTolerance) {
+    console.log("HERE");
     let unitString = checkPluralUnit(targetUnitInt, targetUnitName);
     return `${targetUnitInt} ${unitString}`;
   }
-  if (closestInt-targetUnitInDecimal <=decimalTolerance) {
+  if (Math.abs(closestInt - targetUnitInDecimal) <= decimalTolerance) {
     let unitString = checkPluralUnit(closestInt, targetUnitName);
     return `${closestInt} ${unitString}`;
+  }
+  //if amount in target unit <1/64, so negligible
+  if (targetUnitInDecimal <= 0.0155) {
+    return `${targetUnitInDecimal.toFixed(5)} ${targetUnitName} (amount negligible)`
   }
 
   //returns rounded amount to 2 decimal places for unit types that commonly use decimal (mostly metric)
   //example return: .67 grams salt
   if (targetUnit.output === "decimal") {
-    let amountTo2Decimal = Math.floor(targetUnitInDecimal * 100) / 100;
-    let unitString = checkPluralUnit(amountTo2Decimal, targetUnitName);
-    return `${amountTo2Decimal.toString(10)} ${unitString}`;
+    let rounded = Math.floor(targetUnitInDecimal * 100) / 100;
+    let unitString = checkPluralUnit(rounded, targetUnitName);
+    return `${rounded.toString(10)} ${unitString}`;
   }
 
   //ex. fraction = ["1/10", 0.1, false] means [fraction string, fraction in decimal, boolean if regular baking fraction]
