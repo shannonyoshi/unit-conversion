@@ -68,8 +68,8 @@ const validateFraction = (amountArray) => {
 };
 
 //checks if the conversion is weight=>weight or vol=>vol
-export const checkIfSimple = (unitFrom, unitTo) => {
-  if (unitDict[unitFrom].normUnit === unitDict[unitTo].normUnit) {
+export const checkIfSimple = (currentUnit, targetUnit) => {
+  if (unitDict[currentUnit].normUnit === unitDict[targetUnit].normUnit) {
     return true;
   }
   return false;

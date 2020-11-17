@@ -7,8 +7,8 @@ import "../styling/convertView.scss";
 const initialInputState={
   name: "",
   amount: "",
-  unitFrom: "",
-  unitTo: "",
+  currentUnit: "",
+  targetUnit: "",
   ingredientName: "",
 }
 

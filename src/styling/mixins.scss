@@ -110,6 +110,11 @@
     font-weight: bold;
   }
 }
+@mixin title {
+  font-size: 2em;
+  padding: $m-padding;
+  color: color(dark);
+}
 
 //card mixins
 @mixin card-general {
@@ -127,9 +132,7 @@
     min-height: 300px;
   }
   .card-title {
-    font-size: 2em;
-    padding: $m-padding;
-    color: color(dark);
+    @include title;
     @media (max-width: 600px) {
       padding: $xs-padding;
       font-size: 1.25em;

@@ -9,20 +9,19 @@ import {
 
 //performs simple conversion, returns string of converted amount + unit
 export const convertSimple = (amount, inputs) => {
-  let startingUnit = unitDict[inputs.unitFrom];
-  let targetUnit = unitDict[inputs.unitTo];
-  const normalizedAmount = amount * startingUnit.conversion;
+  let targetUnit = unitDict[inputs.targetUnit];
+  const normalizedAmount = amount * unitDict[inputs.currentUnit].conversion;
   const targetUnitInDecimal = normalizedAmount / targetUnit.conversion;
   const prettyConvertedString = prettifyRemainder(
     targetUnitInDecimal,
-    inputs.unitTo,
+    inputs.targetUnit,
     targetUnit,
     normalizedAmount
   );
   const convertedIngr = {
     amount: inputs.amount,
-    unitFrom: inputs.unitFrom,
-    unitTo: inputs.unitTo,
+    currentUnit: inputs.currentUnit,
+    targetUnit: inputs.targetUnit,
     ingredientName: inputs.ingredientName,
     convertedString: `${prettyConvertedString} ${inputs.ingredientName}`,
   };
@@ -39,17 +38,17 @@ export const convertComplex = async (inputs, isAmount) => {
   const complexIngr = {
     ingredientName: inputs.ingredientName,
     currentAmount: isAmount,
-    currentUnit: inputs.unitFrom,
-    altUnit: unitDict[inputs.unitFrom].normUnit,
-    altAmount: unitDict[inputs.unitFrom].conversion * isAmount,
-    targetUnit: inputs.unitTo,
-    targetConv: unitDict[inputs.unitTo].conversion,
+    currentUnit: inputs.currentUnit,
+    altUnit: unitDict[inputs.currentUnit].normUnit,
+    altAmount: unitDict[inputs.currentUnit].conversion * isAmount,
+    targetUnit: inputs.targetUnit,
+    targetConv: unitDict[inputs.targetUnit].conversion,
   };
   const newIngredient = await postConversion(complexIngr);
   const formattedIngr = {
     amount: inputs.amount,
-    unitFrom: inputs.unitFrom,
-    unitTo: inputs.unitTo,
+    currentUnit: inputs.currentUnit,
+    targetUnit: inputs.targetUnit,
     ingredientName: inputs.ingredientName,
     convertedString: `${newIngredient.targetAmount} ${newIngredient.targetUnit} ${inputs.ingredientName}`,
   };

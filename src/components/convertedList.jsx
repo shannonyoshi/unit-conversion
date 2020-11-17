@@ -17,8 +17,8 @@ export default function ConvertedList({ingredients, setIngredients, setInputs}) 
     setInputs({
       name: "",
       amount: toEdit.amount,
-      unitFrom: toEdit.unitFrom,
-      unitTo: toEdit.unitTo,
+      currentUnit: toEdit.currentUnit,
+      targetUnit: toEdit.targetUnit,
       ingredientName: toEdit.ingredientName,
     });
   };
@@ -51,7 +51,7 @@ export default function ConvertedList({ingredients, setIngredients, setInputs}) 
             {ingredients.map((ingredient, index) => (
               <div className="list-item" key={`O${index}`}>
                 <li className="original">
-                  {`${ingredient.amount} ${ingredient.unitFrom} ${ingredient.ingredientName}`}
+                  {`${ingredient.amount} ${ingredient.currentUnit} ${ingredient.ingredientName}`}
                 </li>
                 <div>
                   <FontAwesomeIcon

@@ -12,13 +12,13 @@ type SuggestionInput struct {
 
 // Suggestion for output of suggestions table queries
 type Suggestion struct {
-	ID        int
-	Name      string
-	Email     string
-	Message   string
-	IsError   bool
-	CreatedAt time.Time
-	ViewedAt  *time.Time
+	ID        int        `json:"id"`
+	Name      string     `json:"name"`
+	Email     string     `json:"email"`
+	Message   string     `json:"message"`
+	IsError   bool       `json:"is_error"`
+	CreatedAt time.Time  `json:"created_at"`
+	ViewedAt  *time.Time `json:"viewed_at"`
 }
 
 // IngredientInput for receiving ingredients from users
@@ -41,8 +41,8 @@ type Ingredient struct {
 
 // IngredientInfo for receiving info from API calls to third party service
 type IngredientInfo struct {
-	SourceAmount float64 `json:"sourceAmount,omitempty"`
-	SourceUnit   string  `json:"sourceUnit,omitempty"`
-	TargetAmount float64 `json:"targetAmount,omitempty"`
-	TargetUnit   string  `json:"targetUnit,omitempty"`
+	SourceAmount float64 `json:"sourceAmount"`
+	SourceUnit   string  `json:"sourceUnit"`
+	TargetAmount float64 `json:"targetAmount"`
+	TargetUnit   string  `json:"targetUnit"`
 }

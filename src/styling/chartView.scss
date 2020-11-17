@@ -2,21 +2,50 @@
 @import "mixins";
 
 .page-wrapper{
-  height:auto;
-    width:100%;
+  height:100%;
+  width:100%;
   display:block;
+  // background: rgb(251, 251, 246);
+  // background: linear-gradient(
+  //   0deg,
+  //   rgba(251, 251, 246, .3) 0%,
+  //   rgba(255, 255, 211, 0.4) 100%);
+  // background-color: color(off-white);
+  padding:$m-padding 0;
+  h1{
+    @include title;
+    padding:$xs-padding;
+  }
+  .filter{
+    margin: $s-padding;
+  }
+  label {
+    @include form-label;
+    padding-right: $s-padding;
+    font-weight: bold;
+  }
+  select {
+    @include select-mixin;
+  }
 }
 .table-wrapper{
   overflow-x: auto;
+  width:90%;
+  margin-left:5%;
 }
 
 table{
   width:100%;
   border: 1px solid black;
   border-collapse: collapse;
+  margin: $s-padding;
   th{
+    color:color(light);
+    background-color: color(medium);
     padding:$xs-padding;
-    // border: 1px solid black;
+    border: 1px solid color(dark);
+    border-collapse: collapse;
+    white-space:nowrap;
 
   }
   th[scope=row] {

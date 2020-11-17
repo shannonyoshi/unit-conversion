@@ -119,19 +119,19 @@ export const unitDict = {
     type: "US",
     singular: "quart",
   },
-  gallons: {
-    normUnit: "mL",
-    conversion: 3785.41,
-    output: "fraction",
-    type: "US",
-    singular: "gallon",
-  },
   liters: {
     normUnit: "mL",
     conversion: 1000,
     output: "decimal",
     type: "metric",
     singular: "liter",
+  },
+  gallons: {
+    normUnit: "mL",
+    conversion: 3785.41,
+    output: "fraction",
+    type: "US",
+    singular: "gallon",
   },
   grams: {
     normUnit: "g",

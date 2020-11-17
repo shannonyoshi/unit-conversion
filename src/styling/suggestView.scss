@@ -78,6 +78,9 @@
 
     // }
   }
+  .checker {
+    @include honey-pot
+  }
   .string-input {
     @include input-mixin;
     width: 60%;

@@ -1,22 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { unitDict } from "../util/units";
 import { filterFractions, filterUnits } from "../util/utilFunctions";
 
 export default function ChartTables({ units }) {
-  // console.log('3. RENDER CHART TABLES')
-  // useEffect(()=> {
-  //   console.log('UseEffect')
-  // },[units])
 
   let chartType = new Set();
   for (let i = 0; i < units.length; i++) {
     let curr = units[i];
     chartType.add(unitDict[curr].normUnit);
   }
-  // const sortBySize = (unitNames)=>{{
-  //   unitNames.forEach(name=>)
-
-  // }}
 
   if (chartType.size > 1) {
     let units1 = filterUnits("normUnit", "mL", units);
@@ -24,17 +16,17 @@ export default function ChartTables({ units }) {
     return (
       <div>
         <h1>Volume</h1>
-        <ChartTable units={units1} />
+        <ChartTable units={units1} table={"volume"} />
         <h1>Weight</h1>
-        <ChartTable units={units2} />
+        <ChartTable units={units2} table={"weight"} />
       </div>
     );
   } else {
-    return <ChartTable units={units} />;
+    return <ChartTable units={units} table={"single"}/>;
   }
 }
 
-function ChartTable({ units }) {
+function ChartTable({ units, table }) {
 
   let tData = [];
   for (let i = 0; i < units.length; i++) {
@@ -63,26 +55,33 @@ function ChartTable({ units }) {
     <table>
       <thead>
         <tr>
-          <th scope="col">Units</th>
+          <th scope="col" rowSpan="2">Units</th>
           {/* <th scope="col">Test</th> */}
           {units.map((unitName) => (
-            <th colSpan="2" scope="col">
-              {unitName} ({unitDict[unitName].conversion} {unitDict[unitName].normUnit})
+            <th colSpan="2" scope="col" key={`${table} header ${unitName}`}>
+              {unitName.charAt(0).toUpperCase() + unitName.slice(1)}
+            </th>
+          ))}
+        </tr>
+        <tr>
+        {units.map((unitName) => (
+            <th colSpan="2" scope="col" key={`${table} "normU" ${unitDict[unitName].conversion}`}>
+              ({unitDict[unitName].conversion} {unitDict[unitName].normUnit})
             </th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {tData.map((row) => (
-          <tr>
+        {tData.map((row, index) => (
+          <tr key={`${table} row ${row.heading} ${index}`}>
             <th scope="row" className="freeze">
-              {row.heading}
+              {row.heading.charAt(0).toUpperCase() + row.heading.slice(1)}
             </th>
-        {row.rData.map((subU) => (Number.isInteger(subU.decimal)? <td colSpan="2">{subU.decimal===0? "": subU.decimal}</td>:
-              <>
-              <td>{subU.decimal===0?"": subU.decimal}</td>
-              <td nowrap>{subU.decimal===0?"": subU.string}</td>
-              </>
+        {row.rData.map((subU, i) => (Number.isInteger(subU.decimal)? <td colSpan="2" key={` ${table} entry ${row.heading} ${index} ${i}`}>{subU.decimal===0? "": subU.decimal}</td>:
+              < React.Fragment key={`${table} entry ${row.heading} ${index} ${i}`}>
+              <td >{subU.decimal===0?"": subU.decimal}</td>
+              <td>{subU.decimal===0?"": subU.string}</td>
+              </ React.Fragment>
             ))}
           </tr>
         ))}

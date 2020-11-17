@@ -19,7 +19,7 @@ import {
 
 library.add(faTrashAlt, faBalanceScale, faChevronDown, faEdit);
 function App() {
-  // ingredient ex. {"amount": "3", "unitFrom": "cups", "unitTo": "grams", "ingredient": "flour", "id": 0}
+  // ingredient ex. {"Amount": "3", "currentUnit": "cups", "targetUnit": "grams", "ingredient": "flour", "id": 0}
   return (
     <div className="App">
       <Header />

@@ -46,7 +46,7 @@ export default function ConversionForm({
       return;
     }
 
-    const isSimple = checkIfSimple(inputs.unitFrom, inputs.unitTo);
+    const isSimple = checkIfSimple(inputs.currentUnit, inputs.targetUnit);
     let convertedIngr = {};
     if (isSimple) {
       convertedIngr = convertSimple(isAmount, inputs);
@@ -72,7 +72,7 @@ export default function ConversionForm({
         <h1 className="card-title">Unit Converter</h1>
         <form onSubmit={handleSubmit} autoComplete="off">
           <div className="form-section">
-            <label htmlFor="name" className="honey">
+            <label htmlFor="name" className="checker">
               Leave this blank
             </label>
             <input
@@ -97,42 +97,42 @@ export default function ConversionForm({
             />
           </div>
           <div className="form-section">
-            <label htmlFor="unitFrom" className="convert-label">
+            <label htmlFor="currentUnit" className="convert-label">
               From
             </label>
 
             <select
               required
-              id="unitFrom"
-              name="unitFrom"
-              value={inputs.unitFrom}
+              id="currentUnit"
+              name="currentUnit"
+              value={inputs.currentUnit}
               onChange={handleInputChange}>
               <option value="" disabled defaultValue>
                 Select Unit
               </option>
               {unitKeys.map((unit) => (
-                <option value={unit} key={`unitFrom${unit}`}>
+                <option value={unit} key={`currentUnit${unit}`}>
                   {unit}
                 </option>
               ))}
             </select>
           </div>
           <div className="form-section">
-            <label htmlFor="unitTo" className="convert-label">
+            <label htmlFor="targetUnit" className="convert-label">
               To
             </label>
 
             <select
               required
-              value={inputs.unitTo}
-              id="unitTo"
-              name="unitTo"
+              value={inputs.targetUnit}
+              id="targetUnit"
+              name="targetUnit"
               onChange={handleInputChange}>
               <option value="" disabled defaultValue>
                 Select Unit
               </option>
               {unitKeys.map((unit) => (
-                <option value={unit} key={`unitTo${unit}`}>
+                <option value={unit} key={`targetUnit${unit}`}>
                   {unit}
                 </option>
               ))}
@@ -152,7 +152,7 @@ export default function ConversionForm({
             />
           </div>
           <ShowErrors errors={errors} />
-          <button type="submit" disabled={(inputs.amount>0||inputs.amount.length>0 )&& inputs.unitFrom.length>0 && inputs.unitTo.length>0?false: true}>Convert</button>
+          <button type="submit" disabled={(inputs.amount>0||inputs.amount.length>0 )&& inputs.currentUnit.length>0 && inputs.targetUnit.length>0?false: true}>Convert</button>
         </form>
       </div>
     </div>
