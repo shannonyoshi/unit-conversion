@@ -30,6 +30,9 @@
 
 @mixin select-mixin {
   @include input-mixin;
+  text-align:center;
+  text-align-last: center;
+  -moz-text-align-last: center;
   -webkit-appearance: none;
   -moz-appearance: none;
   -ms-appearance: none;
@@ -114,6 +117,13 @@
   font-size: 2em;
   padding: $m-padding;
   color: color(dark);
+  @media(max-width: 1100px) {
+    font-size:1.7em;
+  }
+  @media(max-width: 600px) {
+    font-size:1.5em;
+    padding: $s-padding
+  }
 }
 
 //card mixins
@@ -122,7 +132,7 @@
   background: linear-gradient(
     0deg,
     rgba(251, 251, 246, 1) 0%,
-    rgba(255, 255, 211, 0.4) 100%
+    rgba(255, 255, 211, 0.3) 100%
   );
   border-radius: 5px;
   box-shadow: 4px 4px 10px 0px rgba(0, 0, 0, 0.4);

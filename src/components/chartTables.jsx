@@ -3,7 +3,6 @@ import { unitDict } from "../util/units";
 import { filterFractions, filterUnits } from "../util/utilFunctions";
 
 export default function ChartTables({ units }) {
-
   let chartType = new Set();
   for (let i = 0; i < units.length; i++) {
     let curr = units[i];
@@ -15,19 +14,27 @@ export default function ChartTables({ units }) {
     let units2 = filterUnits("normUnit", "g", units);
     return (
       <div>
-        <h1>Volume</h1>
-        <ChartTable units={units1} table={"volume"} />
-        <h1>Weight</h1>
-        <ChartTable units={units2} table={"weight"} />
+        <div className="single-table">
+          <h1>Volume Table</h1>
+          <ChartTable units={units1} table={"volume"} />
+        </div>
+        <div className="single-table">
+          <h1>Weight Table</h1>
+          <ChartTable units={units2} table={"weight"} />
+        </div>
       </div>
     );
   } else {
-    return <ChartTable units={units} table={"single"}/>;
+    return (
+      <div className="single-table">
+        <h1>{unitDict[units[0]].normUnit === "mL" ? "Volume" : "Weight"} Table</h1>
+        <ChartTable units={units} table={"single"} />
+      </div>
+    );
   }
 }
 
 function ChartTable({ units, table }) {
-
   let tData = [];
   for (let i = 0; i < units.length; i++) {
     let currName = units[i];
@@ -44,7 +51,9 @@ function ChartTable({ units, table }) {
         "allClosest",
         conversion - convertedInt
       );
-      subResult["string"] = `${convertedInt > 0 ? convertedInt + " " : ""}${closestFrac[0]}`;
+      subResult["string"] = `${convertedInt > 0 ? convertedInt + " " : ""}${
+        closestFrac[0]
+      }`;
       currResult.rData.push(subResult);
     }
     tData.push(currResult);
@@ -52,41 +61,60 @@ function ChartTable({ units, table }) {
 
   return (
     <div className="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th scope="col" rowSpan="2">Units</th>
-          {/* <th scope="col">Test</th> */}
-          {units.map((unitName) => (
-            <th colSpan="2" scope="col" key={`${table} header ${unitName}`}>
-              {unitName.charAt(0).toUpperCase() + unitName.slice(1)}
+      <table>
+        <thead>
+          <tr>
+            <th scope="col" rowSpan="2">
+              Units
             </th>
-          ))}
-        </tr>
-        <tr>
-        {units.map((unitName) => (
-            <th colSpan="2" scope="col" key={`${table} "normU" ${unitDict[unitName].conversion}`}>
-              ({unitDict[unitName].conversion} {unitDict[unitName].normUnit})
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {tData.map((row, index) => (
-          <tr key={`${table} row ${row.heading} ${index}`}>
-            <th scope="row" className="freeze">
-              {row.heading.charAt(0).toUpperCase() + row.heading.slice(1)}
-            </th>
-        {row.rData.map((subU, i) => (Number.isInteger(subU.decimal)? <td colSpan="2" key={` ${table} entry ${row.heading} ${index} ${i}`}>{subU.decimal===0? "": subU.decimal}</td>:
-              < React.Fragment key={`${table} entry ${row.heading} ${index} ${i}`}>
-              <td >{subU.decimal===0?"": subU.decimal}</td>
-              <td>{subU.decimal===0?"": subU.string}</td>
-              </ React.Fragment>
+            {/* <th scope="col">Test</th> */}
+            {units.map((unitName) => (
+              <th colSpan="2" scope="col" key={`${table} header ${unitName}`}>
+                {unitName.charAt(0).toUpperCase() + unitName.slice(1)}
+              </th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+          <tr>
+            {units.map((unitName) => (
+              <th
+                colSpan="2"
+                scope="col"
+                key={`${table} "normU" ${unitDict[unitName].conversion}`}>
+                ({unitDict[unitName].conversion} {unitDict[unitName].normUnit})
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {tData.map((row, index) => (
+            <tr key={`${table} row ${row.heading} ${index}`}>
+              <th scope="row" className="freeze">
+                {row.heading.charAt(0).toUpperCase() + row.heading.slice(1)}
+              </th>
+              {row.rData.map((subU, i) =>
+                Number.isInteger(subU.decimal) ? (
+                  <td
+                    colSpan="2"
+                    key={` ${table} entry ${row.heading} ${index} ${i}`}
+                    className={index % 2 === 1 ? "odd" : ""}>
+                    {subU.decimal === 0 ? "" : subU.decimal}
+                  </td>
+                ) : (
+                  <React.Fragment
+                    key={`${table} entry ${row.heading} ${index} ${i}`}>
+                    <td className={index % 2 === 1 ? "odd" : ""}>
+                      {subU.decimal === 0 ? "" : subU.decimal}
+                    </td>
+                    <td className={index % 2 === 1 ? "odd" : ""}>
+                      {subU.decimal === 0 ? "" : subU.string}
+                    </td>
+                  </React.Fragment>
+                )
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

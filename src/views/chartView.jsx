@@ -22,7 +22,7 @@ export default function ChartView() {
   // console.log('unitFilter:units', unitFilter,":",units)
 
   return (
-    <div className="page-wrapper">
+    <div className="charts-page-wrapper">
       <ChartFilter unitFilters={unitFilters} unitFilter={unitFilter} setUnitFilter={setUnitFilter} setUnits={setUnits}/>
       <ChartTables units={units}/>
     </div>

@@ -5,7 +5,8 @@
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  margin-bottom:5vh;
+  padding-bottom:5vh;
+  background-color: rgba(251, 251, 246, .5);
 }
 
 .card-small {
@@ -17,6 +18,7 @@
 .form-wrapper {
   display: flex;
   flex-direction: column;
+  
   .form-section {
     padding: $s-padding;
     padding-left:$lg-padding;

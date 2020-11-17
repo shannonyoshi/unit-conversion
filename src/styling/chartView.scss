@@ -1,62 +1,90 @@
 @import "variables";
 @import "mixins";
 
-.page-wrapper{
-  height:100%;
-  width:100%;
-  display:block;
+.charts-page-wrapper {
+  height: 100%;
+  width: 100%;
+  display: block;
   // background: rgb(251, 251, 246);
-  // background: linear-gradient(
-  //   0deg,
-  //   rgba(251, 251, 246, .3) 0%,
-  //   rgba(255, 255, 211, 0.4) 100%);
+  background: linear-gradient(
+    0deg,
+    rgba(251, 251, 246, 0.3) 0%,
+    rgba(255, 255, 211, 0.3) 100%
+  );
   // background-color: color(off-white);
-  padding:$m-padding 0;
-  h1{
+
+  h1 {
     @include title;
-    padding:$xs-padding;
+    color: color(medium);
+    padding: $xs-padding;
   }
-  .filter{
-    margin: $s-padding;
-  }
-  label {
-    @include form-label;
-    padding-right: $s-padding;
-    font-weight: bold;
-  }
-  select {
-    @include select-mixin;
+  .filter {
+    padding: $m-padding 0 $s-padding;
+    vertical-align: middle;
+    @media (max-width: 600px) {
+      padding: $s-padding 0 $xs-padding;
+    }
+
+    label {
+      @include form-label;
+      padding-right: $s-padding;
+      font-weight: bold;
+      @media (max-width: 1100px) {
+        font-size: 1.25em;
+      }
+    }
+    select {
+      @include select-mixin;
+      font-size: 1.5em;
+      font-weight: bold;
+      @media (max-width: 1100px) {
+        font-size: 1.25em;
+      }
+    }
   }
 }
-.table-wrapper{
+.single-table {
+  margin-bottom: $lg-padding;
+}
+.table-wrapper {
   overflow-x: auto;
-  width:90%;
-  margin-left:5%;
+  width: 90%;
+  margin: auto;
+  @media (max-width: 1100px) {
+    width: 95%;
+  }
 }
 
-table{
-  width:100%;
-  border: 1px solid black;
-  border-collapse: collapse;
-  margin: $s-padding;
-  th{
-    color:color(light);
+table {
+  width: 100%;
+  border-collapse: separate;
+  border: 5px solid color(dark-highlight);
+  th {
+    color: color(light);
     background-color: color(medium);
-    padding:$xs-padding;
-    border: 1px solid color(dark);
-    border-collapse: collapse;
-    white-space:nowrap;
-
+    padding: $xs-padding;
+    border-right: 1px solid color(dark);
+    // border-collapse: collapse;
+    white-space: nowrap;
   }
-  th[scope=row] {
+  th[scope="row"] {
+    border-top: 1px solid color(dark);
     position: -webkit-sticky;
     position: sticky;
     left: 0;
     z-index: 1;
   }
+  tr {
+    .odd {
+      background-color: color(light);
+    }
+  }
   td {
-    padding:$xxs-padding;
-    white-space:nowrap;
-    border: 1px solid black;
+    background-color: color(off-white);
+    padding: $xxs-padding;
+    white-space: nowrap;
+    // border: 1px solid black;
+    border-right: 1px solid color(medium-highlight);
+    color: color(darker);
   }
 }
