@@ -64,12 +64,12 @@ function ChartTable({ units, table }) {
       <table>
         <thead>
           <tr>
-            <th scope="col" rowSpan="2">
+            <th scope="col" rowSpan="2" className="bold">
               Units
             </th>
             {/* <th scope="col">Test</th> */}
             {units.map((unitName) => (
-              <th colSpan="2" scope="col" key={`${table} header ${unitName}`}>
+              <th colSpan="2" scope="col" key={`${table} header ${unitName}`} className="bold" >
                 {unitName.charAt(0).toUpperCase() + unitName.slice(1)}
               </th>
             ))}
@@ -77,6 +77,7 @@ function ChartTable({ units, table }) {
           <tr>
             {units.map((unitName) => (
               <th
+              classNAme="small"
                 colSpan="2"
                 scope="col"
                 key={`${table} "normU" ${unitDict[unitName].conversion}`}>
@@ -88,7 +89,7 @@ function ChartTable({ units, table }) {
         <tbody>
           {tData.map((row, index) => (
             <tr key={`${table} row ${row.heading} ${index}`}>
-              <th scope="row" className="freeze">
+              <th scope="row" className="freeze bold">
                 {row.heading.charAt(0).toUpperCase() + row.heading.slice(1)}
               </th>
               {row.rData.map((subU, i) =>

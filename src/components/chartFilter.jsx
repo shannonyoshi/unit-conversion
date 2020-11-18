@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { unitDict } from "../util/units";
 import { filterUnits } from "../util/utilFunctions";

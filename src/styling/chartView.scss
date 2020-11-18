@@ -66,6 +66,12 @@ table {
     border-right: 1px solid color(dark);
     // border-collapse: collapse;
     white-space: nowrap;
+    .small {
+      font-size: 0.7em;
+    }
+    .bold {
+      font-weight: bold;
+    }
   }
   th[scope="row"] {
     border-top: 1px solid color(dark);
