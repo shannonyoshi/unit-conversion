@@ -44,7 +44,7 @@
   }
 }
 .single-table {
-  margin-bottom: $lg-padding;
+  padding: $lg-padding;
 }
 .table-wrapper {
   overflow-x: auto;
@@ -66,12 +66,6 @@ table {
     border-right: 1px solid color(dark);
     // border-collapse: collapse;
     white-space: nowrap;
-    .small {
-      font-size: 0.7em;
-    }
-    .bold {
-      font-weight: bold;
-    }
   }
   th[scope="row"] {
     border-top: 1px solid color(dark);
@@ -80,6 +74,13 @@ table {
     left: 0;
     z-index: 1;
   }
+                    .small {
+                      font-size: 0.85em;
+                      padding:$xxs-padding;
+                    }
+                    .bold {
+                      font-weight: bold;
+                    }
   tr {
     .odd {
       background-color: color(light);
@@ -91,6 +92,6 @@ table {
     white-space: nowrap;
     // border: 1px solid black;
     border-right: 1px solid color(medium-highlight);
-    color: color(darker);
+    color: color(dark);
   }
 }

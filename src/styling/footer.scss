@@ -1,0 +1,25 @@
+@import "variables";
+@import "mixins";
+
+.footer-wrapper {
+  background-color: color(darker);
+
+  height: 300px;
+  width:100%;
+  position: absolute;
+  bottom: 0;
+  // &-logo{
+  //   padding: $m-padding;
+  // }
+  // &-nav{
+  //   width:50vw;
+  // }
+  footer {
+    height:100%;
+    display: flex;
+    padding: $lg-padding;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+}

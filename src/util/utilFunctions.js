@@ -169,6 +169,6 @@ export const filterUnits = (filterType, filterString, units = unitDict) => {
     }
   }
 
-  console.log('2. filterString', filterString,'filterResults', result)
+  // console.log('2. filterString', filterString,'filterResults', result)
   return result;
 };

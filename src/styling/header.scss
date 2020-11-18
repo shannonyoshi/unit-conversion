@@ -1,74 +1,31 @@
 @import "variables";
 @import "mixins";
 
-.App-logo {
-  height: 10vmin;
-  pointer-events: none;
-}
-
-.header {
+header {
   background-color: color(darker);
-  // height: 10vh;
   min-height: 100px;
   display: flex;
+  flex-direction: row;
   align-items: flex-end;
   justify-content: space-between;
-  font-size: calc(10px + 2vmin);
-  color: color(medium);
-  box-sizing: border-box;
-  transition: all .5s;
-  @media(max-width:1100px) {
+  flex-wrap: nowrap;
+  transition: all 0.5s;
+  padding: $s-padding;
+  @media (max-width: 850px) {
     align-items: center;
-  }
-  @media(max-height: 800px) {
-    flex-direction: column;;
+    flex-direction: column;
+    padding-bottom: 0;
+    justify-content: space-evenly;
   }
   @media (max-width: 600px) {
     display: block;
     height: 60px;
     min-height: 50px;
-  }
-  &-left {
-    display: flex;
-    align-items: center;
-    font-size: 1.2em;
-    padding: $s-padding;
-    width: auto;
-    max-width: 500px;
-    @media (max-width: 600px) {
-      // max-width:100vw;
-      justify-content: center;
-      padding: $xxs-padding;
-    }
-  }
-
-  &-logo-icon {
-    //   color: color(medium);
-    font-size: 2.5em;
-    @media (max-width: 1100px) {
-      font-size: 1.75em;
-    }
-    @media (max-width: 600px) {
-      font-size: 1em;
-    }
-  }
-  &-logo-text {
-    line-height: 1.4em;
-    font-size: 1em;
-    padding-left: $s-padding;
-    white-space:nowrap;
-    @media (max-width: 1100px) {
-      font-size: 0.75em;
-      line-heigh: 1em;
-    }
-    @media (max-width: 600px) {
-      font-size: 0.5em;
-      padding-left: $xxs-padding;
-    }
+    padding: 0;
   }
 }
 
-.wrapper {
+.hamburger-wrapper {
   @media (max-width: 600px) {
     display: flex;
     align-items: center;
@@ -77,13 +34,9 @@
     height: 60px;
   }
 }
-.nav-wrapper{
-  height:100%;
-}
 
-.hamburger {
+.hamburger-menu {
   @media (max-width: 600px) {
-    box-sizing: border-box;
     background-color: color(darker);
     height: 32px;
     width: 32px;
@@ -93,16 +46,14 @@
     align-items: center;
     padding: 2px;
     margin-left: 10px;
-    &.true {
-      padding-left: 5px;
-    }
+
     .line {
       height: 2px;
       width: 20px;
       background-color: color(light);
       transition: all 0.3s ease-in-out;
       &.true {
-        width: 20px;
+        width: 22px;
         padding-left: 4px;
       }
     }
@@ -136,74 +87,3 @@
   }
 }
 
-nav {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-around;
-  width: 60vw;
-  padding-bottom: $s-padding;
-  padding-right: 0 $m-padding $s-padding 0;
-  @media (max-width: 1100px) {
-    max-width: 75vw;
-    // width: 70vw;
-    padding: 0 $m-padding 0 0 ;
-  }
-  @media (max-width: 600px) {
-    max-height: 0px;
-    overflow:hidden;
-    transition: all .5s ease-in-out;
-    // transition: padding .5s ease-in-out;
-    justify-content: space-between;
-    padding: $s-padding;
-    background-color: color(darker);
-    position: absolute;
-    top: 60px;
-    left: 0;
-    height: 100%;
-    width: 50px;
-    flex-direction: column;
-    align-items: stretch;
-    opacity: 0.95;
-    padding: 0;
-    width:0;
-    z-index: 2;
-    &.true {
-      // display: flex;
-      // align-content: space-between;
-      width: 60vw;
-      max-height: 200px;
-      padding: $m-padding $s-padding;
-      // transition: max-height 1s ease-in-out;
-    }
-  }
-
-  .inactive-nav-link {
-    @include hover-raise;
-    text-decoration: none;
-    color: color(light);
-    outline: none;
-    font-size: 1em;
-    padding: $xs-padding;
-    white-space:nowrap;
-    @media (max-width: 1100px) {
-      font-size: 0.9em;
-    }
-    @media (max-width: 600px) {
-      font-size:1em;
-      border-bottom: 1px solid color(dark);
-      &:hover {
-        transform: none;
-        border-bottom: 1px solid color(light);
-      }
-    }
-  }
-  .active-nav-link {
-    text-decoration: none;
-    color: color(medium);
-    outline: none;
-  }
-}
-
-.App-link {
-  color: #61dafb;
-}

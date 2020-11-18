@@ -1,0 +1,100 @@
+@import "variables";
+@import "mixins";
+
+
+// .nav-wrapper.footer-nav{
+
+//   // min-height:400px;
+// }
+nav {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  @media(max-width:600px){
+
+    flex-direction: column;
+  }
+  &.header-nav {
+    @media (max-width: 800px) {
+      max-width: 65vw;
+    }
+    @media (max-width: 600px) {
+      max-height: 0px;
+      overflow: hidden;
+      transition: all 0.5s ease-in-out;
+      justify-content: space-between;
+      padding: $s-padding;
+      background-color: color(darker);
+      position: absolute;
+      top: 60px;
+      left: 0;
+      height: 100%;
+      width: 50px;
+      align-items: stretch;
+      opacity: 0.95;
+      padding: 0;
+      width: 0;
+      z-index: 2;
+      &.true {
+        width: 60vw;
+        max-height: 250px;
+        padding: $m-padding $s-padding;
+      }
+    }
+  }
+  &.footer-nav {
+    justify-content:space-around;
+    @media (max-width: 600px) {
+      align-items:center;
+      margin-top:$s-padding;
+
+    }
+  }
+
+  .inactive-nav-link {
+    text-decoration: none;
+    color: color(light);
+    outline: none;
+    font-size: 2em;
+    padding: $xs-padding;
+    white-space: nowrap;
+
+    border-bottom: 1px solid transparent;
+    &:hover {
+      border-bottom: 1px solid color(medium);
+    }
+    @media (max-width: 1100px) {
+      font-size: 1.5em;
+    }
+    @media (max-width: 600px) {
+      font-size: 1em;
+    }
+    &.header-nav {
+      @include hover-raise;
+      @media (max-width: 600px) {
+        border-bottom: 1px solid color(dark);
+        &:hover {
+          transform: none;
+          border-bottom: 1px solid color(light);
+        }
+      }
+    }
+    &.footer-nav {
+      font-size:1rem;
+
+
+      // &:hover {
+      //   border-bottom: 1px solid transparent;
+      // }
+    }
+  }
+  .active-nav-link {
+    text-decoration: none;
+    color: color(medium);
+    outline: none;
+    border-bottom: 1px solid transparent;
+    &.footer-nav :hover {
+      border-bottom: 1px solid color(medium);
+    }
+  }
+}

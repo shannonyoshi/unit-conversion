@@ -77,7 +77,7 @@ function ChartTable({ units, table }) {
           <tr>
             {units.map((unitName) => (
               <th
-              classNAme="small"
+              className="small"
                 colSpan="2"
                 scope="col"
                 key={`${table} "normU" ${unitDict[unitName].conversion}`}>

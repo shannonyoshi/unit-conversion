@@ -1,13 +1,13 @@
 import React from "react";
 import { Route } from "react-router-dom";
 
-import "./styling/App.scss";
 import Header from "./components/header";
 import ConvertView from "./views/convertView";
 import AboutView from "./views/aboutView";
 import SuggestView from "./views/suggestView";
 import SiteInfoView from "./views/siteInfoView";
-import ChartView from "./views/chartView"
+import ChartView from "./views/chartView";
+import Footer from "./components/footer";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
@@ -25,9 +25,10 @@ function App() {
       <Header />
       <Route exact path="/" component={ConvertView} />
       <Route path="/suggestions" component={SuggestView} />
-      <Route path="/charts" component={ChartView}/>
+      <Route path="/charts" component={ChartView} />
       <Route path="/site-info" component={SiteInfoView} />
       <Route path="/about-me" component={AboutView} />
+      <Footer />
     </div>
   );
 }
