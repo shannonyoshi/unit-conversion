@@ -69,7 +69,6 @@
       background-color: color(medium-highlight);
       color: color(dark)
     }
-
   }
   box-shadow: inset 0px 0px 1px 1px rgba(25, 100, 126, 0.2);
   background-color: color(light);
@@ -80,6 +79,15 @@
   border-radius: 5px;
   font-size: 1.25em;
   width: 50%;
+  &.large{
+    padding:$s-padding $lg-padding;
+    font-size:1.5em;
+    margin: $m-padding;
+    
+    @media(max-width: 600px){
+      padding: $xs-padding $lg-padding;
+    }
+  }
   @media (max-width: 600px) {
     width: 80%;
   }
@@ -163,6 +171,7 @@
   padding-bottom: $m-padding;
   min-height: 395px;
   min-width: 400px;
+
 }
 
 @mixin card-large {

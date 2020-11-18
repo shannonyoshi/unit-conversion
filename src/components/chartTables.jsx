@@ -8,6 +8,9 @@ export default function ChartTables({ units }) {
     let curr = units[i];
     chartType.add(unitDict[curr].normUnit);
   }
+  if (units.length===0) {
+    return<></>
+  }
 
   if (chartType.size > 1) {
     let units1 = filterUnits("normUnit", "mL", units);

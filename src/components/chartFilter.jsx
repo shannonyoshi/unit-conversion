@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect } from "react";
 
 import { unitDict } from "../util/units";
@@ -8,31 +9,38 @@ export default function ChartFilter({
   unitFilter,
   setUnitFilter,
   setUnits,
+  showCustomFilter,
+  setShowCustomFilter,
 }) {
   useEffect(() => {
     const filterByType = () => {
       //   console.log("1. unitFilter", unitFilter);
       switch (unitFilter) {
         case "All":
+          setShowCustomFilter(false);
           return Object.keys(unitDict);
         case "Standard":
+          setShowCustomFilter(false);
           // filter by unit type US
           return filterUnits("type", "US");
         case "Metric":
+          setShowCustomFilter(false);
           // filter by unit type Metric
-
           return filterUnits("type", "metric");
         case "Weight":
+          setShowCustomFilter(false);
           // filter by normUnit g
           return filterUnits("normUnit", "g");
         case "Volume":
-          console.log("volume");
+          setShowCustomFilter(false);
+          // console.log("volume");
           // filter by normUnit mL
           return filterUnits("normUnit", "mL");
-        // case "Custom":
-        //   // TODO:finish this option
-        //   return;
+        case "Custom":
+          setShowCustomFilter(true);
+          return [];
         default:
+          setShowCustomFilter(false);
           return Object.keys(unitDict);
       }
     };
@@ -54,6 +62,15 @@ export default function ChartFilter({
           </option>
         ))}
       </select>
+      {unitFilter === "Custom" && !showCustomFilter ? (
+        <FontAwesomeIcon
+          icon="edit"
+          className="icon-btn edit-item"
+          onClick={(e) => setShowCustomFilter(true)}
+        />
+      ) : (
+        ""
+      )}
     </div>
   );
 }

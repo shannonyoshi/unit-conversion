@@ -1,23 +1,24 @@
 @import "variables";
 @import "mixins";
-
+//ChartView
 .charts-page-wrapper {
   height: 100%;
   width: 100%;
   display: block;
   // background: rgb(251, 251, 246);
-  background: linear-gradient(
-    0deg,
-    rgba(251, 251, 246, 0.3) 0%,
-    rgba(255, 255, 211, 0.3) 100%
-  );
-  // background-color: color(off-white);
+  // background: linear-gradient(
+  //   0deg,
+  //   rgba(251, 251, 246, 0.3) 0%,
+  //   rgba(255, 255, 211, 0.3) 100%
+  // );
+  background-color: color(white);
 
   h1 {
     @include title;
     color: color(medium);
     padding: $xs-padding;
   }
+  //chartFilter
   .filter {
     padding: $m-padding 0 $s-padding;
     vertical-align: middle;
@@ -35,6 +36,7 @@
     }
     select {
       @include select-mixin;
+      background-color: color(off-white);
       font-size: 1.5em;
       font-weight: bold;
       @media (max-width: 1100px) {
@@ -43,8 +45,58 @@
     }
   }
 }
+
+// CustomFilter
+.btns-wrapper {
+  @include card-large;
+  margin: $m-padding auto $lg-padding;
+}
+
+.filter-btn {
+  padding: $s-padding;
+  color: color(dark);
+  font-size: 1em;
+  border: none;
+  background-color: color(light);
+  margin: $s-padding;
+  box-shadow: inset 0px 0px 1px 1px rgba(25, 100, 126, 0.5);
+  border-radius: 5px;
+  min-width: 105px;
+
+  &:hover {
+    background-color: color(medium-highlight);
+  }
+  &:focus {
+    outline: none;
+  }
+  @media (max-width: 600px) {
+    padding: $xs-padding;
+    margin: $xs-padding;
+  }
+}
+.reset {
+  color: color(alert);
+  float: right;
+  &:hover {
+    color: color(alert-orange);
+  }
+}
+
+.selected {
+  background-color: color(medium);
+  color: color(darker);
+}
+
+.submit-btn {
+  @include submit-button;
+}
+
+// ChartTable
 .single-table {
   padding: $lg-padding;
+  @media(max-width: 600px) {
+    padding: $xs-padding;
+  }
 }
 .table-wrapper {
   overflow-x: auto;
@@ -74,13 +126,13 @@ table {
     left: 0;
     z-index: 1;
   }
-                    .small {
-                      font-size: 0.85em;
-                      padding:$xxs-padding;
-                    }
-                    .bold {
-                      font-weight: bold;
-                    }
+  .small {
+    font-size: 0.85em;
+    padding: $xxs-padding;
+  }
+  .bold {
+    font-weight: bold;
+  }
   tr {
     .odd {
       background-color: color(light);
