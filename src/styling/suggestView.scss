@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: $s-padding;
+  padding: $xlg-padding 0;
   .card-med-large {
     @include card-large;
     line-height: 3em;
@@ -42,6 +42,12 @@
       padding: $xs-padding;
       text-align: center;
     }
+    &.checkbox {
+      flex-wrap: nowrap !important;
+      // display: flex;
+      // flex-direction: row;
+      align-items:center;
+    }
 
     .suggestion-label {
       @include form-label;
@@ -61,12 +67,10 @@
   form {
     max-width: 100%;
   }
-  &.checkbox {
-    flex-wrap: nowrap !important;
-  }
   span {
     line-height: 1.25;
-    max-width: 80vw;
+    // width: auto;
+    max-width: 70vw;
     color: color(dark);
   }
   textarea {
@@ -74,18 +78,23 @@
     min-width: 300px;
     width: 60%;
     max-width: 90vw;
-    // @media(max-width: 600px){
-
-    // }
+    @media(max-width: 600px){
+      min-width:100px;
+      width:100%;
+    }
   }
   .checker {
-    @include honey-pot
+    @include honey-pot;
   }
   .string-input {
     @include input-mixin;
     width: 60%;
     max-width: 90vw;
     min-width: 300px;
+    @media(max-width: 600px){
+      min-width:100px;
+      width:100%;
+    }
   }
 
   .submit-button {
@@ -115,7 +124,6 @@
 
   .edit-icon {
     @include edit-btn;
-;
   }
   .del-icon {
     @include del-btn;

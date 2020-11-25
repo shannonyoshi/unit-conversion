@@ -1,21 +1,22 @@
 @import "variables";
 @import "mixins";
 
+
+// ConvertView
 .convert-page-wrapper {
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  padding-bottom:5vh;
   background-color: rgba(251, 251, 246, .5);
-  height:100%
+  height:100%;
+  padding:$xlg-padding 0;
 }
 
 .card-small {
   @include card-small;
 }
 
-//form component styling
-
+//ConversionForm
 .form-wrapper {
   display: flex;
   flex-direction: column;
@@ -49,7 +50,7 @@
     @include submit-button;
   }
 }
-//list component styling
+//ConvertedList
 ul {
   padding: $xs-padding;
 }
@@ -65,6 +66,7 @@ ul {
   .icon-btn {
     padding-left: .75em;
     font-size: 1.5em;
+    width:1.5em;
   }
   .edit-item {
     @include edit-btn

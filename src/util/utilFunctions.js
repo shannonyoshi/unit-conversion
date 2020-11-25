@@ -105,6 +105,7 @@ export const filterFractions = (type, remainder = null) => {
     }
     return [current, next];
   };
+  // console.log('remainder', remainder)
   switch (type) {
     case "all":
       return allFractions;
@@ -115,11 +116,18 @@ export const filterFractions = (type, remainder = null) => {
       const close2Fracs = closest2(commonFracs);
       return close2Fracs[0];
     case "allClosest":
-      return allFractions.reduce((prev, curr) =>
-        Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder)
-          ? curr
-          : prev
-      );
+      const closestF = allFractions.reduce((prev, curr)=> {
+    // console.log('curr:', curr, ' prev:',prev)
+    //     console.log('Math.abs(curr[1]-remainder):', Math.abs(curr[1]-remainder))
+    //     console.log('Math.abs(prev[1]-remainder):', Math.abs(prev[1]-remainder))
+        return Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder)? curr: prev
+      })
+      console.log('closestF', closestF)
+      return closestF
+      // return allFractions.reduce((prev, curr) =>{
+      //   return Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder)? curr: prev
+      // }
+      // );
     case "commonClosest":
       return allFractions.reduce((prev, curr) =>
         Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder) &&
@@ -136,30 +144,45 @@ export const filterFractions = (type, remainder = null) => {
 };
 
 //returns array of units in [[name, conversion],[name, conversion]] format of same type that are smaller than remainingmLs, starting from largest unit
+//exclude is for mostly starting unit name when we don't want to return the starting unit as an option
 export const findPossibleUnits = (
   remainingmLs,
   targetUnitType,
-  targetNormUnit
+  targetNormUnit,
+  exclude = null
 ) => {
-  let possible = [];
+  // console.log('exclude', exclude)
+  const possible = [];
+  // console.log(unitDisct);
   for (let [key, value] of Object.entries(unitDict)) {
+    // console.log('KEY', key)
+    // console.log('value.type===targetUnitType', value.type===targetUnitType)
+    // console.log('value.conversion<=remainingmLs', value.conversion<=remainingmLs)
+    // console.log('value.normUnit===targetNormUnit', value.normUnit===targetNormUnit)
+    // console.log('key!=exclude', key!=exclude)
     if (
       value.type === targetUnitType &&
       value.conversion <= remainingmLs &&
-      value.normUnit === targetNormUnit
+      value.normUnit === targetNormUnit &&
+      key !== exclude
     ) {
       possible.push([key, value.conversion]);
+      // console.log('possible after add', possible)
     }
   }
+  // console.log('possible being returned from findPossibleUnits', possible)
+  // possible.map(unit=>console.log('unit', unit))
+  // console.log('possible.length', possible.length)
   return possible.reverse();
 };
 //accepts unitDict OR array of unit names
 export const filterUnits = (filterType, filterString, units = unitDict) => {
-  
   let result = [];
   if (Array.isArray(units)) {
     // console.log('array')
-    result = units.filter(unitName=>unitDict[unitName][filterType]===filterString)
+    result = units.filter(
+      (unitName) => unitDict[unitName][filterType] === filterString
+    );
   } else {
     for (let [key, value] of Object.entries(units)) {
       if (value[filterType] === filterString) {

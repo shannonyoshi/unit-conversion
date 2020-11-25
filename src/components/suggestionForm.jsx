@@ -95,7 +95,7 @@ export default function SuggestionForm({
             onChange={handleInputChange}
           />
           <span>
-            Please check this box if you are reporting an error or issue
+            Please check this if you are reporting an error or issue
           </span>
         </div>
         <button type="submit" className="submit-button">

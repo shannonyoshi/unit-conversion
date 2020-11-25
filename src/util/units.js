@@ -2,6 +2,7 @@
 export const allFractions = [
   ["", 0.0, true],
   ["1/64", 0.0156, false],
+  ["1/48", 0.02083, false],
   ["1/32", 0.0313, false],
   ["3/64", 0.0469, false],
   ["1/16", 0.0625, false],

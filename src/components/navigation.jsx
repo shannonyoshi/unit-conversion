@@ -12,32 +12,32 @@ export default function Navigation({ description, clickHandler = null }) {
         <NavLink
           exact
           to="/"
-          className={`inactive-nav-link ${description}`}
-          activeClassName={`active-nav-link ${description}`}>
+          className={`nav-link ${description}`}
+          activeClassName="active">
           Converter
         </NavLink>
         <NavLink
           to="/suggestions"
-          className={`inactive-nav-link ${description}`}
-          activeClassName={`active-nav-link ${description}`}>
+          className={`nav-link ${description}`}
+          activeClassName="active">
           Suggestions
         </NavLink>
         <NavLink
           to="/charts"
-          className={`inactive-nav-link ${description}`}
-          activeClassName={`active-nav-link ${description}`}>
+          className={`nav-link ${description}`}
+          activeClassName="active">
           Charts
         </NavLink>
         <NavLink
           to="/about-me"
-          className={`inactive-nav-link ${description}`}
-          activeClassName={`active-nav-link ${description}`}>
+          className={`nav-link ${description}`}
+          activeClassName="active">
           About Me
         </NavLink>
         <NavLink
           to="/site-info"
-          className={`inactive-nav-link ${description}`}
-          activeClassName={`active-nav-link ${description}`}>
+          className={`nav-link ${description}`}
+          activeClassName="active">
           Site Info
         </NavLink>
       </nav>

@@ -8,20 +8,20 @@ export default function ChartTables({ units }) {
     let curr = units[i];
     chartType.add(unitDict[curr].normUnit);
   }
-  if (units.length===0) {
-    return<></>
+  if (units.length === 0) {
+    return <></>;
   }
 
   if (chartType.size > 1) {
     let units1 = filterUnits("normUnit", "mL", units);
     let units2 = filterUnits("normUnit", "g", units);
     return (
-      <div>
+      <div className="table-card">
         <div className="single-table">
           <h1>Volume Table</h1>
           <ChartTable units={units1} table={"volume"} />
         </div>
-        <div className="single-table">
+        <div className="single-table weight">
           <h1>Weight Table</h1>
           <ChartTable units={units2} table={"weight"} />
         </div>
@@ -29,8 +29,10 @@ export default function ChartTables({ units }) {
     );
   } else {
     return (
-      <div className="single-table">
-        <h1>{unitDict[units[0]].normUnit === "mL" ? "Volume" : "Weight"} Table</h1>
+      <div className="table-card">
+        <h1>
+          {unitDict[units[0]].normUnit === "mL" ? "Volume" : "Weight"} Table
+        </h1>
         <ChartTable units={units} table={"single"} />
       </div>
     );
@@ -72,7 +74,11 @@ function ChartTable({ units, table }) {
             </th>
             {/* <th scope="col">Test</th> */}
             {units.map((unitName) => (
-              <th colSpan="2" scope="col" key={`${table} header ${unitName}`} className="bold" >
+              <th
+                colSpan="2"
+                scope="col"
+                key={`${table} header ${unitName}`}
+                className="bold">
                 {unitName.charAt(0).toUpperCase() + unitName.slice(1)}
               </th>
             ))}
@@ -80,7 +86,7 @@ function ChartTable({ units, table }) {
           <tr>
             {units.map((unitName) => (
               <th
-              className="small"
+                className="small"
                 colSpan="2"
                 scope="col"
                 key={`${table} "normU" ${unitDict[unitName].conversion}`}>

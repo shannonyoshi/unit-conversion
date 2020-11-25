@@ -166,7 +166,7 @@
 @mixin card-small {
   @include card-general;
   width: 31vw;
-  margin: $m-padding $xs-padding 0px;
+  margin: $xs-padding;
   padding-top: $s-padding;
   padding-bottom: $m-padding;
   min-height: 395px;
@@ -179,15 +179,15 @@
   min-height: 500px;
   width: 70vw;
   padding: $lg-padding;
-  margin: $lg-padding;
-  margin-bottom: $xlg-padding;
+  margin: 0 $lg-padding;
+
   // @media(max-width: 1100px){
   //   padding:$m-padding;
   //   margin:$m-padding;
   // }
   @media (max-width: 800px) {
     padding: $m-padding;
-    margin: $m-padding;
+    margin:0 $m-padding;
     width: 90vw;
   }
   @media (max-width: 700px) {
@@ -195,7 +195,7 @@
   }
   @media (max-width: 600px) {
     padding: $xs-padding;
-    margin: $xs-padding;
+    margin: 0 $xs-padding;
     width: 95vw;
   }
 }

@@ -10,6 +10,9 @@
     width: auto;
     max-width: 500px;
     &.header-logo {
+      @media (max-width: 800px) {
+      padding-bottom:$s-padding;
+      }
       @media (max-width: 600px) {
         justify-content: center;
         padding: $xxs-padding;
@@ -19,16 +22,19 @@
 
   &-icon {
     font-size: 4rem;
+    @media (max-width: 1100px) {
+      font-size: 3rem;
+    }
     &.header-logo{
-      @media (max-width: 1100px) {
-        font-size: 3rem;
-      }
       @media (max-width: 600px) {
         font-size: 2rem;
       }
     }
     &.footer-logo{
       font-size:3rem;
+      @media (max-width:800px){
+        font-size:2em;
+      }
     }
   }
   &-text {
@@ -48,6 +54,10 @@
     }
     &.footer-logo{
       font-size: 1.5rem;
+      @media (max-width:800px){
+        font-size:1em;
+      }
+
     }
   }
 }

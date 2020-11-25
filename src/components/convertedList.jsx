@@ -1,6 +1,8 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import {checkPluralUnit} from "../util/utilFunctions"
+
 export default function ConvertedList({ingredients, setIngredients, setInputs}) {
   // removes ingredient from list
   const deleteIngredient = (index) => {
@@ -51,7 +53,7 @@ export default function ConvertedList({ingredients, setIngredients, setInputs}) 
             {ingredients.map((ingredient, index) => (
               <div className="list-item" key={`O${index}`}>
                 <li className="original">
-                  {`${ingredient.amount} ${ingredient.currentUnit} ${ingredient.ingredientName}`}
+                  {`${ingredient.amount} ${checkPluralUnit(ingredient.amount, ingredient.currentUnit)} ${ingredient.ingredientName}`}
                 </li>
                 <div>
                   <FontAwesomeIcon

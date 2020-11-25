@@ -105,8 +105,6 @@ nav,
 section {
   display: block;
 }
-body {
-}
 ol,
 ul {
   list-style: none;
@@ -153,6 +151,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  // @media(max-width:600px){
+  //   padding-bottom: 400px;
+  // }
 }
 
 code {

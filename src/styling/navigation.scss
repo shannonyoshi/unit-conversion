@@ -2,10 +2,6 @@
 @import "mixins";
 
 
-// .nav-wrapper.footer-nav{
-
-//   // min-height:400px;
-// }
 nav {
   display: flex;
   align-items: flex-end;
@@ -16,7 +12,7 @@ nav {
   }
   &.header-nav {
     @media (max-width: 800px) {
-      max-width: 65vw;
+      width: 90vw;
     }
     @media (max-width: 600px) {
       max-height: 0px;
@@ -51,14 +47,13 @@ nav {
     }
   }
 
-  .inactive-nav-link {
+  .nav-link {
     text-decoration: none;
     color: color(light);
     outline: none;
     font-size: 2em;
     padding: $xs-padding;
     white-space: nowrap;
-
     border-bottom: 1px solid transparent;
     &:hover {
       border-bottom: 1px solid color(medium);
@@ -81,20 +76,14 @@ nav {
     }
     &.footer-nav {
       font-size:1rem;
-
-
-      // &:hover {
-      //   border-bottom: 1px solid transparent;
-      // }
     }
-  }
-  .active-nav-link {
-    text-decoration: none;
-    color: color(medium);
-    outline: none;
-    border-bottom: 1px solid transparent;
-    &.footer-nav :hover {
-      border-bottom: 1px solid color(medium);
+    &.active{
+      text-decoration: none;
+      color: color(medium);
+      outline: none;
+      &.footer-nav :hover {
+        border-bottom: 1px solid color(medium);
+      }
     }
   }
 }
