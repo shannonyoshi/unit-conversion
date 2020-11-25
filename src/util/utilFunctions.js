@@ -2,7 +2,7 @@ import { unitDict, allFractions } from "./units";
 
 //returns parsed amount in decimal or false if amount is unable to be parsed
 export const validateAmount = (amount) => {
-  //probably will never catch anything with this one
+  //probably will never catch anything with this one  ¯\_( )_/¯
   let result = false;
   if (typeof amount === "number") {
     return amount;
@@ -10,15 +10,14 @@ export const validateAmount = (amount) => {
   //split amount on white space, then remove excess white space
   let amountArray = amount.split(" ").map((item) => item.trim());
   amountArray = amountArray.filter((item) => item !== "");
-  //if whole number
+  //checks for whole number to return
   if (!amount.includes(".") && !amount.includes("/") && !amount.includes(",")) {
     const parsedWholeNum = parseInt(amountArray.join(""));
-    // console.log("parsedWholeNum", parsedWholeNum);
     if (typeof parsedWholeNum == "number") {
       result = parsedWholeNum;
     }
   }
-  //if amount is/has fraction
+  // checks amount is/has fraction
   if (amount.includes("/")) {
     result = validateFraction(amountArray);
   }
@@ -31,7 +30,6 @@ export const validateAmount = (amount) => {
       result = parsedFl;
     }
   }
-  // console.log("result", result);
   return result;
 };
 
@@ -83,14 +81,14 @@ export const checkPluralUnit = (amount, endUnitName) => {
   return returnString;
 };
 
-//returns tolerance in mLs of 2.5%
+//returns tolerance in mLs of +/-2.5%
 export const calcNormalizedTolerance = (normalizedAmount) => {
   const twoPointFivePercent = normalizedAmount * 1.025 - normalizedAmount;
 
   return twoPointFivePercent;
 };
 
-//filters fractions, remainder should be in decimal
+//filters fractions, remainder should be in decimal, if closest2, check if returning ["",1,"true"]
 export const filterFractions = (type, remainder = null) => {
   const closest2 = (fracs) => {
     //adds additional fraction to the end ["", 1.00, "true"]
@@ -105,7 +103,6 @@ export const filterFractions = (type, remainder = null) => {
     }
     return [current, next];
   };
-  // console.log('remainder', remainder)
   switch (type) {
     case "all":
       return allFractions;
@@ -116,18 +113,8 @@ export const filterFractions = (type, remainder = null) => {
       const close2Fracs = closest2(commonFracs);
       return close2Fracs[0];
     case "allClosest":
-      const closestF = allFractions.reduce((prev, curr)=> {
-    // console.log('curr:', curr, ' prev:',prev)
-    //     console.log('Math.abs(curr[1]-remainder):', Math.abs(curr[1]-remainder))
-    //     console.log('Math.abs(prev[1]-remainder):', Math.abs(prev[1]-remainder))
-        return Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder)? curr: prev
-      })
-      console.log('closestF', closestF)
-      return closestF
-      // return allFractions.reduce((prev, curr) =>{
-      //   return Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder)? curr: prev
-      // }
-      // );
+      return allFractions.reduce((prev, curr)=> {
+        return Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder)? curr: prev})
     case "commonClosest":
       return allFractions.reduce((prev, curr) =>
         Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder) &&
@@ -151,15 +138,9 @@ export const findPossibleUnits = (
   targetNormUnit,
   exclude = null
 ) => {
-  // console.log('exclude', exclude)
+
   const possible = [];
-  // console.log(unitDisct);
   for (let [key, value] of Object.entries(unitDict)) {
-    // console.log('KEY', key)
-    // console.log('value.type===targetUnitType', value.type===targetUnitType)
-    // console.log('value.conversion<=remainingmLs', value.conversion<=remainingmLs)
-    // console.log('value.normUnit===targetNormUnit', value.normUnit===targetNormUnit)
-    // console.log('key!=exclude', key!=exclude)
     if (
       value.type === targetUnitType &&
       value.conversion <= remainingmLs &&
@@ -167,31 +148,25 @@ export const findPossibleUnits = (
       key !== exclude
     ) {
       possible.push([key, value.conversion]);
-      // console.log('possible after add', possible)
     }
   }
-  // console.log('possible being returned from findPossibleUnits', possible)
-  // possible.map(unit=>console.log('unit', unit))
-  // console.log('possible.length', possible.length)
   return possible.reverse();
 };
-//accepts unitDict OR array of unit names
+
+//filters based on filterType matching provided filterString, accepts unitDict OR array of unit names
 export const filterUnits = (filterType, filterString, units = unitDict) => {
   let result = [];
   if (Array.isArray(units)) {
-    // console.log('array')
     result = units.filter(
       (unitName) => unitDict[unitName][filterType] === filterString
     );
   } else {
     for (let [key, value] of Object.entries(units)) {
       if (value[filterType] === filterString) {
-        // console.log('filterType===filterString', filterType,filterString)
         result.push(key);
       }
     }
   }
 
-  // console.log('2. filterString', filterString,'filterResults', result)
   return result;
 };

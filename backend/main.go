@@ -104,6 +104,7 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 		} else {
 			fmt.Println(err)
 		}
+		return
 	}
 	target := models.Convert(ingrInput, record)
 

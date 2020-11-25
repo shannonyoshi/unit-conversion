@@ -17,7 +17,7 @@ export const convertSimple = (amount, inputs) => {
     inputs.currentUnit,
     targetUnitInDecimal,
     inputs.targetUnit,
-    targetUnit,
+ 
     normalizedAmount
   );
   const convertedIngr = {
@@ -51,14 +51,15 @@ export const convertComplex = async (inputs, isAmount) => {
   const newIngredient = await postConversion(complexIngr);
   console.log("newIngredient", newIngredient);
   // TODO: should prettify converted string since only decimal is being returned
+  const normalizedAmount = newIngredient.targetAmount * unitDict[inputs.targetUnit].conversion
+  const prettyString = prettifyRemainder(inputs.currentUnit, newIngredient.targetAmount, inputs.targetUnit, normalizedAmount)
+  console.log('prettyString', prettyString)
   const formattedIngr = {
     amount: inputs.amount,
     currentUnit: inputs.currentUnit,
     targetUnit: inputs.targetUnit,
     ingredientName: inputs.ingredientName,
-    convertedString: `${Math.round(newIngredient.targetAmount * 1000) / 1000} ${
-      newIngredient.targetUnit
-    } ${inputs.ingredientName}`,
+    convertedString: `${prettyString} ${inputs.ingredientName}`,
   };
   return formattedIngr;
 };
@@ -68,9 +69,9 @@ const prettifyRemainder = (
   startingUnitName,
   targetUnitInDecimal,
   targetUnitName,
-  targetUnit,
   normalizedAmount
 ) => {
+  const targetUnit=unitDict[targetUnitName]
   const normalizedTolerance = calcNormalizedTolerance(normalizedAmount);
   const decimalTolerance = normalizedTolerance / targetUnit.conversion;
   let targetUnitInt = Math.floor(targetUnitInDecimal);

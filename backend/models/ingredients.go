@@ -102,6 +102,7 @@ func ConvertToRatio(input IngredientInput, info IngredientInfo) Ingredient {
 
 // Convert handles the conversion for ingredients already in the Ingredients table
 func Convert(input IngredientInput, ingr Ingredient) IngredientInfo {
+	fmt.Printf("\n\nparameters from Convert\nIngredientInput: %+v\n Ingredient: %+v\n", input, ingr)
 	var targetAmount float64
 	switch input.AltUnit {
 	case "mL":
