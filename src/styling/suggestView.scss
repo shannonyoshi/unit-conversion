@@ -12,7 +12,6 @@
   .card-med-large {
     @include card-large;
     line-height: 3em;
-    // width: 60vw;
     text-align: center;
     padding: $lg-padding;
   }
@@ -29,12 +28,6 @@
     align-items: flex-start;
     flex-wrap: wrap;
     justify-content: center;
-    // text-align: left;
-    // width: auto;
-    // @media (max-width: 1000px) {
-    // padding: $s-padding;
-    // align-items: center;
-    // }
     @media (max-width: 800px) {
       padding: $s-padding;
     }
@@ -44,9 +37,7 @@
     }
     &.checkbox {
       flex-wrap: nowrap !important;
-      // display: flex;
-      // flex-direction: row;
-      align-items:center;
+      align-items: center;
     }
 
     .suggestion-label {
@@ -69,7 +60,6 @@
   }
   span {
     line-height: 1.25;
-    // width: auto;
     max-width: 70vw;
     color: color(dark);
   }
@@ -78,9 +68,9 @@
     min-width: 300px;
     width: 60%;
     max-width: 90vw;
-    @media(max-width: 600px){
-      min-width:100px;
-      width:100%;
+    @media (max-width: 600px) {
+      min-width: 100px;
+      width: 100%;
     }
   }
   .checker {
@@ -91,9 +81,9 @@
     width: 60%;
     max-width: 90vw;
     min-width: 300px;
-    @media(max-width: 600px){
-      min-width:100px;
-      width:100%;
+    @media (max-width: 600px) {
+      min-width: 100px;
+      width: 100%;
     }
   }
 
@@ -117,15 +107,49 @@
     line-height: 1.25em;
     color: color(dark);
   }
-  .icon-btn {
-    font-size: 2em;
+}
+
+//suggestionCard
+.icons {
+  padding-top: $m-padding;
+  float: right;
+  font-size:2em;
+  @media(max-width: 1100px) {
+    font-size:1.7em;
+  }
+  @media (max-width: 600px) {
+    font-size:1.5em;
     padding: $s-padding;
   }
-
+  .icon-btn {
+    // width: 2em;
+    // height: 2em;
+    margin: $xxs-padding;
+  }
   .edit-icon {
     @include edit-btn;
   }
   .del-icon {
     @include del-btn;
   }
+}
+
+.deleted{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  line-height:1em;
+
+  .warning {
+    color: color(alert);
+  }
+  .reset {
+    margin:$xs-padding;
+
+    color: color(alert);
+    &:hover {
+      color: color(accent);
+    }
+  }
+  
 }

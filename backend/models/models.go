@@ -16,9 +16,9 @@ type Suggestion struct {
 	Name      string     `json:"name"`
 	Email     string     `json:"email"`
 	Message   string     `json:"message"`
-	IsError   bool       `json:"is_error"`
-	CreatedAt time.Time  `json:"created_at"`
-	ViewedAt  *time.Time `json:"viewed_at"`
+	IsError   bool       `json:"isError"`
+	CreatedAt time.Time  `json:"createdAt"`
+	ViewedAt  *time.Time `json:"viewedAt"`
 }
 
 // IngredientInput for receiving ingredients from users

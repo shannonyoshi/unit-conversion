@@ -9,9 +9,9 @@ export const postSuggestion = async (suggestion) => {
     },
     body: JSON.stringify(suggestion),
   };
-  //  console.log('request', request)
+   console.log('request', request)
   const response = await fetch(`${baseURL}suggest`, request);
-  // console.log('response', response)
+  console.log('response', response)
   // console.log('response.status', response.status)
   if (!response.ok) {
     console.log(response);

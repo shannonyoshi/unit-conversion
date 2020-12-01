@@ -7,18 +7,19 @@ import SuggestionCard from "../components/suggestionCard"
 
 export default function SuggestView() {
   const blankSuggestion = {
-    country:"",
-    Name: "",
-    Message: "",
-    Email: "",
-    IsError: false,
+    checker:"",
+    name: "",
+    message: "",
+    email: "",
+    isError: false,
   };
   const [suggestion, setSuggestion] = useState(blankSuggestion);
   const [showCard, setShowCard] = useState(false);
   const [isEdit, setIsEdit] = useState(false)
   const submitForm = async() => {
+    console.log('submitForm()')
     let sugToSubmit = suggestion
-    delete sugToSubmit["country"]
+    delete sugToSubmit["checker"]
     let returnedSug={}
     if (isEdit) {
       returnedSug = await putSuggestion(suggestion)
@@ -45,11 +46,6 @@ export default function SuggestView() {
 
   return (
     <div className="page-wrapper">
-      <div className="card-med-large">
-        <h1 className="card-title">{showCard? "Submitted Suggestion":"Suggestion Form"}</h1>
-        {/* <h1 className="card-title">
-          Page currently being constructed, check back soon!
-        </h1> */}
         {showCard ? (
           <SuggestionCard toggleEdit={toggleEdit} suggestion={suggestion} reset={reset}/>
         ) : (
@@ -60,7 +56,6 @@ export default function SuggestView() {
             submitForm={submitForm}
           />
         )}
-      </div>
     </div>
   );
 }
