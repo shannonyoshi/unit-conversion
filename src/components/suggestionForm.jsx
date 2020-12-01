@@ -103,7 +103,7 @@ export default function SuggestionForm({
               Please check this if you are reporting an error or issue
             </span>
           </div>
-          <button type="submit" className="submit-button">
+          <button type="submit" disabled={suggestion.message.length<1? true:false} className="submit-button">
             {isEdit ? "Update" : "Submit"}
           </button>
         </form>

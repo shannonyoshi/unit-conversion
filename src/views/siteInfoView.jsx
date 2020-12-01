@@ -22,9 +22,9 @@ export default function SiteInfoView() {
           the need for Redux or Context. Text parsing, validation, and simple
           conversions&mdash;defined as weight to weight or volume to
           volume&mdash;are handled by the front end since no additional
-          information is required. The results of simple conversions are within
-          +/-2.5% of the input amount in order to balance accuracy and
-          readability.
+          information is required. For now the forms have honeypots to weed out
+          bots. The results of simple conversions are within +/-2.5% of the
+          input amount in order to balance accuracy and readability.
         </p>
 
         <p className="indent">
@@ -49,7 +49,7 @@ export default function SiteInfoView() {
         </p>
         <h3 className="card-subtitle">Admin Portal</h3>
         <p>
-          <span>What:</span> Create an admin portal with user verification and
+          <span>What:</span> Create an admin portal with user authentication and
           CRUD functionality for suggestions
         </p>
         <p>
