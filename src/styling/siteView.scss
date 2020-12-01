@@ -1,16 +1,24 @@
 @import "variables";
 @import "mixins";
 
-.page-wrapper {
+// siteInfoView.jsx
+.info-page-wrapper {
   height: auto;
-  width: 100%;
+  widows: 100%;
+  padding: $xlg-padding 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-  .link{
-      text-decoration: none;
-      color:color(medium);
+  .github-icon{
+    color:color(medium);
+    @include hover-raise;
+    &:hover {
+      color:color(dark-highlight)
+    }
   }
+  .second{
+    padding-bottom: 0;
+  }
+
   p {
     padding: 0px $xs-padding;
     color: color(dark);
@@ -21,21 +29,15 @@
     max-width: 70ch;
     margin-bottom: 1.5em;
     @media(max-width:600px){
-        font-size:1em;
-        line-height:1.24em;
-      }
+      font-size:1em;
+      line-height:1.24em;
+    }
   }
   .indent {
     text-indent: 4ch;
   }
-}
-.card-large {
-  @include card-large;
-  line-height: 3em;
-  .card-title{
-      font-weight: bold;
-  }
-  .card-subtitle{
+  span {
     font-weight: bold;
+    color: color(medium);
   }
 }

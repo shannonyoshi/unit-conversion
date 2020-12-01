@@ -126,11 +126,33 @@
   padding: $m-padding;
   color: color(dark);
   @media(max-width: 1100px) {
+    line-height:2em;
     font-size:1.7em;
   }
   @media(max-width: 600px) {
-    font-size:1.5em;
-    padding: $s-padding
+
+    line-height:1.5em;
+    font-size:1.25em;
+    padding: $xs-padding;
+    font-weight:bold;
+  }
+}
+@mixin subtitle {
+  font-size: 1.5em;
+  padding: $s-padding;
+  color: color(dark);
+  color:color(medium);
+  line-height: 1.7em;
+  @media(max-width: 1100px) {
+    line-height:1.5em;
+    font-size:1.25em;
+    padding: $xs-padding;
+  }
+  @media(max-width: 600px) {
+    line-height:1.25em;
+    font-size:1.1em;
+    padding: $xxs-padding;
+    font-weight:bold;
   }
 }
 
@@ -152,11 +174,11 @@
   .card-title {
     @include title;
     @media (max-width: 600px) {
-      padding: $xs-padding;
-      font-size: 1.25em;
-      font-weight: bold;
       margin: 0;
     }
+  }
+  .card-subtitle {
+    @include subtitle;
   }
   .full {
     width: 90vw;

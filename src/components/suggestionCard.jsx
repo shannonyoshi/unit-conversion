@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { delSuggestion } from "../util/crudFuncs";
 
 export default function SuggestionCard({ toggleEdit, suggestion, reset }) {
-  // console.log('suggestion', suggestion)
   const [message, setMessage] = useState("");
   const [deleted, setDeleted] = useState(false);
   const removeSug = async (e) => {
@@ -22,7 +21,6 @@ export default function SuggestionCard({ toggleEdit, suggestion, reset }) {
     }
   };
 
-  // console.log("suggestion in SUGGESTION CARD", suggestion);
   return (
     <div className="card-med-large">
       <div></div>

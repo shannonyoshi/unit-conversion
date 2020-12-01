@@ -1,4 +1,6 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import Logo from "../components/Logo";
 import Navigation from "../components/navigation";
 
@@ -9,6 +11,11 @@ export default function Footer() {
       <footer>
         <Logo description="footer-logo" />
         <Navigation description="footer-nav" />
+        <a
+            href="https://github.com/shannonyoshi/unit-conversion"
+            target="_blank">
+            <FontAwesomeIcon icon={["fab", "github"]} className="github-icon"/>
+          </a>
       </footer>
     </div>
   );

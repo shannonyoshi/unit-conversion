@@ -3,17 +3,10 @@
 
 .footer-wrapper {
   background-color: color(darkest);
-
   height: 300px;
   width:100%;
   position: absolute;
   bottom: 0;
-  // &-logo{
-  //   padding: $m-padding;
-  // }
-  // &-nav{
-  //   width:50vw;
-  // }
   footer {
     height:100%;
     display: flex;
@@ -21,5 +14,12 @@
     align-items: center;
     flex-direction: column;
     justify-content: space-around;
+  }
+  .github-icon{
+    color:color(medium);
+    font-size: 2em;
+    &:hover {
+      color:color(dark-highlight)
+    }
   }
 }

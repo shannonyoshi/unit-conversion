@@ -17,8 +17,9 @@ import {
   faEdit,
   faSyncAlt
 } from "@fortawesome/free-solid-svg-icons";
+import {faGithub} from "@fortawesome/free-brands-svg-icons"
 
-library.add(faTrashAlt, faBalanceScale, faChevronDown, faEdit, faSyncAlt);
+library.add(faTrashAlt, faBalanceScale, faChevronDown, faEdit, faSyncAlt, faGithub);
 function App() {
   // ingredient ex. {"Amount": "3", "currentUnit": "cups", "targetUnit": "grams", "ingredient": "flour", "id": 0}
   return (

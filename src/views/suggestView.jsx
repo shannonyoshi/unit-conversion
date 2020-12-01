@@ -17,7 +17,6 @@ export default function SuggestView() {
   const [showCard, setShowCard] = useState(false);
   const [isEdit, setIsEdit] = useState(false)
   const submitForm = async() => {
-    console.log('submitForm()')
     let sugToSubmit = suggestion
     delete sugToSubmit["checker"]
     let returnedSug={}
@@ -26,7 +25,6 @@ export default function SuggestView() {
     } else {
       returnedSug = await postSuggestion(suggestion);
     }
-    console.log('returnedSug', returnedSug)
     setSuggestion(returnedSug);
     setShowCard(true);
     setIsEdit(false)
