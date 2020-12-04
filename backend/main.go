@@ -137,6 +137,8 @@ func main() {
 	mux.HandleFunc("/api/suggest", suggestionPage)
 	mux.HandleFunc("/api/view-suggestions", viewAllSuggestions)
 	mux.HandleFunc("/api/convert", conversionPage)
+	fs := http.FileServer(http.Dir("./static"))
+	mux.Handle("/", fs)
 
 	c := cors.AllowAll()
 
