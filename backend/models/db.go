@@ -12,7 +12,14 @@ var conn *pgx.Conn
 func init() {
 	var err error
 
-	conn, err = pgx.Connect(context.Background(), "postgresql://user:password@localhost:5432/development")
+	pgstr := os.Getenv("PGCONN")
+
+	if pgstr == "" {
+		panic(errors.New("no pgconn provided, put PGCONN='connect string' in your environment"))
+	}
+
+	// "postgresql://user:password@localhost:5432/development"
+	conn, err = pgx.Connect(context.Background(), pgstr)
 	if err != nil {
 		panic(err)
 	}
