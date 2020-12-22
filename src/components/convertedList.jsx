@@ -59,7 +59,7 @@ export default function ConvertedList({ingredients, setIngredients, setInputs}) 
                   <FontAwesomeIcon
                     icon="edit"
                     className="edit-item icon-btn"
-                    onClick={(e) => editIngredient(index)}
+                    onClick={(e) => editIngredient(e, index)}
                   />
                   <FontAwesomeIcon
                     icon="trash-alt"
