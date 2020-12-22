@@ -2,7 +2,9 @@ package models
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"os"
 
 	"github.com/jackc/pgx/v4"
 )
