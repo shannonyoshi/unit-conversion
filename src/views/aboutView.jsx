@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import "../styling/aboutView.scss";
 
@@ -35,14 +36,14 @@ export default function AboutView() {
           it this far, and I still have plans to add features. If you want to
           learn more about the technical aspects and plans for this site, check
           out the{" "}
-          <a href="/site-info" className="link">
+          <Link to="/site-info" className="link">
             Site Info page
-          </a>
+          </Link>
           . If you have any concerns or feature suggestions, please submit them
           via the form on the{" "}
-          <a href="/suggestions" className="link">
+          <Link to="/suggestions" className="link">
             Suggestions page
-          </a>
+          </Link>
           .
         </p>
       </div>

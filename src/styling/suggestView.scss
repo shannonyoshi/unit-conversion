@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: $xlg-padding 0;
+  padding: $lg-padding 0;
   .card-med-large {
     @include card-large;
     line-height: 3em;
