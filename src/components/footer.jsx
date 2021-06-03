@@ -13,7 +13,7 @@ export default function Footer() {
         <Navigation description="footer-nav" />
         <a
             href="https://github.com/shannonyoshi/unit-conversion"
-            target="_blank">
+            target="_blank" rel="noopener noreferrer">
             <FontAwesomeIcon icon={["fab", "github"]} className="github-icon"/>
           </a>
       </footer>

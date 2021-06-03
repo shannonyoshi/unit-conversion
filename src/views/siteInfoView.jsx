@@ -12,7 +12,8 @@ export default function SiteInfoView() {
           Site Info{" "}
           <a
             href="https://github.com/shannonyoshi/unit-conversion"
-            target="_blank">
+            target="_blank"
+            rel="noopener noreferrer">
             <FontAwesomeIcon icon={["fab", "github"]} className="github-icon" />
           </a>
         </h1>

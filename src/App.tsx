@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { Route } from "react-router-dom";
 
 import Header from "./components/header";
@@ -17,10 +17,10 @@ import {
   faEdit,
   faSyncAlt
 } from "@fortawesome/free-solid-svg-icons";
-import {faGithub} from "@fortawesome/free-brands-svg-icons"
+import { faGithub } from "@fortawesome/free-brands-svg-icons"
 
 library.add(faTrashAlt, faBalanceScale, faChevronDown, faEdit, faSyncAlt, faGithub);
-function App() {
+const App: FC = (): JSX.Element => {
   // ingredient ex. {"Amount": "3", "currentUnit": "cups", "targetUnit": "grams", "ingredient": "flour", "id": 0}
   return (
     <div className="App">

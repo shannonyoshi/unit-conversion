@@ -1,17 +1,27 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect } from "react";
+import React, { FC, useEffect } from "react";
 
 import { unitDict } from "../util/units";
 import { filterUnits } from "../util/utilFunctions";
+import { Filter } from "../types"
 
-export default function ChartFilter({
+type FilterProps = {
+  unitFilters: Filter[],
+  unitFilter: Filter,
+  setUnitFilter: (filter: Filter) => void,
+  setUnits: (units: string[]) => void,
+  showCustomFilter: boolean,
+  setShowCustomFilter: (show: boolean) => void
+}
+
+const ChartFilter: FC<FilterProps> = ({
   unitFilters,
   unitFilter,
   setUnitFilter,
   setUnits,
   showCustomFilter,
   setShowCustomFilter,
-}) {
+}: FilterProps): JSX.Element => {
   useEffect(() => {
     const filterByType = () => {
       //   console.log("1. unitFilter", unitFilter);
@@ -55,7 +65,7 @@ export default function ChartFilter({
         id="filter"
         name="filter"
         value={unitFilter}
-        onChange={(e) => setUnitFilter(e.target.value)}>
+        onChange={(e) => setUnitFilter(e.target.value as Filter)}>
         {unitFilters.map((item) => (
           <option value={item} key={`filter${item}`}>
             {item}
@@ -74,3 +84,4 @@ export default function ChartFilter({
     </div>
   );
 }
+export default ChartFilter;

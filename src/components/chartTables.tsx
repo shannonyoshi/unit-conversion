@@ -1,8 +1,13 @@
-import React from "react";
+import React, { FC } from "react";
 import { unitDict } from "../util/units";
 import { filterFractions, filterUnits } from "../util/utilFunctions";
 
-export default function ChartTables({ units }) {
+type TablesProps = {
+  units: any[]
+}
+
+
+const ChartTables: FC<TablesProps> =({ units }: TablesProps): JSX.Element => {
   let chartType = new Set();
   for (let i = 0; i < units.length; i++) {
     let curr = units[i];
@@ -38,8 +43,13 @@ export default function ChartTables({ units }) {
     );
   }
 }
+// TODO: make units type more specific
+type TableProps = {
+  units:any,
+  table:string
+}
 
-function ChartTable({ units, table }) {
+const ChartTable:FC<TableProps>=({ units, table }:TableProps):JSX.Element=> {
   let tData = [];
   for (let i = 0; i < units.length; i++) {
     let currName = units[i];
@@ -56,9 +66,8 @@ function ChartTable({ units, table }) {
         "allClosest",
         conversion - convertedInt
       );
-      subResult["string"] = `${convertedInt > 0 ? convertedInt + " " : ""}${
-        closestFrac[0]
-      }`;
+      subResult["string"] = `${convertedInt > 0 ? convertedInt + " " : ""}${closestFrac[0]
+        }`;
       currResult.rData.push(subResult);
     }
     tData.push(currResult);
@@ -128,3 +137,6 @@ function ChartTable({ units, table }) {
     </div>
   );
 }
+
+
+export default ChartTables;

@@ -1,12 +1,8 @@
-import React from "react";
+import React, { FC } from "react";
 
 import "../styling/aboutView.scss";
 
-export default function AboutView() {
-  // return( <div>
-  //     <h2>About Me</h2>
-  //     </div>
-  // )
+const AboutView: FC = (): JSX.Element => {
   return (
     <div className="page-wrapper">
       <div className="card-large">
@@ -48,4 +44,5 @@ export default function AboutView() {
       </div>
     </div>
   );
-}
+};
+export default AboutView;
