@@ -11,6 +11,7 @@ export default function Footer() {
       <footer>
         <Logo description="footer-logo" />
         <Navigation description="footer-nav" />
+        <a href="https://syoshi.dev/" className="portfolio-link"><p>Portfolio</p></a>
         <a
             href="https://github.com/shannonyoshi/unit-conversion"
             target="_blank">

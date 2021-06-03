@@ -134,11 +134,16 @@ func viewAllSuggestions(w http.ResponseWriter, r *http.Request) {
 func main() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/api/suggest", suggestionPage)
-	mux.HandleFunc("/api/view-suggestions", viewAllSuggestions)
-	mux.HandleFunc("/api/convert", conversionPage)
+	//mux.HandleFunc("/api/suggest", suggestionPage)
+	//mux.HandleFunc("/api/view-suggestions", viewAllSuggestions)
+	//mux.HandleFunc("/api/convert", conversionPage)
 	fs := http.FileServer(http.Dir("./static"))
 	mux.Handle("/", fs)
+	// to fix react routing issue, all pages will first redirect to base url instead of 404
+	mux.Handle("/suggestions", http.RedirectHandler("https://bakingunits.com/",307))
+	mux.Handle("/charts", http.RedirectHandler("https://bakingunits.com/",307))
+	mux.Handle("/about-me", http.RedirectHandler("https://bakingunits.com/",307))
+	mux.Handle("/site-info", http.RedirectHandler("https://bakingunits.com/",307))
 
 	c := cors.AllowAll()
 

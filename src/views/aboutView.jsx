@@ -12,6 +12,7 @@ export default function AboutView() {
     <div className="page-wrapper">
       <div className="card-large">
         <h1 className="card-title">About Me</h1>
+        <a href="https://syoshi.dev/" className="link port" target="_blank"><h4>View my portfolio</h4></a>
         <p className="indent">
           I love baking! Learning about food science is fun&mdash;sometimes
           frustrating&mdash;and always interesting. Plus, seeing friends and

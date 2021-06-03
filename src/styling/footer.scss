@@ -15,6 +15,13 @@
     flex-direction: column;
     justify-content: space-around;
   }
+  .portfolio-link{
+    text-decoration:none;
+    color:color(medium);
+    outline: none;
+    font-size:1.2em;
+
+  }
   .github-icon{
     color:color(medium);
     font-size: 2em;
