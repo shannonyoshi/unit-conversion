@@ -1,12 +1,19 @@
-import React from "react";
+import React, {FC} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import "../styling/logo.scss";
 
-export default function Logo({description=""}) {
+interface LogoProps {
+  description: string;
+}
+
+const Logo: FC<LogoProps> = ({ description }: LogoProps): JSX.Element => {
   return (
     <div className={`logo-wrapper ${description}`}>
-      <FontAwesomeIcon icon="balance-scale" className={`logo-icon ${description}`} />
+      <FontAwesomeIcon
+        icon="balance-scale"
+        className={`logo-icon ${description}`}
+      />
       <h3 className={`logo-text ${description}`}>
         Baking Unit
         <br />
@@ -14,4 +21,6 @@ export default function Logo({description=""}) {
       </h3>
     </div>
   );
-}
+};
+
+export default Logo;

@@ -1,9 +1,15 @@
-import React from "react";
+import React, { Dispatch, SetStateAction, FC } from "react";
 import { NavLink } from "react-router-dom";
 
 import "../styling/navigation.scss";
 
-export default function Navigation({ description, clickHandler = null }) {
+interface NavProps {
+  description: string,
+  clickHandler?: (e:React.MouseEvent) => void;
+}
+
+
+const Navigation: FC<NavProps> = ({ description, clickHandler }: NavProps): JSX.Element => {
   return (
     <div className={`nav-wrapper ${description}`}>
       <nav
@@ -43,4 +49,6 @@ export default function Navigation({ description, clickHandler = null }) {
       </nav>
     </div>
   );
-}
+};
+
+export default Navigation;

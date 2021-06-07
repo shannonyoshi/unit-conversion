@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import { validateAmount, checkIfSimple } from "../util/utilFunctions";
 import { convertComplex, convertSimple } from "../util/conversionFunctions";
 import { unitDict } from "../util/units";
 
+import {IngrInput} from "../types"
+
 import ShowErrors from "./errors";
 
 const unitKeys = Object.keys(unitDict);
+
+interface FormProps {
+  setConvertedIngredients:Dispatch<SetStateAction<>,
+  convertedIngredients,
+  inputs:IngrInputs,
+  setInputs: Dispatch<SetStateAction<IngrInputs>>,
+  initialInputState:IngrInputs,
+}
 
 export default function ConversionForm({
   setConvertedIngredients,
