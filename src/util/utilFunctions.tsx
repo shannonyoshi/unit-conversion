@@ -1,9 +1,12 @@
 import { unitDict, allFractions } from "./units";
+import { Fraction } from "../types"
+
+// TODO: rewrite validateAmount to work better in typescript
 
 //returns parsed amount in decimal or false if amount is unable to be parsed
 export const validateAmount = (amount) => {
   //probably will never catch anything with this one  ¯\_( )_/¯
-  let result = false;
+  let result: any = false;
   if (typeof amount === "number") {
     return amount;
   }
@@ -89,10 +92,10 @@ export const calcNormalizedTolerance = (normalizedAmount) => {
 };
 
 //filters fractions, remainder should be in decimal, if closest2, check if returning ["",1,"true"]
-export const filterFractions = (type, remainder = null) => {
-  const closest2 = (fracs) => {
+export const filterFractions = (type: string, remainder?: number): Fraction[] => {
+  const closest2 = (fracs: Fraction[], remainder: number):Fraction[] => {
     //adds additional fraction to the end ["", 1.00, "true"]
-    fracs.push([fracs[0][0], fracs[0][1] + 1, fracs[0][2]]);
+    fracs.push({ fraction: fracs[0][0], decimal: fracs[0][1] + 1, common: fracs[0][2] });
     let i = 0;
     let next = fracs[1];
     let current = fracs[i];
@@ -107,24 +110,25 @@ export const filterFractions = (type, remainder = null) => {
     case "all":
       return allFractions;
     case "common":
-      return allFractions.filter((fraction) => fraction[2] === true);
+      return allFractions.filter((fraction) => fraction.common === true);
     case "commonClosestLower":
-      const commonFracs = filterFractions("common");
-      const close2Fracs = closest2(commonFracs);
-      return close2Fracs[0];
+      const commonFracs: Fraction[] = filterFractions("common");
+      const close2Fracs: Fraction[] = closest2(commonFracs, remainder);
+      return [close2Fracs[0]];
     case "allClosest":
-      return allFractions.reduce((prev, curr)=> {
-        return Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder)? curr: prev})
+      return [allFractions.reduce((prev, curr) => {
+        return Math.abs(curr.decimal - remainder) < Math.abs(prev.decimal - remainder) ? curr : prev
+      })]
     case "commonClosest":
-      return allFractions.reduce((prev, curr) =>
-        Math.abs(curr[1] - remainder) < Math.abs(prev[1] - remainder) &&
-        curr[2] === true
+      return [allFractions.reduce((prev, curr) =>
+        Math.abs(curr.decimal - remainder) < Math.abs(prev.decimal - remainder) &&
+          curr[2] === true
           ? curr
           : prev
-      );
+      )];
     case "commonClosest2":
       let common = filterFractions("common");
-      return closest2(common);
+      return closest2(common, remainder);
     default:
       return null;
   }
@@ -153,16 +157,17 @@ export const findPossibleUnits = (
   return possible.reverse();
 };
 
-//filters based on filterType matching provided filterString, accepts unitDict OR array of unit names
-export const filterUnits = (filterType, filterString, units = unitDict) => {
-  let result = [];
-  if (Array.isArray(units)) {
+
+//filters based on propertyName matching provided filterString, accepts array of unit names
+export const filterUnits = (propertyName: string, filterString: string, units?: string[]): string[] => {
+  let result: string[] = [];
+  if (units) {
     result = units.filter(
-      (unitName) => unitDict[unitName][filterType] === filterString
+      (unitName) => unitDict[unitName][propertyName] === filterString
     );
   } else {
     for (let [key, value] of Object.entries(units)) {
-      if (value[filterType] === filterString) {
+      if (value[propertyName] === filterString) {
         result.push(key);
       }
     }

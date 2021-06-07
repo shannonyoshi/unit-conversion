@@ -11,7 +11,7 @@ import "../styling/chartView.scss";
 //filters units according to user input, calls chartTables
 const ChartView: FC = (): JSX.Element => {
   const [unitFilter, setUnitFilter] = useState<Filter>("All");
-  const [units, setUnits] = useState(Object.keys(unitDict));
+  const [units, setUnits] = useState<string[]>(Object.keys(unitDict));
   const [showCustomFilter, setShowCustomFilter] = useState<boolean>(false);
   const [customUnits, setCustomUnits] = useState([]);
   let unitFilters:Filter[] = ["All", "Standard", "Metric", "Weight", "Volume", "Custom"];

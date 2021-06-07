@@ -16,11 +16,16 @@ export interface Fraction {
   common: boolean
 }
 
+type NormUnit = "mL" | "g"
+type Output = "fraction" | "decimal"
+type UnitType = "US" | "metric"
+
 export interface Unit {
   name: string,
-  normalizedU: string,
+  normUnit: NormUnit, 
+  //conversion: mL/gram
   conversion: number,
-  output:string,
-  type: string,
+  output:Output,
+  type: UnitType,
   singular: string
 }

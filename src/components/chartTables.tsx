@@ -3,12 +3,12 @@ import { unitDict } from "../util/units";
 import { filterFractions, filterUnits } from "../util/utilFunctions";
 
 type TablesProps = {
-  units: any[]
+  units: string[]
 }
 
 
-const ChartTables: FC<TablesProps> =({ units }: TablesProps): JSX.Element => {
-  let chartType = new Set();
+const ChartTables: FC<TablesProps> = ({ units }: TablesProps): JSX.Element => {
+  let chartType: Set<string> = new Set();
   for (let i = 0; i < units.length; i++) {
     let curr = units[i];
     chartType.add(unitDict[curr].normUnit);
@@ -43,32 +43,46 @@ const ChartTables: FC<TablesProps> =({ units }: TablesProps): JSX.Element => {
     );
   }
 }
-// TODO: make units type more specific
+
 type TableProps = {
-  units:any,
-  table:string
+  units: string[],
+  table: string
 }
 
-const ChartTable:FC<TableProps>=({ units, table }:TableProps):JSX.Element=> {
-  let tData = [];
+interface SubR {
+  decimal: number,
+  string: string
+}
+
+interface RowData {
+  heading: string,
+  rowData:SubR[]
+}
+
+const ChartTable: FC<TableProps> = ({ units, table }: TableProps): JSX.Element => {
+  let tData:RowData[]=[];
   for (let i = 0; i < units.length; i++) {
-    let currName = units[i];
-    let currResult = { heading: currName, rData: [] };
-    let currAmount = unitDict[currName].conversion;
+    let currName: string = units[i];
+    let currResult:RowData = { heading: currName, rowData: [] };
+    let currAmount: number = unitDict[currName].conversion;
     for (let k = 0; k < units.length; k++) {
-      let subResult = {};
-      let subU = units[k];
-      let targetAmount = unitDict[subU].conversion;
-      let conversion = targetAmount / currAmount;
-      subResult["decimal"] = Math.floor(conversion * 100) / 100;
-      let convertedInt = Math.floor(conversion);
+      let subU: string = units[k];
+      let conversion: number = unitDict[subU].conversion/ currAmount;
+      let convertedInt:number = Math.floor(conversion);
+      
       let closestFrac = filterFractions(
         "allClosest",
-        conversion - convertedInt
+        (conversion - convertedInt)
       );
-      subResult["string"] = `${convertedInt > 0 ? convertedInt + " " : ""}${closestFrac[0]
-        }`;
-      currResult.rData.push(subResult);
+      let deci:number = Math.floor(conversion * 100) / 100
+      // let str =
+      let subResult: SubR = {
+        decimal: deci, 
+        string: `${convertedInt > 0 ? convertedInt + " " : ""}${closestFrac[0]
+          }`
+      };
+
+      currResult.rowData.push(subResult);
     }
     tData.push(currResult);
   }
@@ -78,13 +92,13 @@ const ChartTable:FC<TableProps>=({ units, table }:TableProps):JSX.Element=> {
       <table>
         <thead>
           <tr>
-            <th scope="col" rowSpan="2" className="bold">
+            <th scope="col" rowSpan={2} className="bold">
               Units
             </th>
             {/* <th scope="col">Test</th> */}
             {units.map((unitName) => (
               <th
-                colSpan="2"
+                colSpan={2}
                 scope="col"
                 key={`${table} header ${unitName}`}
                 className="bold">
@@ -96,7 +110,7 @@ const ChartTable:FC<TableProps>=({ units, table }:TableProps):JSX.Element=> {
             {units.map((unitName) => (
               <th
                 className="small"
-                colSpan="2"
+                colSpan={2}
                 scope="col"
                 key={`${table} "normU" ${unitDict[unitName].conversion}`}>
                 ({unitDict[unitName].conversion} {unitDict[unitName].normUnit})
@@ -110,10 +124,10 @@ const ChartTable:FC<TableProps>=({ units, table }:TableProps):JSX.Element=> {
               <th scope="row" className="freeze bold">
                 {row.heading.charAt(0).toUpperCase() + row.heading.slice(1)}
               </th>
-              {row.rData.map((subU, i) =>
+              {row.rowData.map((subU, i) =>
                 Number.isInteger(subU.decimal) ? (
                   <td
-                    colSpan="2"
+                    colSpan={2}
                     key={` ${table} entry ${row.heading} ${index} ${i}`}
                     className={index % 2 === 1 ? "odd" : ""}>
                     {subU.decimal === 0 ? "" : subU.decimal}
