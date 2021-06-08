@@ -3,7 +3,7 @@ import ConversionForm from "../components/conversionForm";
 import ConvertedList from "../components/convertedList";
 import "../styling/convertView.scss";
 
-import {IngrInput}from "../types"
+import {IngrInput, ConvIngr}from "../types"
 
 //name is used as a honeypot to weed out bots submitting the form
 const initialInputState:IngrInput={
@@ -14,7 +14,7 @@ const initialInputState:IngrInput={
   // ingredientName: "",
 }
 const ConvertView: FC=():JSX.Element=> {
-  const [ingredients, setIngredients] = useState([]);
+  const [ingredients, setIngredients] = useState<ConvIngr[]>([]);
   const [inputs, setInputs] = useState<IngrInput>(initialInputState);
   return (
     <div className="convert-page-wrapper">

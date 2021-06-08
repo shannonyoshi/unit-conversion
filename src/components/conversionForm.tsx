@@ -1,43 +1,42 @@
-import React, { useState, Dispatch, SetStateAction } from "react";
+import React, { useState, Dispatch, SetStateAction, FC } from "react";
 import { validateAmount, checkIfSimple } from "../util/utilFunctions";
 import { convertComplex, convertSimple } from "../util/conversionFunctions";
 import { unitDict } from "../util/units";
 
-import {IngrInput} from "../types"
+import { IngrInput, ConvIngr, ErrorInt } from "../types";
 
 import ShowErrors from "./errors";
 
 const unitKeys = Object.keys(unitDict);
 
 interface FormProps {
-  setConvertedIngredients:Dispatch<SetStateAction<>,
-  convertedIngredients,
-  inputs:IngrInputs,
-  setInputs: Dispatch<SetStateAction<IngrInputs>>,
-  initialInputState:IngrInputs,
+  setConvertedIngredients: Dispatch<SetStateAction<ConvIngr[]>>;
+  convertedIngredients: ConvIngr[];
+  inputs: IngrInput;
+  setInputs: Dispatch<SetStateAction<IngrInput>>;
+  initialInputState: IngrInput;
 }
-
-export default function ConversionForm({
+const initialErrorState = {
+  Amount: "",
+  "Ingredient Name": "",
+  Conversion: "",
+  General: "",
+};
+const ConversionForm: FC<FormProps> = ({
   setConvertedIngredients,
   convertedIngredients,
   inputs,
   setInputs,
   initialInputState,
-}) {
-  const initialErrorState = {
-    Amount: "",
-    "Ingredient Name": "",
-    Conversion: "",
-    General: "",
-  };
-  const [errors, setErrors] = useState(initialErrorState);
+}: FormProps): JSX.Element => {
+  const [errors, setErrors] = useState<ErrorInt>(initialErrorState);
 
   //checks if conversion is "simple" (vol=>vol or weight=>weight), validate amount
   //if so, use function from util file to perform the conversion, then set to state converted list to display
   //else, validate ingredientName, do post request
   //performs API call to BE
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setErrors(initialErrorState);
     //assumes if name is filled out (it's hidden from view), the form was completed by a bot. It is only "visible" to people using screen readers
@@ -57,14 +56,19 @@ export default function ConversionForm({
     }
 
     const isSimple = checkIfSimple(inputs.currentUnit, inputs.targetUnit);
-    let convertedIngr = {};
     if (isSimple) {
-      convertedIngr = convertSimple(isAmount, inputs);
+      let simpleConvIngr: ConvIngr = convertSimple(isAmount, inputs);
+      setConvertedIngredients([...convertedIngredients, simpleConvIngr]);
+      setInputs(initialInputState)
     } else {
-      convertedIngr = await convertComplex(inputs, isAmount);
-      if (convertedIngr.errorType) {
+      let convertedIngr: ConvIngr | { errorMessage: string } = await convertComplex(inputs, isAmount);
+      if (convertedIngr.errorMessage) {
         setErrors({ ...errors, "Ingredient Name": convertedIngr.message });
+
       }
+      //  TODO: figure out how this etypeof convertedIngr != ConvIngrrror should go
+      // if (convertedIngr.errorType) {
+      // }
     }
     setConvertedIngredients([...convertedIngredients, convertedIngr]);
     setInputs(initialInputState);
@@ -117,7 +121,7 @@ export default function ConversionForm({
               name="currentUnit"
               value={inputs.currentUnit}
               onChange={handleInputChange}>
-              <option value="" disabled defaultValue>
+              <option value="" disabled >
                 Select Unit
               </option>
               {unitKeys.map((unit) => (
@@ -138,7 +142,7 @@ export default function ConversionForm({
               id="targetUnit"
               name="targetUnit"
               onChange={handleInputChange}>
-              <option value="" disabled defaultValue>
+              <option value="" disabled >
                 Select Unit
               </option>
               {unitKeys.map((unit) => (
@@ -162,9 +166,21 @@ export default function ConversionForm({
             />
           </div>
           <ShowErrors errors={errors} />
-          <button type="submit" disabled={(inputs.amount>0||inputs.amount.length>0 )&& inputs.currentUnit.length>0 && inputs.targetUnit.length>0?false: true}>Convert</button>
+          <button
+            type="submit"
+            disabled={
+              (inputs.amount > 0 || inputs.amount.length > 0) &&
+                inputs.currentUnit.length > 0 &&
+                inputs.targetUnit.length > 0
+                ? false
+                : true
+            }>
+            Convert
+          </button>
         </form>
       </div>
     </div>
   );
-}
+};
+
+export default ConversionForm;
