@@ -68,6 +68,7 @@ export const postConversion = async (ingredient) => {
 
   const response = await fetch(`${baseURL}convert`, request);
   if (!response.ok) {
+    return {errorMessage: "Error fetching ingredient data"}
     console.log("response", response);
   }
   const data = await response.json();

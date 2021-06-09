@@ -62,13 +62,12 @@ const ConversionForm: FC<FormProps> = ({
       setInputs(initialInputState)
     } else {
       let convertedIngr: ConvIngr | { errorMessage: string } = await convertComplex(inputs, isAmount);
-      if (convertedIngr.errorMessage) {
-        setErrors({ ...errors, "Ingredient Name": convertedIngr.message });
+
+      // since errorMessage should be the only property on the return if there is an error
+      if (Object.getOwnPropertyNames(convertedIngr).length > 1) {
+        setErrors({ ...errors, "Ingredient Name": convertedIngr.errorMessage });
 
       }
-      //  TODO: figure out how this etypeof convertedIngr != ConvIngrrror should go
-      // if (convertedIngr.errorType) {
-      // }
     }
     setConvertedIngredients([...convertedIngredients, convertedIngr]);
     setInputs(initialInputState);
@@ -161,7 +160,7 @@ const ConversionForm: FC<FormProps> = ({
               id="ingredientName"
               name="ingredientName"
               placeholder="flour"
-              value={inputs.ingredientName}
+              value={inputs.name}
               onChange={handleInputChange}
             />
           </div>
@@ -169,7 +168,7 @@ const ConversionForm: FC<FormProps> = ({
           <button
             type="submit"
             disabled={
-              (inputs.amount > 0 || inputs.amount.length > 0) &&
+              (inputs.amount.length > 0) &&
                 inputs.currentUnit.length > 0 &&
                 inputs.targetUnit.length > 0
                 ? false

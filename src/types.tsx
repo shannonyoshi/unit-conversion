@@ -32,10 +32,10 @@ export interface Unit {
 // converted ingredient
 export interface ConvIngr {
   amount: string,
-  convertedString: string,
   currentUnit: string,
-  ingredientName: string,
   targetUnit: string
+  ingredientName: string,
+  convertedString: string,
 }
 
 export interface ErrorInt {
@@ -43,4 +43,21 @@ export interface ErrorInt {
   "Ingredient Name": string,
   Conversion: string,
   General: string,
+}
+// used when sending into to backend
+export interface ComplexIngr{
+  ingredientName: string,
+  currentAmount: number,
+  currentUnit: string,
+  altUnit: string,
+  altAmount: number,
+  targetUnit: string,
+  targetConv: number
+}
+// get ingredient from backend in this format
+export interface NewIngr {
+  sourceAmount:number,
+  sourceUnit:string,
+  targetAmount:number,
+  targetUnit:string
 }
