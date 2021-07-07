@@ -1,3 +1,5 @@
+import {ConvIngr, ComplexIngr} from "../types"
+
 const baseURL = "http://localhost:8080/api/";
 
 export const postSuggestion = async (suggestion) => {
@@ -37,7 +39,7 @@ export const putSuggestion = async (suggestion) => {
   return data;
 };
 
-export const delSuggestion = async (suggestionID)=> {
+export const delSuggestion = async (suggestionID:number)=> {
   
   const request = {
     method: "DELETE",
@@ -56,7 +58,7 @@ export const delSuggestion = async (suggestionID)=> {
 // example ingredient: ingredientName, currentAmount, currentUnit, altUnit, altAmount, targetUnit
 //altUnit and altAmount is the "type" and conversion of currentUnit.
 
-export const postConversion = async (ingredient) => {
+export const postConversion = async (ingredient:ComplexIngr) :Promise<ConvIngr| null>  => {
   const request = {
     method: "POST",
     headers: {
@@ -68,10 +70,10 @@ export const postConversion = async (ingredient) => {
 
   const response = await fetch(`${baseURL}convert`, request);
   if (!response.ok) {
-    return {errorMessage: "Error fetching ingredient data"}
+    return null
     console.log("response", response);
   }
-  const data = await response.json();
+  const data:ConvIngr = await response.json();
   // console.log('returned conversion data', data)
   return data;
 };

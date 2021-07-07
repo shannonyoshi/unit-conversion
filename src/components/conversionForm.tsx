@@ -60,18 +60,21 @@ const ConversionForm: FC<FormProps> = ({
       let simpleConvIngr: ConvIngr = convertSimple(isAmount, inputs);
       setConvertedIngredients([...convertedIngredients, simpleConvIngr]);
       setInputs(initialInputState)
+
     } else {
-      let convertedIngr: ConvIngr | { errorMessage: string } = await convertComplex(inputs, isAmount);
+      let convertedIngr: ConvIngr | null = await convertComplex(inputs, isAmount);
 
-      // since errorMessage should be the only property on the return if there is an error
-      if (Object.getOwnPropertyNames(convertedIngr).length > 1) {
-        setErrors({ ...errors, "Ingredient Name": convertedIngr.errorMessage });
+      if (convertedIngr != null) {
+        setConvertedIngredients([...convertedIngredients, convertedIngr]);
+        setInputs(initialInputState)
+      }
 
+      else {
+        setErrors({ ...errors, "Ingredient Name": `Error fetching ${inputs.name} information` });
       }
     }
-    setConvertedIngredients([...convertedIngredients, convertedIngr]);
-    setInputs(initialInputState);
   };
+  
   const handleInputChange = (e) => {
     e.persist();
     // console.log("event.target", e.target, "event.target.value",e.target.value)
