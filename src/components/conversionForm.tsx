@@ -1,4 +1,4 @@
-import React, { useState, Dispatch, SetStateAction, FC } from "react";
+import React, { useState, Dispatch, SetStateAction, FC, SyntheticEvent } from "react";
 import { validateAmount, checkIfSimple } from "../util/utilFunctions";
 import { convertComplex, convertSimple } from "../util/conversionFunctions";
 import { unitDict } from "../util/units";
@@ -36,8 +36,8 @@ const ConversionForm: FC<FormProps> = ({
   //else, validate ingredientName, do post request
   //performs API call to BE
 
-  const handleSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.SyntheticEvent) => {
+    event.preventDefault();
     setErrors(initialErrorState);
     //assumes if name is filled out (it's hidden from view), the form was completed by a bot. It is only "visible" to people using screen readers
     if (inputs.name && inputs.name.length > 0) {
@@ -74,13 +74,30 @@ const ConversionForm: FC<FormProps> = ({
       }
     }
   };
-  
-  const handleInputChange = (e) => {
-    e.persist();
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>)=> {
+    event.preventDefault();
     // console.log("event.target", e.target, "event.target.value",e.target.value)
-    setInputs((inputs) => ({ ...inputs, [e.target.name]: e.target.value }));
+    setInputs((inputs) => ({ ...inputs, [event.currentTarget.name]: event.currentTarget.value }));
     setErrors(initialErrorState);
   };
+
+  const handleSelectChange = (event: React.SyntheticEvent):void => {
+    let target= event.target as HTMLInputElement
+
+
+    console.log("event", event)
+    console.log(`target`, target)
+      // event.preventDefault();
+      // setInputs((inputs)=> ({...inputs, [event.target.name]: event.target.value}))
+    }
+
+
+  // const handleSelectChange = (event: React.ChangeEventHandler<HTMLSelectElement>):void => {
+  // console.log("event", event)
+  //   // event.preventDefault();
+  //   // setInputs((inputs)=> ({...inputs, [event.target.name]: event.target.value}))
+  // }
 
   return (
     <div className="card-small">
@@ -122,7 +139,7 @@ const ConversionForm: FC<FormProps> = ({
               id="currentUnit"
               name="currentUnit"
               value={inputs.currentUnit}
-              onChange={handleInputChange}>
+              onChange={(event:React.SyntheticEvent)=>handleSelectChange(event)}>
               <option value="" disabled >
                 Select Unit
               </option>
@@ -143,7 +160,7 @@ const ConversionForm: FC<FormProps> = ({
               value={inputs.targetUnit}
               id="targetUnit"
               name="targetUnit"
-              onChange={handleInputChange}>
+              onChange={handleSelectChange}>
               <option value="" disabled >
                 Select Unit
               </option>

@@ -1,5 +1,5 @@
 import { postConversion } from "./crudFuncs";
-import {ComplexIngr} from "../types"
+import {ComplexIngr, IngrInput, ConvIngr, Unit, NewIngr} from "../types"
 import { unitDict } from "./units";
 import {
   checkPluralUnit,
@@ -12,7 +12,7 @@ import {
 //performs simple conversion, returns string of converted amount + unit
 export const convertSimple = (amount:number, inputs:IngrInput):ConvIngr => {
   // console.log("convertSimple()");
-  let targetUnit:string = unitDict[inputs.targetUnit];
+  let targetUnit:Unit = unitDict[inputs.targetUnit];
   const normalizedAmount:number = amount * unitDict[inputs.currentUnit].conversion;
   const targetUnitInDecimal:number = normalizedAmount / targetUnit.conversion;
   const prettyConvertedString:string = prettifyRemainder(
@@ -25,8 +25,8 @@ export const convertSimple = (amount:number, inputs:IngrInput):ConvIngr => {
     amount: inputs.amount,
     currentUnit: inputs.currentUnit,
     targetUnit: inputs.targetUnit,
-    ingredientName: inputs.ingredientName,
-    convertedString: `${prettyConvertedString} ${inputs.ingredientName}`,
+    ingredientName: inputs.name,
+    convertedString: `${prettyConvertedString} ${inputs.name}`,
   };
   console.log("convertedIngr", convertedIngr);
   return convertedIngr;
@@ -34,14 +34,14 @@ export const convertSimple = (amount:number, inputs:IngrInput):ConvIngr => {
 // returns tuple for better error checking
 export const convertComplex = async (inputs:IngrInput, isAmount:number) :ConvIngr |{errorMessage:string}=> {
   // console.log("convertComplex()");
-  if (inputs.ingredientName.length === 0) {
+  if (inputs.name.length === 0) {
     return {
       errorMessage:
         "Can't complete complex conversions (weight <=> volume) without an ingredient name",
     };
   }
   const complexIngr:ComplexIngr = {
-    ingredientName: inputs.ingredientName,
+    ingredientName: inputs.name,
     currentAmount: isAmount,
     currentUnit: inputs.currentUnit,
     altUnit: unitDict[inputs.currentUnit].normUnit,
@@ -49,7 +49,7 @@ export const convertComplex = async (inputs:IngrInput, isAmount:number) :ConvIng
     targetUnit: inputs.targetUnit,
     targetConv: unitDict[inputs.targetUnit].conversion,
   };
-  const newIngredient:NewIngr = await postConversion(complexIngr);
+  const newIngredient: ConvIntr| nulll = await postConversion(complexIngr);
   console.log("newIngredient", newIngredient);
   // TODO: should prettify converted string since only decimal is being returned
   const normalizedAmount:number = newIngredient.targetAmount * unitDict[inputs.targetUnit].conversion
@@ -59,8 +59,8 @@ export const convertComplex = async (inputs:IngrInput, isAmount:number) :ConvIng
     amount: inputs.amount,
     currentUnit: inputs.currentUnit,
     targetUnit: inputs.targetUnit,
-    ingredientName: inputs.ingredientName,
-    convertedString: `${prettyString} ${inputs.ingredientName}`,
+    ingredientName: inputs.name,
+    convertedString: `${prettyString} ${inputs.name}`,
   };
   return formattedIngr;
 };
