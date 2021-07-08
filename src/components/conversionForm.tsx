@@ -62,6 +62,10 @@ const ConversionForm: FC<FormProps> = ({
       setInputs(initialInputState)
 
     } else {
+      if (inputs.ingredientName.length === 0) {
+        setErrors({ ...errors, "Ingredient Name": "An ingredient name is required for complex conversions" })
+        return
+      }
       let convertedIngr: ConvIngr | null = await convertComplex(inputs, isAmount);
 
       if (convertedIngr != null) {
@@ -70,27 +74,27 @@ const ConversionForm: FC<FormProps> = ({
       }
 
       else {
-        setErrors({ ...errors, "Ingredient Name": `Error fetching ${inputs.name} information` });
+        setErrors({ ...errors, "Ingredient Name": `Error fetching ${inputs.ingredientName} information` });
       }
     }
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>)=> {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     // console.log("event.target", e.target, "event.target.value",e.target.value)
     setInputs((inputs) => ({ ...inputs, [event.currentTarget.name]: event.currentTarget.value }));
     setErrors(initialErrorState);
   };
 
-  const handleSelectChange = (event: React.SyntheticEvent):void => {
-    let target= event.target as HTMLInputElement
+  const handleSelectChange = (event: React.SyntheticEvent): void => {
+    let target = event.target as HTMLInputElement
 
 
     console.log("event", event)
     console.log(`target`, target)
-      // event.preventDefault();
-      // setInputs((inputs)=> ({...inputs, [event.target.name]: event.target.value}))
-    }
+    // event.preventDefault();
+    // setInputs((inputs)=> ({...inputs, [event.target.name]: event.target.value}))
+  }
 
 
   // const handleSelectChange = (event: React.ChangeEventHandler<HTMLSelectElement>):void => {
@@ -139,7 +143,7 @@ const ConversionForm: FC<FormProps> = ({
               id="currentUnit"
               name="currentUnit"
               value={inputs.currentUnit}
-              onChange={(event:React.SyntheticEvent)=>handleSelectChange(event)}>
+              onChange={(event: React.SyntheticEvent) => handleSelectChange(event)}>
               <option value="" disabled >
                 Select Unit
               </option>

@@ -71,9 +71,7 @@ export const postConversion = async (ingredient:ComplexIngr) :Promise<ConvIngr| 
   const response = await fetch(`${baseURL}convert`, request);
   if (!response.ok) {
     return null
-    console.log("response", response);
   }
   const data:ConvIngr = await response.json();
-  // console.log('returned conversion data', data)
   return data;
 };

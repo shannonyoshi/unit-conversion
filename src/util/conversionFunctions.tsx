@@ -32,16 +32,10 @@ export const convertSimple = (amount:number, inputs:IngrInput):ConvIngr => {
   return convertedIngr;
 };
 // returns tuple for better error checking
-export const convertComplex = async (inputs:IngrInput, isAmount:number) :ConvIngr |{errorMessage:string}=> {
-  // console.log("convertComplex()");
-  if (inputs.name.length === 0) {
-    return {
-      errorMessage:
-        "Can't complete complex conversions (weight <=> volume) without an ingredient name",
-    };
-  }
+export const convertComplex = async (inputs:IngrInput, isAmount:number) :Promise<ConvIngr |null>=> {
+
   const complexIngr:ComplexIngr = {
-    ingredientName: inputs.name,
+    ingredientName: inputs.ingredientName,
     currentAmount: isAmount,
     currentUnit: inputs.currentUnit,
     altUnit: unitDict[inputs.currentUnit].normUnit,
@@ -49,35 +43,39 @@ export const convertComplex = async (inputs:IngrInput, isAmount:number) :ConvIng
     targetUnit: inputs.targetUnit,
     targetConv: unitDict[inputs.targetUnit].conversion,
   };
-  const newIngredient: ConvIntr| nulll = await postConversion(complexIngr);
+  const newIngredient: ConvIngr| null = await postConversion(complexIngr);
   console.log("newIngredient", newIngredient);
-  // TODO: should prettify converted string since only decimal is being returned
-  const normalizedAmount:number = newIngredient.targetAmount * unitDict[inputs.targetUnit].conversion
-  const prettyString:string = prettifyRemainder(inputs.currentUnit, newIngredient.targetAmount, inputs.targetUnit, normalizedAmount)
-  console.log('prettyString', prettyString)
-  const formattedIngr:ConvIngr = {
-    amount: inputs.amount,
-    currentUnit: inputs.currentUnit,
-    targetUnit: inputs.targetUnit,
-    ingredientName: inputs.name,
-    convertedString: `${prettyString} ${inputs.name}`,
-  };
-  return formattedIngr;
+  return newIngredient
+  // // TODO: should prettify converted string since only decimal is being returned
+  // if (newIngredient===null){
+  //   return null
+  // }
+  // const normalizedAmount:number = newIngredient.targetAmount * unitDict[inputs.targetUnit].conversion
+  // const prettyString:string = prettifyRemainder(inputs.currentUnit, newIngredient.targetAmount, inputs.targetUnit, normalizedAmount)
+  // console.log('prettyString', prettyString)
+  // const formattedIngr:ConvIngr = {
+  //   amount: inputs.amount,
+  //   currentUnit: inputs.currentUnit,
+  //   targetUnit: inputs.targetUnit,
+  //   ingredientName: inputs.ingredientName,
+  //   convertedString: `${prettyString} ${inputs.ingredientName}`,
+  // };
+  // return formattedIngr;
 };
 
 //receives the converted amount in decimal, and returns a human readable string with the converted amount and target unit
 const prettifyRemainder = (
-  startingUnitName,
-  targetUnitInDecimal,
-  targetUnitName,
-  normalizedAmount
+  startingUnitName:string,
+  targetUnitInDecimal:number,
+  targetUnitName:string,
+  normalizedAmount:number
 ) => {
-  const targetUnit=unitDict[targetUnitName]
-  const normalizedTolerance = calcNormalizedTolerance(normalizedAmount);
-  const decimalTolerance = normalizedTolerance / targetUnit.conversion;
-  let targetUnitInt = Math.floor(targetUnitInDecimal);
-  let closestInt = Math.round(targetUnitInDecimal);
-  const decimalRemainder = targetUnitInDecimal - targetUnitInt;
+  const targetUnit:Unit=unitDict[targetUnitName]
+  const normalizedTolerance:number = calcNormalizedTolerance(normalizedAmount);
+  const decimalTolerance:number = normalizedTolerance / targetUnit.conversion;
+  let targetUnitInt:number = Math.floor(targetUnitInDecimal);
+  let closestInt:number = Math.round(targetUnitInDecimal);
+  const decimalRemainder:number = targetUnitInDecimal - targetUnitInt;
 
   //returns whole numbers within tolerance buffer
   //example return: 1 cup butter
@@ -101,14 +99,13 @@ const prettifyRemainder = (
     return `${rounded.toString(10)} ${checkPluralUnit(rounded, targetUnitName)}`;
   }
 
-  //ex. fraction = ["1/10", 0.1, false] means [fraction string, fraction in decimal, boolean if regular baking fraction]
   const fraction = filterFractions("allClosest", decimalRemainder);
   // console.log("decimalRemainder", decimalRemainder);
   // console.log("fraction", fraction);
 
   //returns fraction if common and amount is within tolerance
   //example return: 2 1/2 cups milk
-  let unitString = checkPluralUnit(targetUnitInt + fraction[1], targetUnitName);
+  let unitString = checkPluralUnit(targetUnitInt + fraction.decimal, targetUnitName);
   const currRemainder =
     normalizedAmount - (targetUnitInt + fraction[1]) * targetUnit.conversion;
   if (fraction[2] === true && currRemainder <= normalizedTolerance) {

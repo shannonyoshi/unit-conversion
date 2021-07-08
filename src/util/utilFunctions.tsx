@@ -4,16 +4,13 @@ import { Fraction } from "../types"
 // TODO: rewrite validateAmount to work better in typescript
 
 //returns parsed amount in decimal or false if amount is unable to be parsed
-export const validateAmount = (amount) => {
-  //probably will never catch anything with this one  ¯\_( )_/¯
-  let result: any = false;
-  if (typeof amount === "number") {
-    return amount;
-  }
-  //split amount on white space, then remove excess white space
-  let amountArray = amount.split(" ").map((item) => item.trim());
-  amountArray = amountArray.filter((item) => item !== "");
-  //checks for whole number to return
+export const validateAmount = (amount:string):number | boolean => {
+  let result: number | boolean = false
+
+  //split amount on white space into string[], then remove excess white space
+  let amountArray:string[] = amount.split(" ").map((item:string) => item.trim());
+  amountArray = amountArray.filter((item:string) => item !== "");
+  //checks if amount is a whole number that can be returned
   if (!amount.includes(".") && !amount.includes("/") && !amount.includes(",")) {
     const parsedWholeNum = parseInt(amountArray.join(""));
     if (typeof parsedWholeNum == "number") {
@@ -110,15 +107,19 @@ export const filterFractions = (type: string, remainder?: number): Fraction[] =>
     case "all":
       return allFractions;
     case "common":
+      // returns common=true fractions
       return allFractions.filter((fraction) => fraction.common === true);
     case "commonClosestLower":
+      // returns the closest common fraction that is less than the remainder
       const commonFracs: Fraction[] = filterFractions("common");
       const close2Fracs: Fraction[] = closest2(commonFracs, remainder);
       return [close2Fracs[0]];
     case "allClosest":
+      // returns common = true or false
       return [allFractions.reduce((prev, curr) => {
         return Math.abs(curr.decimal - remainder) < Math.abs(prev.decimal - remainder) ? curr : prev
       })]
+      // returns common=true closest fraction
     case "commonClosest":
       return [allFractions.reduce((prev, curr) =>
         Math.abs(curr.decimal - remainder) < Math.abs(prev.decimal - remainder) &&
@@ -130,7 +131,7 @@ export const filterFractions = (type: string, remainder?: number): Fraction[] =>
       let common = filterFractions("common");
       return closest2(common, remainder);
     default:
-      return null;
+      return allFractions;
   }
 };
 

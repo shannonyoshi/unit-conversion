@@ -2,12 +2,13 @@
 
 export type Filter = "All" | "Standard" | "Metric" | "Weight" | "Volume" | "Custom"
 
-
+// name here is a honeypot to catch bots, and should not be used for actual information
 export interface IngrInput {
   name: string,
   amount: string,
   currentUnit: string,
   targetUnit: string,
+  ingredientName:string
 }
 
 export interface Fraction {
