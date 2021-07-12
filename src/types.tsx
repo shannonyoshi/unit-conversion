@@ -12,7 +12,7 @@ export interface IngrInput {
 }
 
 export interface Fraction {
-  fraction: string,
+  string: string,
   decimal: number,
   common: boolean
 }
@@ -20,6 +20,8 @@ export interface Fraction {
 type NormUnit = "mL" | "g"
 type Output = "fraction" | "decimal"
 type UnitType = "US" | "metric"
+
+export type unitProperty = "name" | "normUnit" | "conversion" | "output" | "type"| "singular"
 
 export interface Unit {
   name: string,

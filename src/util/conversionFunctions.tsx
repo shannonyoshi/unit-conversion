@@ -1,5 +1,5 @@
 import { postConversion } from "./crudFuncs";
-import {ComplexIngr, IngrInput, ConvIngr, Unit, NewIngr} from "../types"
+import { ComplexIngr, IngrInput, ConvIngr, Unit, NewIngr, Fraction } from "../types"
 import { unitDict } from "./units";
 import {
   checkPluralUnit,
@@ -8,16 +8,21 @@ import {
   findPossibleUnits,
 } from "./utilFunctions";
 
+// used in a few funcs below
+type FracOption = { unit: [string, number], count: number, remainder: number, frac?: Fraction }
+
 
 //performs simple conversion, returns string of converted amount + unit
-export const convertSimple = (amount:number, inputs:IngrInput):ConvIngr => {
+export const convertSimple = (amount: number, inputs: IngrInput): ConvIngr => {
   // console.log("convertSimple()");
-  let targetUnit:Unit = unitDict[inputs.targetUnit];
-  const normalizedAmount:number = amount * unitDict[inputs.currentUnit].conversion;
-  const targetUnitInDecimal:number = normalizedAmount / targetUnit.conversion;
-  const prettyConvertedString:string = prettifyRemainder(
+  let targetUnit: Unit = unitDict[inputs.targetUnit];
+  // amount in grams or mLs
+  const normalizedAmount: number = amount * unitDict[inputs.currentUnit].conversion;
+  // converted amount in decimal
+  const convertedAmountInDecimal: number = normalizedAmount / targetUnit.conversion;
+  const prettyConvertedString: string = prettifyRemainder(
     inputs.currentUnit,
-    targetUnitInDecimal,
+    convertedAmountInDecimal,
     inputs.targetUnit,
     normalizedAmount
   );
@@ -28,13 +33,13 @@ export const convertSimple = (amount:number, inputs:IngrInput):ConvIngr => {
     ingredientName: inputs.name,
     convertedString: `${prettyConvertedString} ${inputs.name}`,
   };
-  console.log("convertedIngr", convertedIngr);
+  // console.log("convertedIngr", convertedIngr);
   return convertedIngr;
 };
 // returns tuple for better error checking
-export const convertComplex = async (inputs:IngrInput, isAmount:number) :Promise<ConvIngr |null>=> {
+export const convertComplex = async (inputs: IngrInput, isAmount: number): Promise<ConvIngr | null> => {
 
-  const complexIngr:ComplexIngr = {
+  const complexIngr: ComplexIngr = {
     ingredientName: inputs.ingredientName,
     currentAmount: isAmount,
     currentUnit: inputs.currentUnit,
@@ -43,7 +48,7 @@ export const convertComplex = async (inputs:IngrInput, isAmount:number) :Promise
     targetUnit: inputs.targetUnit,
     targetConv: unitDict[inputs.targetUnit].conversion,
   };
-  const newIngredient: ConvIngr| null = await postConversion(complexIngr);
+  const newIngredient: ConvIngr | null = await postConversion(complexIngr);
   console.log("newIngredient", newIngredient);
   return newIngredient
   // // TODO: should prettify converted string since only decimal is being returned
@@ -65,29 +70,29 @@ export const convertComplex = async (inputs:IngrInput, isAmount:number) :Promise
 
 //receives the converted amount in decimal, and returns a human readable string with the converted amount and target unit
 const prettifyRemainder = (
-  startingUnitName:string,
-  targetUnitInDecimal:number,
-  targetUnitName:string,
-  normalizedAmount:number
-) => {
-  const targetUnit:Unit=unitDict[targetUnitName]
-  const normalizedTolerance:number = calcNormalizedTolerance(normalizedAmount);
-  const decimalTolerance:number = normalizedTolerance / targetUnit.conversion;
-  let targetUnitInt:number = Math.floor(targetUnitInDecimal);
-  let closestInt:number = Math.round(targetUnitInDecimal);
-  const decimalRemainder:number = targetUnitInDecimal - targetUnitInt;
+  startingUnitName: string,
+  convertedAmountInDecimal: number,
+  targetUnitName: string,
+  normalizedAmount: number
+): string => {
+  const targetUnit: Unit = unitDict[targetUnitName]
+  const normalizedTolerance: number = calcNormalizedTolerance(normalizedAmount);
+  const convertedTolerance: number = normalizedTolerance / targetUnit.conversion;
+  let targetUnitInt: number = Math.floor(convertedAmountInDecimal);
+  let closestInt: number = Math.round(convertedAmountInDecimal);
+  const decimalRemainder: number = convertedAmountInDecimal - targetUnitInt;
 
   //returns whole numbers within tolerance buffer
   //example return: 1 cup butter
-  if (targetUnitInDecimal - targetUnitInt <= decimalTolerance) {
+  if (convertedAmountInDecimal - targetUnitInt <= convertedTolerance) {
     return `${targetUnitInt} ${checkPluralUnit(targetUnitInt, targetUnitName)}`;
   }
-  if (Math.abs(closestInt - targetUnitInDecimal) <= decimalTolerance) {
+  if (Math.abs(closestInt - convertedAmountInDecimal) <= convertedTolerance) {
     return `${closestInt} ${checkPluralUnit(closestInt, targetUnitName)}`;
   }
   //if amount in target unit <1/64, so negligible
-  if (targetUnitInDecimal <= 0.0155) {
-    return `${targetUnitInDecimal.toFixed(
+  if (convertedAmountInDecimal <= 0.0155) {
+    return `${convertedAmountInDecimal.toFixed(
       5
     )} ${targetUnitName} (amount negligible)`;
   }
@@ -95,11 +100,11 @@ const prettifyRemainder = (
   //returns rounded amount to 2 decimal places for unit types that commonly use decimal (mostly metric)
   //example return: .67 grams salt
   if (targetUnit.output === "decimal") {
-    let rounded = Math.floor(targetUnitInDecimal * 100) / 100;
+    let rounded = Math.floor(convertedAmountInDecimal * 100) / 100;
     return `${rounded.toString(10)} ${checkPluralUnit(rounded, targetUnitName)}`;
   }
 
-  const fraction = filterFractions("allClosest", decimalRemainder);
+  const [fraction] = filterFractions("allClosest", decimalRemainder);
   // console.log("decimalRemainder", decimalRemainder);
   // console.log("fraction", fraction);
 
@@ -107,22 +112,20 @@ const prettifyRemainder = (
   //example return: 2 1/2 cups milk
   let unitString = checkPluralUnit(targetUnitInt + fraction.decimal, targetUnitName);
   const currRemainder =
-    normalizedAmount - (targetUnitInt + fraction[1]) * targetUnit.conversion;
-  if (fraction[2] === true && currRemainder <= normalizedTolerance) {
-    return `${targetUnitInt === 0 ? "" : targetUnitInt} ${
-      fraction[0]
-    } ${unitString}`;
+    normalizedAmount - (targetUnitInt + fraction.decimal) * targetUnit.conversion;
+  if (fraction.common === true && currRemainder <= normalizedTolerance) {
+    return `${targetUnitInt === 0 ? "" : targetUnitInt} ${fraction.string
+      } ${unitString}`;
   }
   //returns uncommon fraction and common fraction, with +/- 1-2 of smaller unit
   // example return: 1 6/32 cups or 1 cup, plus 2 tablespoons
-  let fractionString = `${targetUnitInt === 0 ? "" : targetUnitInt+" "}${
-    fraction[0]
-  } ${unitString}`;
+  let fractionString = `${targetUnitInt === 0 ? "" : targetUnitInt + " "}${fraction.string
+    } ${unitString}`;
   // console.log("fractionString", fractionString);
   let normalizedRemainder =
     normalizedAmount - targetUnitInt * targetUnit.conversion;
   const potentialFracString = checkCloseFracs(
-    targetUnitInDecimal,
+    convertedAmountInDecimal,
     normalizedRemainder,
     targetUnitName,
     normalizedTolerance,
@@ -136,13 +139,12 @@ const prettifyRemainder = (
   }
 
   // last resort, returns `${uncommonAmount} or ${commmonAmount} ${targetU}, plus ${list of counts and units}
-  const commonFrac = filterFractions(
+  const [commonFrac] = filterFractions(
     "commonClosestLower",
-    targetUnitInDecimal - targetUnitInt
+    convertedAmountInDecimal - targetUnitInt
   );
   normalizedRemainder =
-    normalizedRemainder - commonFrac[1] * targetUnit.conversion;
-  // console.log("LOOK HERE");
+    normalizedRemainder - commonFrac.decimal * targetUnit.conversion;
   const possibleU = findPossibleUnits(
     normalizedRemainder,
     targetUnit.type,
@@ -156,10 +158,10 @@ const prettifyRemainder = (
     normalizedRemainder,
     possibleU
   );
-  
+
   // console.log("result", result);
-  if (result.length===1&& result[0][1]===startingUnitName){
-    return `${targetUnitInt>0? targetUnitInt+" ":""}${fraction[0]} ${unitString}`
+  if (result.length === 1 && result[0][1] === startingUnitName) {
+    return `${targetUnitInt > 0 ? targetUnitInt + " " : ""}${fraction.string} ${unitString}`
   }
   let returnString = stringFromConvertRecursive(
     targetUnitInt,
@@ -175,17 +177,18 @@ const prettifyRemainder = (
 // returns readable string if there is a close fraction that gets close to total amount with additional 1-2 of smaller unit
 // if option is found, returns closest option with lower count
 const checkCloseFracs = (
-  targetUnitInDecimal,
-  normalizedRemainder,
-  targetUnitName,
-  normalizedTolerance,
-  startingUnitName
+  convertedAmountInDecimal: number,
+  normalizedRemainder: number,
+  targetUnitName: string,
+  normalizedTolerance: number,
+  startingUnitName: string
 ) => {
   let targetUnit = unitDict[targetUnitName];
-  let targetInt = Math.floor(targetUnitInDecimal);
-  let decimalRemainder = targetUnitInDecimal - targetInt;
+  let targetInt = Math.floor(convertedAmountInDecimal);
+  let decimalRemainder = convertedAmountInDecimal - targetInt;
   let closest2 = filterFractions("commonClosest2", decimalRemainder);
-  let frac1Opt = checkFraction(
+  
+  let frac1Opt:FracOption|null = checkFraction(
     closest2[0],
     normalizedRemainder,
     targetUnit,
@@ -193,7 +196,7 @@ const checkCloseFracs = (
     startingUnitName
   );
   console.log("frac1Opt", frac1Opt);
-  let frac2Opt = checkFraction(
+  let frac2Opt:FracOption|null = checkFraction(
     closest2[1],
     normalizedRemainder,
     targetUnit,
@@ -201,17 +204,17 @@ const checkCloseFracs = (
     startingUnitName
   );
   console.log("frac2Opt", frac2Opt);
-  let closest =
+  let closest:FracOption|null =
     frac1Opt && !frac2Opt ? frac1Opt : frac2Opt && !frac1Opt ? frac2Opt : null;
   console.log("closest", closest);
   if (frac1Opt && frac2Opt) {
     closest =
-      frac1Opt["remainder"] < frac2Opt["remainder"] ? frac1Opt : frac2Opt;
-    if (frac1Opt["remainder"] === frac2Opt["remainder"]) {
+      frac1Opt.remainder < frac2Opt.remainder ? frac1Opt : frac2Opt;
+    if (frac1Opt.remainder === frac2Opt.remainder) {
       closest = frac1Opt["count"] < frac2Opt["count"] ? frac1Opt : frac2Opt;
       if (frac1Opt["count"] === frac2Opt["count"]) {
         closest =
-          frac1Opt["frac"][1] < frac2Opt["frac"][1] ? frac1Opt : frac2Opt;
+          frac1Opt.frac.decimal < frac2Opt.frac.decimal ? frac1Opt : frac2Opt;
       }
     }
   }
@@ -223,7 +226,7 @@ const checkCloseFracs = (
       closest["frac"][1] = 0;
     }
     let plusMinus =
-      targetUnitInDecimal - targetInt - closest["frac"][1] >= 0
+      convertedAmountInDecimal - targetInt - closest["frac"][1] >= 0
         ? "plus"
         : "minus";
     let unitString = checkPluralUnit(
@@ -234,9 +237,8 @@ const checkCloseFracs = (
       closest["count"],
       closest["unit"][0]
     );
-    return `or ${targetInt > 0 ? targetInt : ""} ${
-      closest["frac"][0]
-    } ${unitString}, ${plusMinus} ${closest["count"]} ${secondUnitString}`;
+    return `or ${targetInt > 0 ? targetInt : ""} ${closest["frac"][0]
+      } ${unitString}, ${plusMinus} ${closest["count"]} ${secondUnitString}`;
   }
 
   return null;
@@ -244,59 +246,56 @@ const checkCloseFracs = (
 
 //if an adequate option is found, returns {unit, count, remainder, fraction}, else returns null
 const checkFraction = (
-  fraction,
-  normalizedRemainder,
-  targetUnit,
-  normalizedTolerance,
-  startingUnitName
-) => {
+  fraction: Fraction,
+  normalizedRemainder: number,
+  targetUnit: Unit,
+  normalizedTolerance: number,
+  startingUnitName: string
+):FracOption | null => {
   normalizedRemainder = Math.abs(
-    normalizedRemainder - fraction[1] * targetUnit.conversion
+    normalizedRemainder - fraction.decimal * targetUnit.conversion
   );
   //example unit returned: [pluralUnitName, conversion]
-  let possibleUnits = findPossibleUnits(
+  let possibleUnits: [string, number][] = findPossibleUnits(
     normalizedRemainder + normalizedTolerance,
     targetUnit.type,
     targetUnit.normUnit
   );
 
   //checks if 1 or 2 of unit will get within tolerance, if so adds absolute val of remainder, count, unit
-  let options = {};
+
+  let options = new Map<number, FracOption>();
   //keys for options are the absolute value of the remainder
   for (let i = 0; i < possibleUnits.length; i++) {
     let singleR = Math.abs(normalizedRemainder - possibleUnits[i][1]);
     let doubleR = Math.abs(normalizedRemainder - possibleUnits[i][1] * 2);
     // adds lower remainder to options, preference to lower count
     if (singleR <= doubleR) {
-      options[singleR] = {
+      options.set(singleR, {
         unit: possibleUnits[i],
         count: 1,
         remainder: singleR,
-      };
+      });
     } else {
-      options[doubleR] = {
+      options.set(doubleR, {
         unit: possibleUnits[i],
         count: 2,
         remainder: doubleR,
-      };
+      });
     }
   }
   //finds key to lowest remainder option
 
-  let bestOptKey = Math.min(...Object.keys(options));
-  console.log("bestOptKey", bestOptKey);
-  console.log('options[bestOptKey]["unit"]', options[bestOptKey]["unit"]);
-  console.log("startingUnitName", startingUnitName);
-  console.log(
-    'options[bestOptKey]["unit"][0]===startingUnitName',
-    options[bestOptKey]["unit"][0] === startingUnitName
-  );
+  let bestOptKey: number = Math.min(...Object.keys(options).map(Number));
+
+  let bestOpt: Option | undefined = options.get(bestOptKey)
   if (
-    bestOptKey <= normalizedTolerance &&
-    options[bestOptKey]["unit"][0] !== startingUnitName
+    bestOptKey <= normalizedTolerance && bestOpt &&
+    bestOpt.unit[0] !== startingUnitName
   ) {
-    options[bestOptKey]["frac"] = fraction;
-    return options[bestOptKey];
+    bestOpt.frac = fraction
+
+    return;
   } else {
     return null;
   }
@@ -342,17 +341,14 @@ const stringFromConvertRecursive = (
   commonFrac,
   result
 ) => {
-  let returnString = `${targetUnitInt > 0 ? targetUnitInt : ""} ${
-    fraction[0]
-  } ${unitString} or ${targetUnitInt > 0 ? targetUnitInt : ""} ${
-    commonFrac[1] > 0 ? commonFrac[0] : ""
-  } ${unitString}${result.length > 0 ? ", plus" : ""}`;
+  let returnString = `${targetUnitInt > 0 ? targetUnitInt : ""} ${fraction[0]
+    } ${unitString} or ${targetUnitInt > 0 ? targetUnitInt : ""} ${commonFrac[1] > 0 ? commonFrac[0] : ""
+    } ${unitString}${result.length > 0 ? ", plus" : ""}`;
   const lastI = result.length - 1;
   for (let i = 0; i < result.length; i++) {
     unitString = checkPluralUnit(result[i][0], result[i][1]);
     returnString = returnString.concat(
-      `${i > 0 && lastI > 1 ? "," : ""}${
-        i === lastI && lastI > 0 ? " and " : " "
+      `${i > 0 && lastI > 1 ? "," : ""}${i === lastI && lastI > 0 ? " and " : " "
       }${result[i][0]} ${unitString}`
     );
   }
