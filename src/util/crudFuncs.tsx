@@ -1,8 +1,8 @@
-import {ConvIngr, ComplexIngr} from "../types"
+import { ComplexIngr, AddedIngr, Suggestion} from "../types"
 
 const baseURL = "http://localhost:8080/api/";
 
-export const postSuggestion = async (suggestion) => {
+export const postSuggestion = async (suggestion:Suggestion) => {
   const request = {
     method: "POST",
     headers: {
@@ -23,7 +23,7 @@ export const postSuggestion = async (suggestion) => {
   return data;
 };
 
-export const putSuggestion = async (suggestion) => {
+export const putSuggestion = async (suggestion:Suggestion) => {
   const request = {
     method: "PUT",
     headers: { "Content-Type": "application/json", Authorization: "none" },
@@ -58,7 +58,7 @@ export const delSuggestion = async (suggestionID:number)=> {
 // example ingredient: ingredientName, currentAmount, currentUnit, altUnit, altAmount, targetUnit
 //altUnit and altAmount is the "type" and conversion of currentUnit.
 
-export const postConversion = async (ingredient:ComplexIngr) :Promise<ConvIngr| null>  => {
+export const postConversion = async (ingredient:ComplexIngr) :Promise<AddedIngr| null>  => {
   const request = {
     method: "POST",
     headers: {
@@ -72,6 +72,6 @@ export const postConversion = async (ingredient:ComplexIngr) :Promise<ConvIngr| 
   if (!response.ok) {
     return null
   }
-  const data:ConvIngr = await response.json();
+  const data:AddedIngr = await response.json();
   return data;
 };

@@ -78,30 +78,23 @@ const ConversionForm: FC<FormProps> = ({
       }
     }
   };
-
+  
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
+    console.log(`event`, event)
     // console.log("event.target", e.target, "event.target.value",e.target.value)
     setInputs((inputs) => ({ ...inputs, [event.currentTarget.name]: event.currentTarget.value }));
     setErrors(initialErrorState);
   };
 
-  const handleSelectChange = (event: React.SyntheticEvent): void => {
-    let target = event.target as HTMLInputElement
+  const handleSelectChange = (e:React.ChangeEvent<HTMLSelectElement>): void => {
+    e.persist()
+    e.preventDefault()
+    let value:string = e.currentTarget.value
+    let name:string = e.currentTarget.name
 
-
-    console.log("event", event)
-    console.log(`target`, target)
-    // event.preventDefault();
-    // setInputs((inputs)=> ({...inputs, [event.target.name]: event.target.value}))
+    setInputs((inputs)=> ({...inputs, [name]: value}))
   }
-
-
-  // const handleSelectChange = (event: React.ChangeEventHandler<HTMLSelectElement>):void => {
-  // console.log("event", event)
-  //   // event.preventDefault();
-  //   // setInputs((inputs)=> ({...inputs, [event.target.name]: event.target.value}))
-  // }
 
   return (
     <div className="card-small">
@@ -143,7 +136,7 @@ const ConversionForm: FC<FormProps> = ({
               id="currentUnit"
               name="currentUnit"
               value={inputs.currentUnit}
-              onChange={(event: React.SyntheticEvent) => handleSelectChange(event)}>
+              onChange={handleSelectChange}>
               <option value="" disabled >
                 Select Unit
               </option>
@@ -164,7 +157,8 @@ const ConversionForm: FC<FormProps> = ({
               value={inputs.targetUnit}
               id="targetUnit"
               name="targetUnit"
-              onChange={handleSelectChange}>
+              onChange={handleSelectChange}
+              >
               <option value="" disabled >
                 Select Unit
               </option>

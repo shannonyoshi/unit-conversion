@@ -58,9 +58,16 @@ export interface ComplexIngr{
   targetConv: number
 }
 // get ingredient from backend in this format
-export interface NewIngr {
+export interface AddedIngr {
   sourceAmount:number,
   sourceUnit:string,
   targetAmount:number,
   targetUnit:string
+}
+
+export interface Suggestion {
+  name: string,
+  message: string,
+  email: string,
+  isError: boolean
 }

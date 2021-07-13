@@ -4,8 +4,8 @@ import { Fraction, unitProperty } from "../types"
 // TODO: rewrite validateAmount to work better in typescript
 
 
-// returns decimal of the input if there is a valid fraction or false if not
-const validateFraction = (amountArray: string[]): boolean | number => {
+// returns decimal of the input if there is a valid fraction or null if not
+const validateFraction = (amountArray: string[]): null | number => {
   let fracIndexArr: number[] = [];
   // finds strings that include "/", and saves index of that string
   const fraction = amountArray.filter((string, index) => {
@@ -36,7 +36,7 @@ const validateFraction = (amountArray: string[]): boolean | number => {
       return parsed + quotient;
     }
   }
-  return false;
+  return null;
 };
 //returns parsed amount in decimal or false if amount is unable to be parsed
 export const validateAmount = (amount: string): number | null => {
@@ -53,6 +53,7 @@ export const validateAmount = (amount: string): number | null => {
     // checks amount is/has fraction
     if (amount.includes("/")) {
       return validateFraction(amountArray);
+
     }
     if ((amount.includes(".") || amount.includes(",")) && amountArray.length === 1) {
       const parsedFl = parseFloat(amountArray[0]);
@@ -172,7 +173,7 @@ export const filterUnits = (propertyName: unitProperty, filterString: string, un
   let result: string[] = [];
   if (units) {
     result = units.filter(
-      (unitName:string) => unitDict[unitName][propertyName] === filterString
+      (unitName: string) => unitDict[unitName][propertyName] === filterString
     );
   } else {
     for (let [key, value] of Object.entries(unitDict)) {

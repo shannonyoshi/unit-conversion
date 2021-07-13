@@ -1,5 +1,5 @@
 import { postConversion } from "./crudFuncs";
-import { ComplexIngr, IngrInput, ConvIngr, Unit, NewIngr, Fraction } from "../types"
+import { ComplexIngr, IngrInput, ConvIngr, Unit, AddedIngr, Fraction } from "../types"
 import { unitDict } from "./units";
 import {
   checkPluralUnit,
@@ -46,7 +46,7 @@ export const convertComplex = async (inputs: IngrInput, isAmount: number): Promi
     targetUnit: inputs.targetUnit,
     targetConv: unitDict[inputs.targetUnit].conversion,
   };
-  const newIngredient: ConvIngr | null = await postConversion(complexIngr);
+  const newIngredient: AddedIngr | null = await postConversion(complexIngr);
   console.log("newIngredient", newIngredient);
   // return newIngredient
   // TODO: should prettify converted string since only decimal is being returned
