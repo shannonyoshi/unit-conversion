@@ -81,9 +81,10 @@ const ConversionForm: FC<FormProps> = ({
   
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
+    event.persist()
     console.log(`event`, event)
     // console.log("event.target", e.target, "event.target.value",e.target.value)
-    setInputs((inputs) => ({ ...inputs, [event.currentTarget.name]: event.currentTarget.value }));
+    setInputs((inputs) => ({ ...inputs, [event.target.name]: event.target.value }));
     setErrors(initialErrorState);
   };
 
