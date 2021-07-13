@@ -39,7 +39,7 @@ const validateFraction = (amountArray: string[]): boolean | number => {
   return false;
 };
 //returns parsed amount in decimal or false if amount is unable to be parsed
-export const validateAmount = (amount: string): number | boolean => {
+export const validateAmount = (amount: string): number | null => {
 
   //split amount on white space into string[], then remove excess white space
   let amountArray: string[] = amount.split(" ").map((item: string) => item.trim());
@@ -61,7 +61,7 @@ export const validateAmount = (amount: string): number | boolean => {
       }
     }
   }
-  return false;
+  return null;
 };
 
 //checks if the conversion is weight=>weight or vol=>vol

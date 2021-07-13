@@ -11,7 +11,7 @@ const initialInputState:IngrInput={
   amount: "",
   currentUnit: "",
   targetUnit: "",
-  // ingredientName: "",
+  ingredientName: "",
 }
 const ConvertView: FC=():JSX.Element=> {
   const [ingredients, setIngredients] = useState<ConvIngr[]>([]);

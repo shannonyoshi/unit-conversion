@@ -39,11 +39,11 @@ const ConversionForm: FC<FormProps> = ({
   const handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     setErrors(initialErrorState);
-    //assumes if name is filled out (it's hidden from view), the form was completed by a bot. It is only "visible" to people using screen readers
+    //assumes if name is filled out (it's hidden from view), the form was completed by a bot. It is only "visible" to people using screen readers and instructs them not to ignore the input
     if (inputs.name && inputs.name.length > 0) {
       return;
     }
-
+    // checks that inputs.amount is a number than can be parsed
     const isAmount = validateAmount(inputs.amount);
     // console.log("amount valid?", isAmount);
     if (!isAmount) {

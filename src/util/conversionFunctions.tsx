@@ -14,7 +14,6 @@ type FracOption = { unit: [string, number], count: number, remainder: number, fr
 
 //performs simple conversion, returns string of converted amount + unit
 export const convertSimple = (amount: number, inputs: IngrInput): ConvIngr => {
-  // console.log("convertSimple()");
   let targetUnit: Unit = unitDict[inputs.targetUnit];
   // amount in grams or mLs
   const normalizedAmount: number = amount * unitDict[inputs.currentUnit].conversion;
@@ -33,7 +32,6 @@ export const convertSimple = (amount: number, inputs: IngrInput): ConvIngr => {
     ingredientName: inputs.name,
     convertedString: `${prettyConvertedString} ${inputs.name}`,
   };
-  // console.log("convertedIngr", convertedIngr);
   return convertedIngr;
 };
 // returns tuple for better error checking
@@ -50,22 +48,22 @@ export const convertComplex = async (inputs: IngrInput, isAmount: number): Promi
   };
   const newIngredient: ConvIngr | null = await postConversion(complexIngr);
   console.log("newIngredient", newIngredient);
-  return newIngredient
-  // // TODO: should prettify converted string since only decimal is being returned
-  // if (newIngredient===null){
-  //   return null
-  // }
-  // const normalizedAmount:number = newIngredient.targetAmount * unitDict[inputs.targetUnit].conversion
-  // const prettyString:string = prettifyRemainder(inputs.currentUnit, newIngredient.targetAmount, inputs.targetUnit, normalizedAmount)
-  // console.log('prettyString', prettyString)
-  // const formattedIngr:ConvIngr = {
-  //   amount: inputs.amount,
-  //   currentUnit: inputs.currentUnit,
-  //   targetUnit: inputs.targetUnit,
-  //   ingredientName: inputs.ingredientName,
-  //   convertedString: `${prettyString} ${inputs.ingredientName}`,
-  // };
-  // return formattedIngr;
+  // return newIngredient
+  // TODO: should prettify converted string since only decimal is being returned
+  if (newIngredient===null){
+    return null
+  }
+  const normalizedAmount:number = newIngredient.targetAmount * unitDict[inputs.targetUnit].conversion
+  const prettyString:string = prettifyRemainder(inputs.currentUnit, newIngredient.targetAmount, inputs.targetUnit, normalizedAmount)
+  console.log('prettyString', prettyString)
+  const formattedIngr:ConvIngr = {
+    amount: inputs.amount,
+    currentUnit: inputs.currentUnit,
+    targetUnit: inputs.targetUnit,
+    ingredientName: inputs.ingredientName,
+    convertedString: `${prettyString} ${inputs.ingredientName}`,
+  };
+  return formattedIngr;
 };
 
 //receives the converted amount in decimal, and returns a human readable string with the converted amount and target unit
