@@ -1,0 +1,15 @@
+[Unit]
+Description=unit conversion service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=nobody
+ExecStart=/home/shannon/unit-conversion/backend/backend
+EnvironmentFile=/home/shannon/service-config.env
+
+[Install]
+WantedBy=multi-user.target
