@@ -22,14 +22,14 @@ export default function SuggestionForm({
   };
 
   const handleSubmit = (e) => {
-    console.log("handleSubmit()");
-    console.log("suggestion", suggestion);
+    // console.log("handleSubmit()");
+    // console.log("suggestion", suggestion);
     e.preventDefault();
     if (suggestion.checker && suggestion.checker.length > 0) {
-      console.log("if return");
+      // console.log("if return");
       return;
     }
-    console.log("before submitForm");
+    // console.log("before submitForm");
     submitForm();
   };
 

@@ -1,4 +1,4 @@
-import { ComplexIngr, AddedIngr, Suggestion} from "../types"
+import { ComplexIngr, AddedIngr, SugSubmit} from "../types"
 
 const baseURL = "http://localhost:8080/api/";
 
@@ -23,7 +23,7 @@ export const postSuggestion = async (suggestion:Suggestion) => {
   return data;
 };
 
-export const putSuggestion = async (suggestion:Suggestion) => {
+export const putSuggestion = async (suggestion:SugSubmit) => {
   const request = {
     method: "PUT",
     headers: { "Content-Type": "application/json", Authorization: "none" },

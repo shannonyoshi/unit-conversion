@@ -8,7 +8,7 @@ export interface IngrInput {
   amount: string,
   currentUnit: string,
   targetUnit: string,
-  ingredientName:string
+  ingredientName: string
 }
 
 export interface Fraction {
@@ -21,7 +21,7 @@ type NormUnit = "mL" | "g"
 type Output = "fraction" | "decimal"
 type UnitType = "US" | "metric"
 
-export type unitProperty = "name" | "normUnit" | "conversion" | "output" | "type"| "singular"
+export type unitProperty = "name" | "normUnit" | "conversion" | "output" | "type" | "singular"
 
 export interface Unit {
   name: string,
@@ -48,7 +48,7 @@ export interface ErrorInt {
   General: string,
 }
 // used when sending into to backend
-export interface ComplexIngr{
+export interface ComplexIngr {
   ingredientName: string,
   currentAmount: number,
   currentUnit: string,
@@ -59,15 +59,30 @@ export interface ComplexIngr{
 }
 // get ingredient from backend in this format
 export interface AddedIngr {
-  sourceAmount:number,
-  sourceUnit:string,
-  targetAmount:number,
-  targetUnit:string
+  sourceAmount: number,
+  sourceUnit: string,
+  targetAmount: number,
+  targetUnit: string
 }
-
+// for the form inputs
 export interface Suggestion {
+  checker?: string,
+  name: string,
+  message: string,
+  email: string,
+  isError: boolean,
+  createdAt?: Date
+  viewedAt?:Date
+
+}
+// for sending to backend
+export interface SugSubmit {
   name: string,
   message: string,
   email: string,
   isError: boolean
 }
+// export interface SugSaved {suggestion
+//   suggestion
+
+// }
