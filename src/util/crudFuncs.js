@@ -1,5 +1,6 @@
+// TODO: change this
 // const baseURL = "http://localhost:8080/api/";
-const baseURL = "https://bakingunits.com/api/"
+const baseURL = "https://www.bakingunits.com/api/"
 
 export const postSuggestion = async (suggestion) => {
   const request = {
