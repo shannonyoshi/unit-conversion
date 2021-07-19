@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/jackc/pgx/v4"
 
-	"github.com/shannonyoshi/unit-conversion/backend/models"
-
+	"github.com/gorilla/handlers"
 	"github.com/rs/cors"
+	"github.com/shannonyoshi/unit-conversion/backend/models"
 )
 
 func suggestionPage(w http.ResponseWriter, r *http.Request) {
@@ -140,9 +141,10 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	mux.Handle("/", fs)
 
-	c := cors.AllowAll()
+	cors := cors.Default().Handler(mux)
+	wrap := handlers.LoggingHandler(os.Stdout, cors)
 
-	err := http.ListenAndServe(":8080", c.Handler(mux))
+	err := http.ListenAndServe(":8080", wrap)
 	if err != nil {
 		fmt.Println(err)
 	}
