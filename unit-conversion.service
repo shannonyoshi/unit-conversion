@@ -9,6 +9,7 @@ Restart=always
 RestartSec=1
 User=nobody
 ExecStart=/home/shannon/unit-conversion/backend/backend
+WorkingDirectory=/home/shannon/unit-conversion/backend
 EnvironmentFile=/home/shannon/service-config.env
 
 [Install]
