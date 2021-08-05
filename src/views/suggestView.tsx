@@ -8,29 +8,31 @@ import SuggestionCard from "../components/suggestionCard"
 
 export default function SuggestView() {
   const blankSuggestion: Suggestion = {
-    checker: "",
     name: "",
     message: "",
     email: "",
     isError: false,
   };
   const [suggestion, setSuggestion] = useState<Suggestion>(blankSuggestion);
+  const [checker, setChecker] = useState<string>("")
   const [showCard, setShowCard] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false)
   const submitForm = async () => {
-    let sugToSubmit: SugSubmit = { name: suggestion.name, message: suggestion.message, email: suggestion.email, isError: suggestion.isError }
-    let returnedSug:Suggestion
+    let returnedSug: Suggestion
     if (isEdit) {
-      returnedSug = await putSuggestion(sugToSubmit)
+      // putSuggestion removes checker from suggestion since that does not go to DB, and remove viewedAt & createdAt because they are not updated by user
+        let putSug: Suggestion = { id: suggestion.id, name: suggestion.name, email: suggestion.email, message: suggestion.message, isError: suggestion.isError }
+        returnedSug = await putSuggestion(putSug)
     } else {
-      returnedSug = await postSuggestion(sugToSubmit);
+      let postSug: SugSubmit = { name: suggestion.name, message: suggestion.message, email: suggestion.email, isError: suggestion.isError }
+      returnedSug = await postSuggestion(postSug);
     }
     setSuggestion(returnedSug);
     setShowCard(true);
     setIsEdit(false)
   };
 
-  const toggleEdit = (e:React.MouseEvent) => {
+  const toggleEdit = (e: React.MouseEvent) => {
     e.preventDefault()
     setShowCard(false)
     setIsEdit(true)
@@ -48,6 +50,8 @@ export default function SuggestView() {
         <SuggestionCard toggleEdit={toggleEdit} suggestion={suggestion} reset={reset} />
       ) : (
         <SuggestionForm
+          checker={checker}
+          setChecker={setChecker}
           suggestion={suggestion}
           setSuggestion={setSuggestion}
           isEdit={isEdit}

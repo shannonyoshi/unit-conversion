@@ -1,13 +1,29 @@
-import React from "react";
+import React, {Dispatch, SetStateAction, FC} from "react";
+import {Suggestion} from "../types"
 
-export default function SuggestionForm({
+interface SugFormProps {
+  setChecker: Dispatch<SetStateAction<string>>,
+  checker:string,
+  suggestion:Suggestion,
+  setSuggestion: Dispatch<SetStateAction<Suggestion>>, 
+  isEdit: boolean,
+  submitForm: ()=>void
+
+}
+
+const SuggestionForm: FC<SugFormProps>=({
+  setChecker,
+  checker,
   suggestion,
   setSuggestion,
   isEdit,
   submitForm,
-}) {
-  const handleInputChange = (e) => {
+}:SugFormProps)=> {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.persist();
+    if (e.target.name==="checker") {
+      setChecker(e.target.value)
+    }
     if (e.target.name === "isError") {
       setSuggestion((suggestion) => ({
         ...suggestion,
@@ -21,15 +37,12 @@ export default function SuggestionForm({
     }
   };
 
-  const handleSubmit = (e) => {
-    // console.log("handleSubmit()");
-    // console.log("suggestion", suggestion);
+  const handleSubmit = (e:React.SyntheticEvent) => {
     e.preventDefault();
-    if (suggestion.checker && suggestion.checker.length > 0) {
-      // console.log("if return");
+    // checker is a honeypot to prevent bot submissions
+    if (checker.length > 0) {
       return;
     }
-    // console.log("before submitForm");
     submitForm();
   };
 
@@ -47,7 +60,7 @@ export default function SuggestionForm({
               type="text"
               id="checker"
               name="checker"
-              value={suggestion.checker}
+              value={checker}
               onChange={handleInputChange}
               placeholder="Do not fill this out"
             />

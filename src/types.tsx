@@ -47,7 +47,7 @@ export interface ErrorInt {
   Conversion: string,
   General: string,
 }
-// used when sending into to backend
+// used when sending ingredient to backend
 export interface ComplexIngr {
   ingredientName: string,
   currentAmount: number,
@@ -64,9 +64,9 @@ export interface AddedIngr {
   targetAmount: number,
   targetUnit: string
 }
-// for the form inputs
+
 export interface Suggestion {
-  checker?: string,
+  id?:number,
   name: string,
   message: string,
   email: string,
@@ -75,14 +75,11 @@ export interface Suggestion {
   viewedAt?:Date
 
 }
-// for sending to backend
+// for sending to backend only on POST requests
 export interface SugSubmit {
   name: string,
   message: string,
   email: string,
   isError: boolean
 }
-// export interface SugSaved {suggestion
-//   suggestion
 
-// }

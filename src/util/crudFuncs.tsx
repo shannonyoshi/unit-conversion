@@ -1,8 +1,8 @@
-import { ComplexIngr, AddedIngr, SugSubmit} from "../types"
+import { ComplexIngr, AddedIngr, SugSubmit, Suggestion } from "../types"
 
 const baseURL = "http://localhost:8080/api/";
 
-export const postSuggestion = async (suggestion:Suggestion) => {
+export const postSuggestion = async (suggestion: SugSubmit) => {
   const request = {
     method: "POST",
     headers: {
@@ -11,7 +11,7 @@ export const postSuggestion = async (suggestion:Suggestion) => {
     },
     body: JSON.stringify(suggestion),
   };
-   console.log('request', request)
+  console.log('request', request)
   const response = await fetch(`${baseURL}suggest`, request);
   console.log('response', response)
   // console.log('response.status', response.status)
@@ -23,7 +23,7 @@ export const postSuggestion = async (suggestion:Suggestion) => {
   return data;
 };
 
-export const putSuggestion = async (suggestion:SugSubmit) => {
+export const putSuggestion = async (suggestion: Suggestion): Promise<Suggestion> => {
   const request = {
     method: "PUT",
     headers: { "Content-Type": "application/json", Authorization: "none" },
@@ -39,11 +39,11 @@ export const putSuggestion = async (suggestion:SugSubmit) => {
   return data;
 };
 
-export const delSuggestion = async (suggestionID:number)=> {
-  
+export const delSuggestion = async (suggestionID: number) => {
+
   const request = {
     method: "DELETE",
-    headers: {"Content-Type": "application/json", Authorization: "none"},
+    headers: { "Content-Type": "application/json", Authorization: "none" },
     body: JSON.stringify(suggestionID)
   }
 
@@ -58,7 +58,7 @@ export const delSuggestion = async (suggestionID:number)=> {
 // example ingredient: ingredientName, currentAmount, currentUnit, altUnit, altAmount, targetUnit
 //altUnit and altAmount is the "type" and conversion of currentUnit.
 
-export const postConversion = async (ingredient:ComplexIngr) :Promise<AddedIngr| null>  => {
+export const postConversion = async (ingredient: ComplexIngr): Promise<AddedIngr | null> => {
   const request = {
     method: "POST",
     headers: {
@@ -72,6 +72,6 @@ export const postConversion = async (ingredient:ComplexIngr) :Promise<AddedIngr|
   if (!response.ok) {
     return null
   }
-  const data:AddedIngr = await response.json();
+  const data: AddedIngr = await response.json();
   return data;
 };
