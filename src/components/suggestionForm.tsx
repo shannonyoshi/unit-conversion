@@ -19,7 +19,7 @@ const SuggestionForm: FC<SugFormProps>=({
   isEdit,
   submitForm,
 }:SugFormProps)=> {
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>| React.ChangeEvent<HTMLTextAreaElement>) => {
     e.persist();
     if (e.target.name==="checker") {
       setChecker(e.target.value)
@@ -124,3 +124,5 @@ const SuggestionForm: FC<SugFormProps>=({
     </div>
   );
 }
+
+export default SuggestionForm;
