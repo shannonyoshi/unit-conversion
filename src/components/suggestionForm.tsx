@@ -94,8 +94,7 @@ const SuggestionForm: FC<SugFormProps>=({
               Suggestion
             </label>
             <textarea
-              required
-              type="text"
+              required  
               id="suggestion"
               name="message"
               value={suggestion.message}
