@@ -1,11 +1,55 @@
 @import "variables";
 
+
+@mixin small-font {
+  font-size:1.25em;
+  @media(max-width:600px){
+    font-size:.9em;
+    text-align: center;
+  }
+  @media(max-width:800px){
+    font-size:1em;
+  }
+  @media(max-width:1100px){
+    font-size:1.15em;
+  }
+}
+
+@mixin medium-font {
+  font-size:1.5em;
+  @media(max-width:600px){
+    font-size:1em;
+    text-align: center;
+  }
+  @media(max-width:800px){
+    font-size:1.15em;
+  }
+  @media(max-width:1100px){
+    font-size:1.25em;
+  }
+}
+
+@mixin large-font {
+  font-size:2em;
+  @media(max-width:600px){
+    font-size:1.25em;
+    text-align: center;
+  }
+  @media(max-width:800px){
+    font-size:1.5em;
+  }
+  @media(max-width:1100px){
+    font-size:1.75em;
+  }
+}
+
+
 //form mixins
 @mixin input-mixin {
   background-color: color(white);
   border: none;
   border-radius: 5px;
-
+  
   padding: $xs-padding;
   box-shadow: inset 0px 0px 1px 2px rgba(69, 189, 193, 0.2);
   &:hover {
@@ -30,9 +74,9 @@
 
 @mixin select-mixin {
   @include input-mixin;
-  text-align:center;
-  text-align-last: center;
-  -moz-text-align-last: center;
+  text-align:left;
+  text-align-last: left;
+  -moz-text-align-last: left;
   -webkit-appearance: none;
   -moz-appearance: none;
   -ms-appearance: none;
@@ -59,7 +103,17 @@
   }
 }
 
-@mixin submit-button {
+@mixin button {
+  box-shadow: inset 0px 0px 1px 1px rgba(25, 100, 126, 0.2);
+  background-color: color(light);
+  color:color(medium);
+  margin: 10px;
+  border: none;
+  width: 80%;
+  &:focus {
+    outline: none;
+  }
+
   &:not([disabled]){
     @include hover-raise;
     background-color: color(medium);
@@ -70,29 +124,25 @@
       color: color(dark)
     }
   }
-  box-shadow: inset 0px 0px 1px 1px rgba(25, 100, 126, 0.2);
-  background-color: color(light);
-  color:color(medium);
+}
+
+@mixin large-button {
+  @include large-font;
+  @include button;
+  padding: $s-padding $lg-padding;
+  border-radius: 10px;
+}
+
+@mixin small-button {
+
+  @include medium-font;
+  @include button;
+  
   padding: $xs-padding $lg-padding;
-  margin: 10px;
-  border: none;
   border-radius: 5px;
-  font-size: 1.25em;
-  width: 50%;
-  &.large{
-    padding:$s-padding $lg-padding;
-    font-size:1.5em;
-    margin: $m-padding;
-    
-    @media(max-width: 600px){
-      padding: $xs-padding $lg-padding;
-    }
-  }
+
   @media (max-width: 600px) {
-    width: 80%;
-  }
-  &:focus {
-    outline: none;
+    width: 90%;
   }
 }
 
@@ -112,29 +162,30 @@
 }
 
 @mixin form-label {
+  @include medium-font;
   display: inline-block;
   color: color(dark);
-  font-size: 1.25em;
   text-align: left;
   @media (max-width: 600px) {
-    font-size: 1em;
-    font-weight: bold;
+    font-weight: bold
   }
 }
 @mixin title {
-  font-size: 2em;
+  @include large-font;
+  font-weight:bold;
+  // font-size: 2em;
   padding: $m-padding;
   color: color(dark);
   @media(max-width: 1100px) {
     line-height:2em;
-    font-size:1.7em;
+    // font-size:1.7em;
   }
   @media(max-width: 600px) {
 
     line-height:1.5em;
-    font-size:1.25em;
+    // font-size:1.25em;
     padding: $xs-padding;
-    font-weight:bold;
+    
   }
 }
 @mixin subtitle {

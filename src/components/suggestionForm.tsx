@@ -108,7 +108,7 @@ const SuggestionForm: FC<SugFormProps>=({
               type="checkbox"
               id="reporting-error?"
               name="isError"
-              value={suggestion.isError}
+              value={suggestion.isError.toString()}
               onChange={handleInputChange}
             />
             <span>

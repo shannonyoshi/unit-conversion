@@ -36,10 +36,18 @@
       text-align: center;
     }
     &.checkbox {
+      input{
+        vertical-align: text-top;
+        border-color: color(dark);
+        background-color: color(white);
+        width:1.5em;
+        height:1.5em;
+      }
+      @include small-font;
       flex-wrap: nowrap !important;
       align-items: center;
     }
-
+  
     .suggestion-label {
       @include form-label;
       width: 150px;
@@ -65,6 +73,7 @@
   }
   textarea {
     @include input-mixin;
+    @include small-font;
     min-width: 300px;
     width: 60%;
     max-width: 90vw;
@@ -78,6 +87,7 @@
   }
   .string-input {
     @include input-mixin;
+    @include small-font;
     width: 60%;
     max-width: 90vw;
     min-width: 300px;
@@ -88,7 +98,7 @@
   }
 
   .submit-button {
-    @include submit-button;
+    @include large-button;
   }
   // card component only
   .suggestion-text {
