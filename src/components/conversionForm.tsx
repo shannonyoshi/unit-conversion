@@ -1,4 +1,4 @@
-import React, { useState, Dispatch, SetStateAction, FC, SyntheticEvent } from "react";
+import React, { useState, Dispatch, SetStateAction, FC } from "react";
 import { validateAmount, checkIfSimple } from "../util/utilFunctions";
 import { convertComplex, convertSimple } from "../util/conversionFunctions";
 import { unitDict } from "../util/units";

@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, FC } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { delSuggestion } from "../util/crudFuncs";
 
-export default function SuggestionCard({ toggleEdit, suggestion, reset }) {
+import {Suggestion} from "../types"
+
+
+interface SuggCardProps {
+  toggleEdit: (e: React.MouseEvent) => void;
+  suggestion: Suggestion;
+  reset:()=>void;
+}
+
+const SuggestionCard:FC<SuggCardProps>=({ toggleEdit, suggestion, reset }:SuggCardProps) =>{
   const [message, setMessage] = useState("");
   const [deleted, setDeleted] = useState(false);
-  const removeSug = async (e) => {
+  const removeSug = async (e: React.MouseEvent) => {
     e.preventDefault();
     setDeleted(true);
     if (suggestion.id) {
@@ -66,9 +75,9 @@ export default function SuggestionCard({ toggleEdit, suggestion, reset }) {
         <div className="suggestion-section">
           <p
             className={`suggestion-${
-              suggestion.IisError ? "isError" : "isNotError"
+              suggestion.isError ? "isError" : "isNotError"
             }`}>
-            {suggestion.IsError
+            {suggestion.isError
               ? "This submission IS an Error Report."
               : "This submission is NOT an Error Report."}
           </p>
@@ -77,3 +86,5 @@ export default function SuggestionCard({ toggleEdit, suggestion, reset }) {
     </div>
   );
 }
+
+export default SuggestionCard;
