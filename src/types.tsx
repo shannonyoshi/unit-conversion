@@ -66,13 +66,13 @@ export interface AddedIngr {
 }
 
 export interface Suggestion {
-  id?:number,
+  id?: number,
   name: string,
   message: string,
   email: string,
   isError: boolean,
   createdAt?: Date
-  viewedAt?:Date
+  viewedAt?: Date
 
 }
 // for sending to backend only on POST requests

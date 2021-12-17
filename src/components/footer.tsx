@@ -5,6 +5,7 @@ import Logo from "../components/Logo";
 import Navigation from "../components/navigation";
 
 import "../styling/footer.scss";
+
 const Footer = (): JSX.Element => {
   return (
     <div className="footer-wrapper">
@@ -15,6 +16,9 @@ const Footer = (): JSX.Element => {
           href="https://github.com/shannonyoshi/unit-conversion"
           target="_blank" rel="noopener noreferrer">
           <FontAwesomeIcon icon={["fab", "github"]} className="github-icon" />
+        </a>
+        <a className="nav-link footer-nav" href="https://syoshi.dev/"
+          target="_blank" rel="noopener noreferrer">PortFolio
         </a>
       </footer>
     </div>

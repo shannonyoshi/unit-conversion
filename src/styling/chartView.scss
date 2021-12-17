@@ -94,7 +94,7 @@
     color: color(darker);
   }
   .submit-btn {
-    @include large-button;
+    @include large-btn;
   }
 }
 

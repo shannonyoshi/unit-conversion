@@ -43,6 +43,13 @@
   }
 }
 
+@mixin link-reset {
+  text-decoration: none;
+  color: color(light);
+  outline: none;
+  white-space: nowrap;
+  border-bottom: 1px solid transparent;
+}
 
 //form mixins
 @mixin input-mixin {
@@ -126,14 +133,14 @@
   }
 }
 
-@mixin large-button {
+@mixin large-btn {
   @include large-font;
   @include button;
   padding: $s-padding $lg-padding;
   border-radius: 10px;
 }
 
-@mixin small-button {
+@mixin small-btn {
 
   @include medium-font;
   @include button;

@@ -1,10 +1,10 @@
-import React, {FC} from "react";
+import React, { FC } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import "../styling/siteView.scss";
 
-const SiteInfoView: FC=():JSX.Element=> {
+const SiteInfoView: FC = (): JSX.Element => {
   return (
     <div className="info-page-wrapper">
       <div className="card-large">

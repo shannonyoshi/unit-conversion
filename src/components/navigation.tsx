@@ -8,12 +8,11 @@ interface NavProps {
   clickHandler?: (e:React.MouseEvent) => void;
 }
 
-
 const Navigation: FC<NavProps> = ({ description, clickHandler }: NavProps): JSX.Element => {
   return (
     <div className={`nav-wrapper ${description}`}>
       <nav
-        className={`${description}`}
+        className={`nav${description}`}
         onClick={clickHandler ? clickHandler : undefined}>
         <NavLink
           exact

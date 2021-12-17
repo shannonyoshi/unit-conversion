@@ -1,13 +1,11 @@
 @import "variables";
 @import "mixins";
 
-
 nav {
   display: flex;
   align-items: flex-end;
   justify-content: space-around;
-  @media(max-width:600px){
-
+  @media (max-width: 600px) {
     flex-direction: column;
   }
   &.header-nav {
@@ -39,31 +37,27 @@ nav {
     }
   }
   &.footer-nav {
-    justify-content:space-around;
+    justify-content: space-around;
     @media (max-width: 600px) {
-      align-items:center;
-      margin-top:$s-padding;
-
+      align-items: center;
+      margin-top: $s-padding;
     }
   }
 
   .nav-link {
-    text-decoration: none;
-    color: color(light);
-    outline: none;
-    font-size: 2em;
+    @include link-reset;
+    @include large-font;
+    // font-size: 2em;
     padding: $xs-padding;
-    white-space: nowrap;
-    border-bottom: 1px solid transparent;
     &:hover {
       border-bottom: 1px solid color(medium);
     }
-    @media (max-width: 1100px) {
-      font-size: 1.5em;
-    }
-    @media (max-width: 600px) {
-      font-size: 1em;
-    }
+    // @media (max-width: 1100px) {
+    //   font-size: 1.5em;
+    // }
+    // @media (max-width: 600px) {
+    //   font-size: 1em;
+    // }
     &.header-nav {
       @include hover-raise;
       @media (max-width: 600px) {
@@ -77,7 +71,7 @@ nav {
     &.footer-nav {
       @include medium-font;
     }
-    &.active{
+    &.active {
       text-decoration: none;
       color: color(medium);
       outline: none;
