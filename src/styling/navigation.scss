@@ -47,19 +47,12 @@ nav {
   .nav-link {
     @include link-reset;
     @include large-font;
-    // font-size: 2em;
     padding: $xs-padding;
     &:hover {
       border-bottom: 1px solid color(medium);
     }
-    // @media (max-width: 1100px) {
-    //   font-size: 1.5em;
-    // }
-    // @media (max-width: 600px) {
-    //   font-size: 1em;
-    // }
+    @include hover-raise;
     &.header-nav {
-      @include hover-raise;
       @media (max-width: 600px) {
         border-bottom: 1px solid color(dark);
         &:hover {

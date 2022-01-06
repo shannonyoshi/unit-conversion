@@ -1,6 +1,10 @@
 @import "variables";
 @import "mixins";
 
+.home-link{
+  text-decoration:none;
+}
+
 .logo {
   &-wrapper {
     color: color(medium);

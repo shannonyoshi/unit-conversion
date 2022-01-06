@@ -12,14 +12,16 @@ const Footer = (): JSX.Element => {
       <footer>
         <Logo description="footer-logo" />
         <Navigation description="footer-nav" />
+        <div className="additional-links">
         <a
           href="https://github.com/shannonyoshi/unit-conversion"
           target="_blank" rel="noopener noreferrer">
           <FontAwesomeIcon icon={["fab", "github"]} className="github-icon" />
         </a>
-        <a className="nav-link footer-nav" href="https://syoshi.dev/"
+        <a className="portfolio-link" href="https://syoshi.dev/"
           target="_blank" rel="noopener noreferrer">PortFolio
         </a>
+          </div>
       </footer>
     </div>
   );
