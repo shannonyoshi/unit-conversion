@@ -5,7 +5,7 @@ import { filterUnits } from "../util/utilFunctions";
 export default function CustomFilter({
   customUnits,
   setCustomUnits,
-  setUnits,
+  setUnitNames,
   setShowCustomFilter,
 }) {
   const volumeUnits = filterUnits("normUnit", "mL");
@@ -20,7 +20,7 @@ export default function CustomFilter({
   };
 
   const submitUnits = () => {
-    setUnits(customUnits);
+    setUnitNames(customUnits);
     setShowCustomFilter(false);
   };
 

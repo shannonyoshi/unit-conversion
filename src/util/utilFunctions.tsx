@@ -104,7 +104,7 @@ export const filterFractions = (type: string, remainder?: number): Fraction[] =>
     }
     return [current, next];
   };
-  if (!remainder) {
+  if (remainder===undefined) {
     switch (type) {
       case "all":
         return allFractions;
@@ -130,11 +130,11 @@ export const filterFractions = (type: string, remainder?: number): Fraction[] =>
       // returns common=true closest fraction
       case "commonClosest":
         return [allFractions.reduce((prev, curr) =>
-          Math.abs(curr.decimal - remainder) < Math.abs(prev.decimal - remainder) &&
+          Math.abs(curr.decimal - remainder) <= Math.abs(prev.decimal - remainder) &&
             curr.common === true
             ? curr
             : prev
-        )];
+        ,{ string: "", decimal: 0.0, common: true } )];
       case "commonClosest2":
         let common = filterFractions("common");
         return closest2(common, remainder);

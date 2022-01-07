@@ -9,7 +9,7 @@ type FilterProps = {
   unitFilters: Filter[],
   unitFilter: Filter,
   setUnitFilter: (filter: Filter) => void,
-  setUnits: (units: string[]) => void,
+  setUnitNames: (unitNames: string[]) => void,
   showCustomFilter: boolean,
   setShowCustomFilter: (show: boolean) => void
 }
@@ -18,7 +18,7 @@ const ChartFilter: FC<FilterProps> = ({
   unitFilters,
   unitFilter,
   setUnitFilter,
-  setUnits,
+  setUnitNames,
   showCustomFilter,
   setShowCustomFilter,
 }: FilterProps): JSX.Element => {
@@ -55,7 +55,7 @@ const ChartFilter: FC<FilterProps> = ({
       }
     };
     const filteredUnits = filterByType();
-    setUnits(filteredUnits);
+    setUnitNames(filteredUnits);
   }, [unitFilter]);
 
   return (

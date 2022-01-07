@@ -1,34 +1,35 @@
 import React, { FC } from "react";
 import { unitDict } from "../util/units";
 import { filterFractions, filterUnits } from "../util/utilFunctions";
+import { Fraction } from "../types"
 
 type TablesProps = {
-  units: string[]
+  unitNames: string[]
 }
 
 
-const ChartTables: FC<TablesProps> = ({ units }: TablesProps): JSX.Element => {
+const ChartTables: FC<TablesProps> = ({ unitNames }: TablesProps): JSX.Element => {
   let chartType: Set<string> = new Set();
-  for (let i = 0; i < units.length; i++) {
-    let curr = units[i];
+  for (let i = 0; i < unitNames.length; i++) {
+    let curr = unitNames[i];
     chartType.add(unitDict[curr].normUnit);
   }
-  if (units.length === 0) {
+  if (unitNames.length === 0) {
     return <></>;
   }
 
   if (chartType.size > 1) {
-    let units1 = filterUnits("normUnit", "mL", units);
-    let units2 = filterUnits("normUnit", "g", units);
+    let unitNames1 = filterUnits("normUnit", "mL", unitNames);
+    let unitNames2 = filterUnits("normUnit", "g", unitNames);
     return (
       <div className="table-card">
         <div className="single-table">
           <h1>Volume Table</h1>
-          <ChartTable units={units1} table={"volume"} />
+          <ChartTable unitNames={unitNames1} table={"volume"} />
         </div>
         <div className="single-table weight">
           <h1>Weight Table</h1>
-          <ChartTable units={units2} table={"weight"} />
+          <ChartTable unitNames={unitNames2} table={"weight"} />
         </div>
       </div>
     );
@@ -36,16 +37,16 @@ const ChartTables: FC<TablesProps> = ({ units }: TablesProps): JSX.Element => {
     return (
       <div className="table-card">
         <h1>
-          {unitDict[units[0]].normUnit === "mL" ? "Volume" : "Weight"} Table
+          {unitDict[unitNames[0]].normUnit === "mL" ? "Volume" : "Weight"} Table
         </h1>
-        <ChartTable units={units} table={"single"} />
+        <ChartTable unitNames={unitNames} table={"single"} />
       </div>
     );
   }
 }
 
 type TableProps = {
-  units: string[],
+  unitNames: string[],
   table: string
 }
 
@@ -56,38 +57,66 @@ interface SubR {
 
 interface RowData {
   heading: string,
-  rowData:SubR[]
+  rowData: SubR[]
 }
 
-const ChartTable: FC<TableProps> = ({ units, table }: TableProps): JSX.Element => {
-  let tData:RowData[]=[];
-  for (let i = 0; i < units.length; i++) {
-    let currName: string = units[i];
-    let currResult:RowData = { heading: currName, rowData: [] };
+const generateTableData = (unitNames:string[]):RowData[]=> {
+  let tableData:RowData[]=[]
+  for (let i = 0; i < unitNames.length; i++) {
+    let currName: string = unitNames[i];
+    let currResult: RowData = { heading: currName, rowData: [] };
     let currAmount: number = unitDict[currName].conversion;
-    for (let k = 0; k < units.length; k++) {
-      let subU: string = units[k];
-      let conversion: number = unitDict[subU].conversion/ currAmount;
-      let convertedInt:number = Math.floor(conversion);
-      
-      let closestFrac = filterFractions(
-        "allClosest",
-        (conversion - convertedInt)
-      );
-      let deci:number = Math.floor(conversion * 100) / 100
-      // let str =
-      let subResult: SubR = {
-        decimal: deci, 
-        string: `${convertedInt > 0 ? convertedInt + " " : ""}${closestFrac[0]
+    for (let k = 0; k < unitNames.length; k++) {
+      let subResult:SubR 
+      let subU: string = unitNames[k];
+
+      if (subU===currName) {
+        subResult = {decimal: 1, string: `1`}
+      } else {
+
+        let converted: number = unitDict[subU].conversion / currAmount;
+        let convertedInt: number = Math.floor(converted);
+        
+        let closestFracArr:Fraction[] = filterFractions(
+          "allClosest",
+          (converted - convertedInt)
+          );
+          let closestFrac: Fraction | undefined = closestFracArr.pop()
+          if (closestFrac===undefined){
+            console.log("closestFrac = undefined", "currName: ", currName, " subU: ", subU)
+          }
+          console.log("closestFrac", converted-convertedInt, ":", closestFrac)
+          let deci: number = Math.round(converted * 100) / 100
+          if (closestFrac && closestFrac.decimal === 1) {
+            closestFrac = { string: "", decimal: 0.0, common: true }
+            convertedInt+=1
+          } if(closestFrac && closestFrac.decimal < .0156 && convertedInt>=500){
+            closestFrac = { string: "", decimal: 0.0, common: true }
+            deci=Math.round(deci)
+            
+          }
+          
+          subResult = {
+            decimal: deci,
+            string: `${convertedInt > 0 ? convertedInt + " " : ""}${closestFrac === undefined ? "" : closestFrac.string
           }`
+        }
       };
 
       currResult.rowData.push(subResult);
     }
-    tData.push(currResult);
+    console.log(`currResult`, currResult)
+    tableData.push(currResult);
   }
+  return tableData
+}
 
+const ChartTable: FC<TableProps> = ({ unitNames, table }: TableProps): JSX.Element => {
+  let tData: RowData[] = generateTableData(unitNames);
+  
+  // console.log("tData", tData)
   return (
+
     <div className="table-wrapper">
       <table>
         <thead>
@@ -96,7 +125,7 @@ const ChartTable: FC<TableProps> = ({ units, table }: TableProps): JSX.Element =
               Units
             </th>
             {/* <th scope="col">Test</th> */}
-            {units.map((unitName) => (
+            {unitNames.map((unitName) => (
               <th
                 colSpan={2}
                 scope="col"
@@ -107,7 +136,7 @@ const ChartTable: FC<TableProps> = ({ units, table }: TableProps): JSX.Element =
             ))}
           </tr>
           <tr>
-            {units.map((unitName) => (
+            {unitNames.map((unitName) => (
               <th
                 className="small"
                 colSpan={2}
@@ -125,7 +154,7 @@ const ChartTable: FC<TableProps> = ({ units, table }: TableProps): JSX.Element =
                 {row.heading.charAt(0).toUpperCase() + row.heading.slice(1)}
               </th>
               {row.rowData.map((subU, i) =>
-                Number.isInteger(subU.decimal) ? (
+                Number.isInteger(subU.decimal) || subU.decimal===0? (
                   <td
                     colSpan={2}
                     key={` ${table} entry ${row.heading} ${index} ${i}`}

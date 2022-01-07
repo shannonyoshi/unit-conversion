@@ -40,10 +40,11 @@ export const allFractions: Fraction[] = [
   { string: "7/8", decimal: 0.875, common: false },
   { string: "8/9", decimal: 0.8889, common: false },
   { string: "15/16", decimal: 0.9375, common: false },
+  // { string: "1", decimal: 1.0, common: true }
 ];
 
-export const unitDict: {[unitName:string]:Unit} = {
-  "drops":{
+export const unitDict: { [unitName: string]: Unit } = {
+  "drops": {
     name: "drops",
     normUnit: "mL",
     conversion: 0.0513429,
@@ -51,7 +52,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "US",
     singular: "drop",
   },
-  "smidges":{
+  "smidges": {
     name: "smidges",
     normUnit: "mL",
     conversion: 0.115522,
@@ -59,14 +60,14 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "US",
     singular: "smidge",
   },
-  "pinches":{
+  "pinches": {
     name: "pinches",
     normUnit: "mL",
     conversion: 0.231043,
     output: "fraction",
     type: "US",
     singular: "pinch",
-  }, "dashes":{
+  }, "dashes": {
     name: "dashes",
     normUnit: "mL",
     conversion: 0.462086,
@@ -74,7 +75,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "US",
     singular: "dash",
   },
-  "milliliters":{
+  "milliliters": {
     name: "milliliters",
     normUnit: "mL",
     conversion: 1,
@@ -82,7 +83,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "metric",
     singular: "milliliter",
   },
-  "teaspoons":{
+  "teaspoons": {
     name: "teaspoons",
     normUnit: "mL",
     conversion: 4.92892,
@@ -90,7 +91,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "US",
     singular: "teaspoon",
   },
-  "tablespoons":{
+  "tablespoons": {
     name: "tablespoons",
     normUnit: "mL",
     conversion: 14.7868,
@@ -98,7 +99,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "US",
     singular: "tablespoon",
   },
-  "fluid ounces":{
+  "fluid ounces": {
     name: "fluid ounces",
     normUnit: "mL",
     conversion: 29.5735,
@@ -106,7 +107,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "US",
     singular: "fluid ounce",
   },
-  "cups":{
+  "cups": {
     name: "cups",
     normUnit: "mL",
     conversion: 236.588,
@@ -114,7 +115,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "US",
     singular: "cup",
   },
-  "pints":{
+  "pints": {
     name: "pints",
     normUnit: "mL",
     conversion: 473.176,
@@ -122,7 +123,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "US",
     singular: "pint",
   },
-  "quarts":{
+  "quarts": {
     name: "quarts",
     normUnit: "mL",
     conversion: 946.353,
@@ -130,7 +131,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "US",
     singular: "quart",
   },
-  "liters":{
+  "liters": {
     name: "liters",
     normUnit: "mL",
     conversion: 1000,
@@ -138,7 +139,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "metric",
     singular: "liter",
   },
-  "gallons":{
+  "gallons": {
     name: "gallons",
     normUnit: "mL",
     conversion: 3785.41,
@@ -146,7 +147,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "US",
     singular: "gallon",
   },
-  "grams":{
+  "grams": {
     name: "grams",
     normUnit: "g",
     conversion: 1,
@@ -154,7 +155,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "metric",
     singular: "gram",
   },
-  "ounces":{
+  "ounces": {
     name: "ounces",
     normUnit: "g",
     conversion: 28.3495,
@@ -162,7 +163,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "US",
     singular: "ounce",
   },
-  "pounds":{
+  "pounds": {
     name: "pounds",
     normUnit: "g",
     conversion: 453.592,
@@ -170,7 +171,7 @@ export const unitDict: {[unitName:string]:Unit} = {
     type: "US",
     singular: "pound",
   },
-  "kilograms":{
+  "kilograms": {
     name: "kilograms",
     normUnit: "g",
     conversion: 1000,

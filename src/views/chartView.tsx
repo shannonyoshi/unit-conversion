@@ -11,7 +11,7 @@ import "../styling/chartView.scss";
 //filters units according to user input, calls chartTables
 const ChartView: FC = (): JSX.Element => {
   const [unitFilter, setUnitFilter] = useState<Filter>("All");
-  const [units, setUnits] = useState<string[]>(Object.keys(unitDict));
+  const [unitNames, setUnitNames] = useState<string[]>(Object.keys(unitDict));
   const [showCustomFilter, setShowCustomFilter] = useState<boolean>(false);
   const [customUnits, setCustomUnits] = useState([]);
   let unitFilters:Filter[] = ["All", "Standard", "Metric", "Weight", "Volume", "Custom"];
@@ -22,7 +22,7 @@ const ChartView: FC = (): JSX.Element => {
         unitFilters={unitFilters}
         unitFilter={unitFilter}
         setUnitFilter={setUnitFilter}
-        setUnits={setUnits}
+        setUnitNames={setUnitNames}
         showCustomFilter={showCustomFilter}
         setShowCustomFilter={setShowCustomFilter}
       />
@@ -30,11 +30,11 @@ const ChartView: FC = (): JSX.Element => {
         <CustomFilter
           customUnits={customUnits}
           setCustomUnits={setCustomUnits}
-          setUnits={setUnits}
+          setUnitNames={setUnitNames}
           setShowCustomFilter={setShowCustomFilter}
         />
       ) : (
-        <ChartTables units={units} />
+        <ChartTables unitNames={unitNames} />
       )}
     </div>
   );
