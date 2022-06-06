@@ -8,7 +8,7 @@ import {IngrInput, ConvIngr}from "../types"
 //name is used as a honeypot to weed out bots submitting the form
 const initialInputState:IngrInput={
   name: "",
-  amount: "",
+  currentAmount: "",
   currentUnit: "",
   targetUnit: "",
   ingredientName: "",

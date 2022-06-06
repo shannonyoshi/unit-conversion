@@ -5,7 +5,7 @@ export type Filter = "All" | "Standard" | "Metric" | "Weight" | "Volume" | "Cust
 // name here is a honeypot to catch bots, and should not be used for actual information
 export interface IngrInput {
   name: string,
-  amount: string,
+  currentAmount: string,
   currentUnit: string,
   targetUnit: string,
   ingredientName: string
@@ -34,9 +34,10 @@ export interface Unit {
 }
 // converted ingredient
 export interface ConvIngr {
-  amount: string,
+  currentAmount: number,
   currentUnit: string,
-  targetUnit: string
+  targetAmount?: number,
+  targetUnit: string,
   ingredientName: string,
   convertedString: string,
 }
@@ -47,7 +48,8 @@ export interface ErrorInt {
   Conversion: string,
   General: string,
 }
-// used when sending ingredient to backend
+// used when sending ingredient to backend 
+// alt means normalized
 export interface ComplexIngr {
   ingredientName: string,
   currentAmount: number,

@@ -43,8 +43,8 @@ const ConversionForm: FC<FormProps> = ({
     if (inputs.name && inputs.name.length > 0) {
       return;
     }
-    // checks that inputs.amount is a number than can be parsed
-    const isAmount = validateAmount(inputs.amount);
+    // checks that inputs.currentAmount is a number than can be parsed
+    const isAmount = validateAmount(inputs.currentAmount);
     // console.log("amount valid?", isAmount);
     if (!isAmount) {
       setErrors({
@@ -120,10 +120,10 @@ const ConversionForm: FC<FormProps> = ({
             <input
               required
               type="text"
-              id="amount"
+              id="currentAmount"
               placeholder="3 1/2"
-              name="amount"
-              value={inputs.amount}
+              name="currentAmount"
+              value={inputs.currentAmount}
               onChange={handleInputChange}
             />
           </div>
@@ -187,7 +187,7 @@ const ConversionForm: FC<FormProps> = ({
           <button
             type="submit"
             disabled={
-              (inputs.amount.length > 0) &&
+              (inputs.currentAmount.length > 0) &&
                 inputs.currentUnit.length > 0 &&
                 inputs.targetUnit.length > 0
                 ? false
