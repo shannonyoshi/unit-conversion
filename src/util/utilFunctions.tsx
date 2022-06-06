@@ -90,21 +90,8 @@ export const calcNormalizedTolerance = (normalizedAmount: number): number => {
 
 //filters fractions, remainder should be in decimal, if closest2, check if returning ["",1,"true"]
 export const filterFractions = (type: string, remainder?: number): Fraction[] => {
-  // returns the 2 closest fractions, should have a higher than and lower than the remainder
-  const closest2 = (fracs: Fraction[], remainder: number): [Fraction, Fraction] => {
-    //adds additional fraction to the end ["", 1.00, "true"]
-    fracs.push({ string: fracs[0].string, decimal: fracs[0].decimal + 1, common: fracs[0].common });
-    let i = 0;
-    let next = fracs[1];
-    let current = fracs[i];
-    while (i + 1 < fracs.length && next.decimal < remainder) {
-      current = fracs[i];
-      next = fracs[i + 1];
-      i += 1;
-    }
-    return [current, next];
-  };
-  if (remainder===undefined) {
+
+  if (remainder === undefined) {
     switch (type) {
       case "all":
         return allFractions;
@@ -123,18 +110,11 @@ export const filterFractions = (type: string, remainder?: number): Fraction[] =>
         const close2Fracs: Fraction[] = closest2(commonFracs, remainder);
         return [close2Fracs[0]];
       case "allClosest":
-        // returns common = true or false
-        return [allFractions.reduce((prev, curr) => {
-          return Math.abs(curr.decimal - remainder) < Math.abs(prev.decimal - remainder) ? curr : prev
-        })]
-      // returns common=true closest fraction
+        // returns the closest fraction whether common or not
+        return [allClosest(remainder)]
+      // returns closest common fraction
       case "commonClosest":
-        return [allFractions.reduce((prev, curr) =>
-          Math.abs(curr.decimal - remainder) <= Math.abs(prev.decimal - remainder) &&
-            curr.common === true
-            ? curr
-            : prev
-        ,{ string: "", decimal: 0.0, common: true } )];
+        return [commonClosest(remainder)];
       case "commonClosest2":
         let common = filterFractions("common");
         return closest2(common, remainder);
@@ -143,6 +123,36 @@ export const filterFractions = (type: string, remainder?: number): Fraction[] =>
     }
   };
 }
+
+// Fraction filter functions:
+
+const allClosest = (remainder:number):Fraction =>
+  allFractions.reduce((prev, curr) => {
+    return Math.abs(curr.decimal - remainder) < Math.abs(prev.decimal - remainder) ? curr : prev
+  })
+
+const commonClosest = (remainder: number):Fraction =>
+  allFractions.reduce((prev, curr) =>
+    Math.abs(curr.decimal - remainder) <= Math.abs(prev.decimal - remainder) &&
+      curr.common === true
+      ? curr
+      : prev
+    , { string: "", decimal: 0.0, common: true })
+
+// returns the 2 closest fractions, should have a higher than and lower than the remainder
+const closest2 = (fracs: Fraction[], remainder: number): [Fraction, Fraction] => {
+  //adds additional fraction to the end ["", 1.00, "true"]
+  fracs.push({ string: "", decimal: 1, common: true });
+  let i = 0;
+  let next = fracs[1];
+  let current = fracs[i];
+  while (i + 1 < fracs.length && next.decimal < remainder) {
+    current = fracs[i];
+    next = fracs[i + 1];
+    i += 1;
+  }
+  return [current, next];
+};
 
 //returns array of units in [[name, conversion],[name, conversion]] format of same type that are smaller than remainingmLs, starting from largest unit
 //exclude is for mostly starting unit name when we don't want to return the starting unit as an option

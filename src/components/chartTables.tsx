@@ -7,7 +7,6 @@ type TablesProps = {
   unitNames: string[]
 }
 
-
 const ChartTables: FC<TablesProps> = ({ unitNames }: TablesProps): JSX.Element => {
   let chartType: Set<string> = new Set();
   for (let i = 0; i < unitNames.length; i++) {
@@ -60,52 +59,51 @@ interface RowData {
   rowData: SubR[]
 }
 
-const generateTableData = (unitNames:string[]):RowData[]=> {
-  let tableData:RowData[]=[]
+const generateTableData = (unitNames: string[]): RowData[] => {
+  let tableData: RowData[] = []
   for (let i = 0; i < unitNames.length; i++) {
     let currName: string = unitNames[i];
     let currResult: RowData = { heading: currName, rowData: [] };
     let currAmount: number = unitDict[currName].conversion;
     for (let k = 0; k < unitNames.length; k++) {
-      let subResult:SubR 
+      let subResult: SubR
       let subU: string = unitNames[k];
 
-      if (subU===currName) {
-        subResult = {decimal: 1, string: `1`}
+      if (subU === currName) {
+        subResult = { decimal: 1, string: `1` }
       } else {
 
         let converted: number = unitDict[subU].conversion / currAmount;
         let convertedInt: number = Math.floor(converted);
-        
-        let closestFracArr:Fraction[] = filterFractions(
+
+        let closestFracArr: Fraction[] = filterFractions(
           "allClosest",
           (converted - convertedInt)
-          );
-          let closestFrac: Fraction | undefined = closestFracArr.pop()
-          if (closestFrac===undefined){
-            console.log("closestFrac = undefined", "currName: ", currName, " subU: ", subU)
-          }
-          console.log("closestFrac", converted-convertedInt, ":", closestFrac)
-          let deci: number = Math.round(converted * 100) / 100
-          if (closestFrac && closestFrac.decimal === 1) {
-            closestFrac = { string: "", decimal: 0.0, common: true }
-            convertedInt+=1
-          } if(closestFrac && closestFrac.decimal < .0156 && convertedInt>=500){
-            closestFrac = { string: "", decimal: 0.0, common: true }
-            deci=Math.round(deci)
-            
-          }
-          
-          subResult = {
-            decimal: deci,
-            string: `${convertedInt > 0 ? convertedInt + " " : ""}${closestFrac === undefined ? "" : closestFrac.string
-          }`
+        );
+        let closestFrac: Fraction | undefined = closestFracArr.pop()
+        if (closestFrac === undefined) {
+          console.log("closestFrac = undefined", "currName: ", currName, " subU: ", subU)
+        }
+        console.log("closestFrac", converted - convertedInt, ":", closestFrac)
+        let deci: number = Math.round(converted * 100) / 100
+        if (closestFrac && closestFrac.decimal === 1) {
+          closestFrac = { string: "", decimal: 0.0, common: true }
+          convertedInt += 1
+        }
+        if (closestFrac && closestFrac.decimal < .0156 && convertedInt >= 500) {
+          closestFrac = { string: "", decimal: 0.0, common: true }
+          deci = Math.round(deci)
+        }
+
+        subResult = {
+          decimal: deci,
+          string: `${convertedInt > 0 ? convertedInt + " " : ""}${closestFrac === undefined ? "" : closestFrac.string
+            }`
         }
       };
 
       currResult.rowData.push(subResult);
     }
-    console.log(`currResult`, currResult)
     tableData.push(currResult);
   }
   return tableData
@@ -113,8 +111,6 @@ const generateTableData = (unitNames:string[]):RowData[]=> {
 
 const ChartTable: FC<TableProps> = ({ unitNames, table }: TableProps): JSX.Element => {
   let tData: RowData[] = generateTableData(unitNames);
-  
-  // console.log("tData", tData)
   return (
 
     <div className="table-wrapper">
@@ -124,7 +120,6 @@ const ChartTable: FC<TableProps> = ({ unitNames, table }: TableProps): JSX.Eleme
             <th scope="col" rowSpan={2} className="bold">
               Units
             </th>
-            {/* <th scope="col">Test</th> */}
             {unitNames.map((unitName) => (
               <th
                 colSpan={2}
@@ -154,7 +149,7 @@ const ChartTable: FC<TableProps> = ({ unitNames, table }: TableProps): JSX.Eleme
                 {row.heading.charAt(0).toUpperCase() + row.heading.slice(1)}
               </th>
               {row.rowData.map((subU, i) =>
-                Number.isInteger(subU.decimal) || subU.decimal===0? (
+                Number.isInteger(subU.decimal) || subU.decimal === 0 ? (
                   <td
                     colSpan={2}
                     key={` ${table} entry ${row.heading} ${index} ${i}`}
