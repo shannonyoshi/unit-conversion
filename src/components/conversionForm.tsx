@@ -2,9 +2,9 @@ import React, { useState, Dispatch, SetStateAction, FC } from "react";
 import { formConversion } from "../util/conversionFunctions";
 import { unitDict } from "../util/units";
 
-import { IngrInput, ConvIngr } from "../types";
+import { IngrInput, ConvIngr, Error, ErrorTypes } from "../types";
 
-// import ShowErrors from "./errors";
+import ShowErrors from "./errors";
 
 const unitKeys = Object.keys(unitDict);
 
@@ -23,7 +23,9 @@ const ConversionForm: FC<FormProps> = ({
   setInputs,
   initialInputState,
 }: FormProps): JSX.Element => {
-  const [errors, setErrors] = useState<Error[] | null>(null);
+  // const [errors, setErrors] = useState<Error[] | null>(null);
+  const [errors, setErrors] = useState<Error[] | null>([{name: "General", message: "This is an error. What happens when the error is really long"}, {name:"Amount", message: "This is another error about the amount"}]);
+
 
   //checks if conversion is "simple" (vol=>vol or weight=>weight), validate amount
   //if so, use function from util file to perform the conversion, then set to state converted list to display
@@ -33,11 +35,11 @@ const ConversionForm: FC<FormProps> = ({
   const handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
     const converted: [ConvIngr | null, Error | null] = await formConversion(inputs)
-    if (converted[1] != null) {
+    if (converted[1]) {
       setErrors([converted[1]])
       return
     }
-    if (converted[0] != null) {
+    if (converted[0]) {
       setConvertedIngredients([...convertedIngredients, converted[0]]);
       setInputs(initialInputState)
 
@@ -45,16 +47,12 @@ const ConversionForm: FC<FormProps> = ({
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault();
     event.persist()
-    console.log(`event`, event)
-    // console.log("event.target", e.target, "event.target.value",e.target.value)
     setInputs((inputs) => ({ ...inputs, [event.target.name]: event.target.value }));
     setErrors(null);
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    e.persist()
     e.preventDefault()
     let value: string = e.currentTarget.value
     let name: string = e.currentTarget.name
@@ -148,7 +146,7 @@ const ConversionForm: FC<FormProps> = ({
               onChange={handleInputChange}
             />
           </div>
-          {/* <ShowErrors errors={errors} /> */}
+          {errors ? <ShowErrors errors={errors} /> : null}
           <button
             type="submit"
             disabled={

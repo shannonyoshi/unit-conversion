@@ -1,5 +1,5 @@
 import { postConversion } from "./crudFuncs";
-import { ComplexIngr, IngrInput, ConvIngr, Unit, AddedIngr, Fraction } from "../types"
+import { ComplexIngr, IngrInput, ConvIngr, Unit, AddedIngr, Fraction, Error } from "../types"
 import { unitDict } from "./units";
 import {
   checkPluralUnit,
@@ -14,41 +14,30 @@ import {
 type FracOption = { unit: [string, number], count: number, remainder: number, frac?: Fraction }
 
 
-export const formConversion = async(inputs:IngrInput):Promise<[ConvIngr | null,  Error| null]>=> {
-  if (inputs.name && inputs.name.length>0){
-    return [null, {name: "Honeypot", message: "Sorry, try again later"}]
+export const formConversion = async (inputs: IngrInput): Promise<[ConvIngr | null, Error | null]> => {
+  if (inputs.name && inputs.name.length > 0) {
+    return [null, { name: "General", message: "Sorry, try again later" }]
   }
   const isAmount = validateAmount(inputs.currentAmount)
   if (!isAmount) {
-    return [null,{name: "Amount", message: "Unable to validate amount, either use decimal (1.5) or fraction (1 1/2) amounts"}]
+    return [null, { name: "Amount", message: "Unable to validate amount, either use decimal (1.5) or fraction (1 1/2) amounts" }]
   }
   const isSimple = checkIfSimple(inputs.currentUnit, inputs.targetUnit)
-  let converted:ConvIngr | null
-  if (isSimple){
+  let converted: ConvIngr | null
+  if (isSimple) {
     converted = convertSimple(isAmount, inputs)
   }
   else {
     if (inputs.ingredientName.length === 0) {
-      return [null,{name: "Ingredient Name", message: "Ingredient name needed for complex conversion"}]
+      return [null, { name: "Ingredient Name", message: "Ingredient name needed for complex conversion" }]
     }
-    converted = await convertComplex(inputs,isAmount)
-    if (converted === null){
-      return [null,{name: "Conversion", message: "An error occurred fetching ingredient information"}]
+    converted = await convertComplex(inputs, isAmount)
+    if (converted === null) {
+      return [null, { name: "Conversion", message: "An error occurred fetching ingredient information" }]
     }
   }
-  return [converted,null]
+  return [converted, null]
 }
-
-
-
-
-
-
-
-
-
-
-
 
 //performs simple conversion, returns string of converted amount + unit
 export const convertSimple = (isAmount: number, inputs: IngrInput): ConvIngr => {
@@ -90,13 +79,13 @@ export const convertComplex = async (inputs: IngrInput, isAmount: number): Promi
   console.log("newIngredient", newIngredient);
   // return newIngredient
   // TODO: should prettify converted string since only decimal is being returned
-  if (newIngredient===null){
+  if (newIngredient === null) {
     return null
   }
-  const normalizedAmount:number = newIngredient.targetAmount * unitDict[inputs.targetUnit].conversion
-  const prettyString:string = prettifyRemainder(inputs.currentUnit, newIngredient.targetAmount, inputs.targetUnit, normalizedAmount)
+  const normalizedAmount: number = newIngredient.targetAmount * unitDict[inputs.targetUnit].conversion
+  const prettyString: string = prettifyRemainder(inputs.currentUnit, newIngredient.targetAmount, inputs.targetUnit, normalizedAmount)
   console.log('prettyString', prettyString)
-  const formattedIngr:ConvIngr = {
+  const formattedIngr: ConvIngr = {
     currentAmount: isAmount,
     currentUnit: inputs.currentUnit,
     targetUnit: inputs.targetUnit,
@@ -380,8 +369,8 @@ const stringFromConvertRecursive = (
   targetUnitInt: number,
   fraction: Fraction,
   unitString: string,
-  commonFrac:Fraction,
-  recurResult:[number, string][]
+  commonFrac: Fraction,
+  recurResult: [number, string][]
 ) => {
   let returnString = `${targetUnitInt > 0 ? targetUnitInt : ""} ${fraction.string
     } ${unitString} or ${targetUnitInt > 0 ? targetUnitInt : ""} ${commonFrac.decimal > 0 ? commonFrac.string : ""
