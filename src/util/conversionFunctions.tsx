@@ -6,10 +6,48 @@ import {
   calcNormalizedTolerance,
   filterFractions,
   findPossibleUnits,
+  validateAmount,
+  checkIfSimple
 } from "./utilFunctions";
 
 // used in a few funcs below
 type FracOption = { unit: [string, number], count: number, remainder: number, frac?: Fraction }
+
+
+export const formConversion = async(inputs:IngrInput):Promise<[ConvIngr | null,  Error| null]>=> {
+  if (inputs.name && inputs.name.length>0){
+    return [null, {name: "Honeypot", message: "Sorry, try again later"}]
+  }
+  const isAmount = validateAmount(inputs.currentAmount)
+  if (!isAmount) {
+    return [null,{name: "Amount", message: "Unable to validate amount, either use decimal (1.5) or fraction (1 1/2) amounts"}]
+  }
+  const isSimple = checkIfSimple(inputs.currentUnit, inputs.targetUnit)
+  let converted:ConvIngr | null
+  if (isSimple){
+    converted = convertSimple(isAmount, inputs)
+  }
+  else {
+    if (inputs.ingredientName.length === 0) {
+      return [null,{name: "Ingredient Name", message: "Ingredient name needed for complex conversion"}]
+    }
+    converted = await convertComplex(inputs,isAmount)
+    if (converted === null){
+      return [null,{name: "Conversion", message: "An error occurred fetching ingredient information"}]
+    }
+  }
+  return [converted,null]
+}
+
+
+
+
+
+
+
+
+
+
 
 
 //performs simple conversion, returns string of converted amount + unit

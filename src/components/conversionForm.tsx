@@ -1,11 +1,10 @@
 import React, { useState, Dispatch, SetStateAction, FC } from "react";
-import { validateAmount, checkIfSimple } from "../util/utilFunctions";
-import { convertComplex, convertSimple } from "../util/conversionFunctions";
+import { formConversion } from "../util/conversionFunctions";
 import { unitDict } from "../util/units";
 
-import { IngrInput, ConvIngr, ErrorInt } from "../types";
+import { IngrInput, ConvIngr } from "../types";
 
-import ShowErrors from "./errors";
+// import ShowErrors from "./errors";
 
 const unitKeys = Object.keys(unitDict);
 
@@ -16,12 +15,7 @@ interface FormProps {
   setInputs: Dispatch<SetStateAction<IngrInput>>;
   initialInputState: IngrInput;
 }
-const initialErrorState = {
-  Amount: "",
-  "Ingredient Name": "",
-  Conversion: "",
-  General: "",
-};
+
 const ConversionForm: FC<FormProps> = ({
   setConvertedIngredients,
   convertedIngredients,
@@ -29,7 +23,7 @@ const ConversionForm: FC<FormProps> = ({
   setInputs,
   initialInputState,
 }: FormProps): JSX.Element => {
-  const [errors, setErrors] = useState<ErrorInt>(initialErrorState);
+  const [errors, setErrors] = useState<Error[] | null>(null);
 
   //checks if conversion is "simple" (vol=>vol or weight=>weight), validate amount
   //if so, use function from util file to perform the conversion, then set to state converted list to display
@@ -38,63 +32,34 @@ const ConversionForm: FC<FormProps> = ({
 
   const handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
-    setErrors(initialErrorState);
-    //assumes if name is filled out (it's hidden from view), the form was completed by a bot. It is only "visible" to people using screen readers and instructs them not to ignore the input
-    if (inputs.name && inputs.name.length > 0) {
-      return;
+    const converted: [ConvIngr | null, Error | null] = await formConversion(inputs)
+    if (converted[1] != null) {
+      setErrors([converted[1]])
+      return
     }
-    // checks that inputs.currentAmount is a number than can be parsed
-    const isAmount = validateAmount(inputs.currentAmount);
-    // console.log("amount valid?", isAmount);
-    if (!isAmount) {
-      setErrors({
-        ...errors,
-        Amount:
-          "Unable to validate amount, either use decimal amounts (1.5) or fractions (1 1/2)",
-      });
-      return;
-    }
-
-    const isSimple = checkIfSimple(inputs.currentUnit, inputs.targetUnit);
-    if (isSimple) {
-      let simpleConvIngr: ConvIngr = convertSimple(isAmount, inputs);
-      setConvertedIngredients([...convertedIngredients, simpleConvIngr]);
+    if (converted[0] != null) {
+      setConvertedIngredients([...convertedIngredients, converted[0]]);
       setInputs(initialInputState)
 
-    } else {
-      if (inputs.ingredientName.length === 0) {
-        setErrors({ ...errors, "Ingredient Name": "An ingredient name is required for complex conversions" })
-        return
-      }
-      let convertedIngr: ConvIngr | null = await convertComplex(inputs, isAmount);
-
-      if (convertedIngr != null) {
-        setConvertedIngredients([...convertedIngredients, convertedIngr]);
-        setInputs(initialInputState)
-      }
-
-      else {
-        setErrors({ ...errors, "Ingredient Name": `Error fetching ${inputs.ingredientName} information` });
-      }
     }
   };
-  
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     event.persist()
     console.log(`event`, event)
     // console.log("event.target", e.target, "event.target.value",e.target.value)
     setInputs((inputs) => ({ ...inputs, [event.target.name]: event.target.value }));
-    setErrors(initialErrorState);
+    setErrors(null);
   };
 
-  const handleSelectChange = (e:React.ChangeEvent<HTMLSelectElement>): void => {
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     e.persist()
     e.preventDefault()
-    let value:string = e.currentTarget.value
-    let name:string = e.currentTarget.name
+    let value: string = e.currentTarget.value
+    let name: string = e.currentTarget.name
 
-    setInputs((inputs)=> ({...inputs, [name]: value}))
+    setInputs((inputs) => ({ ...inputs, [name]: value }))
   }
 
   return (
@@ -159,7 +124,7 @@ const ConversionForm: FC<FormProps> = ({
               id="targetUnit"
               name="targetUnit"
               onChange={handleSelectChange}
-              >
+            >
               <option value="" disabled >
                 Select Unit
               </option>
@@ -183,7 +148,7 @@ const ConversionForm: FC<FormProps> = ({
               onChange={handleInputChange}
             />
           </div>
-          <ShowErrors errors={errors} />
+          {/* <ShowErrors errors={errors} /> */}
           <button
             type="submit"
             disabled={

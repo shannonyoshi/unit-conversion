@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, Dispatch, SetStateAction } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { checkPluralUnit } from "../util/utilFunctions"
@@ -6,11 +6,12 @@ import { ConvIngr, IngrInput } from "../types"
 
 type ConvListProps = {
   ingredients: ConvIngr[],
-  setIngredients: (ingredients: ConvIngr[]) => void,
-  setInputs: (inputs: IngrInput) => void
+  setIngredients: Dispatch<SetStateAction< ConvIngr[]>>,
+  setInputs: Dispatch<SetStateAction<IngrInput>>
 }
 
 const ConvertedList: FC<ConvListProps> = ({ ingredients, setIngredients, setInputs }: ConvListProps): JSX.Element => {
+  
   // removes ingredient from list
   const deleteIngredient = (index: number) => {
     let newIngredientsArray = ingredients;
@@ -18,7 +19,7 @@ const ConvertedList: FC<ConvListProps> = ({ ingredients, setIngredients, setInpu
     setIngredients([...newIngredientsArray]);
   };
 
-  //adds ingredient to form, removes from lists
+  //removes ingredient from list and adds to inputs on conversion form
   const editIngredient = (e:React.MouseEvent, index:number) => {
     e.preventDefault();
     let toEdit = ingredients[index];

@@ -42,12 +42,6 @@ export interface ConvIngr {
   convertedString: string,
 }
 
-export interface ErrorInt {
-  Amount: string,
-  "Ingredient Name": string,
-  Conversion: string,
-  General: string,
-}
 // used when sending ingredient to backend 
 // alt means normalized
 export interface ComplexIngr {
@@ -83,5 +77,11 @@ export interface SugSubmit {
   message: string,
   email: string,
   isError: boolean
+}
+
+export type ErrorTypes = "Amount" | "Ingredient Name" | "Conversion" | "General"
+export interface Error {
+  name: ErrorTypes,
+  message: string
 }
 
