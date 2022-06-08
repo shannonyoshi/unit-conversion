@@ -6,23 +6,23 @@ import { Fraction, unitProperty } from "../types"
 
 // returns decimal of the input if there is a valid fraction or null if not
 const validateFraction = (amountArray: string[]): null | number => {
-  let fracIndexArr: number[] = [];
+  let slashIndices: number[] = [];
   // finds strings that include "/", and saves index of that string
   const fraction = amountArray.filter((string, index) => {
     if (string.includes("/")) {
-      fracIndexArr.push(index);
+      slashIndices.push(index);
       return true;
     }
     return false;
   });
   //if one "/" was found
-  if (fracIndexArr.length === 1) {
-    let fracIndex: number = fracIndexArr[0];
-    let parsed: number = 0;
+  if (slashIndices.length === 1) {
+    let fracIndex: number = slashIndices[0];
+    let ints: number = 0;
     // for numbers >1
     if (fracIndex > 0) {
-      // parsed is the whole number before the fraction
-      parsed = parseInt(amountArray.slice(0, fracIndex).join(""), 10);
+      // ints is the whole number before the fraction
+      ints = parseInt(amountArray.slice(0, fracIndex).join(""), 10);
     }
     const fracArray = fraction[0].split("/");
     const dividend = parseInt(fracArray[0], 10);
@@ -30,10 +30,10 @@ const validateFraction = (amountArray: string[]): null | number => {
     if (
       typeof dividend === "number" &&
       typeof divisor === "number" &&
-      typeof parsed === "number"
+      typeof ints === "number"
     ) {
       const quotient = Math.floor((dividend / divisor) * 1000) / 1000;
-      return parsed + quotient;
+      return ints + quotient;
     }
   }
   return null;
@@ -66,7 +66,7 @@ export const validateAmount = (amount: string): number | null => {
 };
 
 //checks if the conversion is weight=>weight or vol=>vol
-export const checkIfSimple = (currentUnit: string, targetUnit: string) => {
+export const checkIfSimple = (currentUnit: string, targetUnit: string):boolean => {
   if (unitDict[currentUnit].normUnit === unitDict[targetUnit].normUnit) {
     return true;
   }

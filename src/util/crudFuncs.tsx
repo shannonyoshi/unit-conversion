@@ -73,11 +73,11 @@ export const postConversion = async (ingredient: ComplexIngr): Promise<[AddedIng
       return [null, { name: "Server", message: "An error occurred fetching ingredient information" }]
     }
     const data: AddedIngr = await response.json();
+    console.log("data: ", data )
     return [data, null];
 
   } catch (error) {
-    console.log(error)
+    console.log("error", error)
     return [null, { name: "Server", message: error.message }]
   }
-
 };

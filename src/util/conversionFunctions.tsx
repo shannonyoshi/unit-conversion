@@ -18,17 +18,18 @@ export const formConversion = async (inputs: IngrInput): Promise<[ConvIngr | nul
   if (inputs.name && inputs.name.length > 0) {
     return [null, { name: "General", message: "Sorry, try again later" }]
   }
-  const isAmount = validateAmount(inputs.currentAmount)
+  const isAmount: number | null = validateAmount(inputs.currentAmount)
   if (!isAmount) {
     return [null, { name: "Amount", message: "Unable to validate amount, either use decimal (1.5) or fraction (1 1/2) amounts" }]
   }
-  const isSimple = checkIfSimple(inputs.currentUnit, inputs.targetUnit)
+  const isSimple: boolean = checkIfSimple(inputs.currentUnit, inputs.targetUnit)
   // let converted: ConvIngr | null
   if (isSimple) {
     return [convertSimple(isAmount, inputs), null]
   }
   else {
     if (inputs.ingredientName.length === 0) {
+      // form button should be disabled when not enough info, so this should not be needed
       return [null, { name: "Ingredient Name", message: "Ingredient name needed for complex conversion" }]
     }
     return await convertComplex(inputs, isAmount)
@@ -40,21 +41,20 @@ export const convertSimple = (isAmount: number, inputs: IngrInput): ConvIngr => 
   let targetUnit: Unit = unitDict[inputs.targetUnit];
   // amount in grams or mLs
   const normalizedAmount: number = isAmount * unitDict[inputs.currentUnit].conversion;
-  // converted amount in decimal
-  const convertedAmountInDecimal: number = normalizedAmount / targetUnit.conversion;
+  const convertedInDecimal: number = normalizedAmount / targetUnit.conversion;
   const prettyConvertedString: string = prettifyRemainder(
     inputs.currentUnit,
-    convertedAmountInDecimal,
+    convertedInDecimal,
     inputs.targetUnit,
     normalizedAmount
   );
   const convertedIngr: ConvIngr = {
     currentAmount: isAmount,
     currentUnit: inputs.currentUnit,
-    targetAmount: convertedAmountInDecimal,
+    targetAmount: convertedInDecimal,
     targetUnit: inputs.targetUnit,
-    ingredientName: inputs.name,
-    convertedString: `${prettyConvertedString} ${inputs.name}`,
+    ingredientName: inputs.ingredientName,
+    convertedString: `${prettyConvertedString} ${inputs.ingredientName}`,
   };
   return convertedIngr;
 };
@@ -72,7 +72,6 @@ export const convertComplex = async (inputs: IngrInput, isAmount: number): Promi
     targetConv: unitDict[inputs.targetUnit].conversion,
   };
   let tryIngredient: [AddedIngr | null, Error | null] = await postConversion(complexIngr);
-  console.log("newIngredient", tryIngredient);
   if (!tryIngredient[0]) {
     return [null, tryIngredient[1]]
   }
@@ -106,8 +105,8 @@ const prettifyRemainder = (
 
   //returns whole numbers within tolerance buffer
   //example return: 1 cup butter
-  if (convertedAmountInDecimal - targetUnitInt <= convertedTolerance) {
-    return `${targetUnitInt} ${checkPluralUnit(targetUnitInt, targetUnitName)}`;
+  if (Math.abs(convertedAmountInDecimal - closestInt) <= convertedTolerance) {
+    return `${closestInt} ${checkPluralUnit(targetUnitInt, targetUnitName)}`;
   }
   if (Math.abs(closestInt - convertedAmountInDecimal) <= convertedTolerance) {
     return `${closestInt} ${checkPluralUnit(closestInt, targetUnitName)}`;
