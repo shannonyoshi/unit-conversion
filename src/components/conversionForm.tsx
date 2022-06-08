@@ -23,14 +23,8 @@ const ConversionForm: FC<FormProps> = ({
   setInputs,
   initialInputState,
 }: FormProps): JSX.Element => {
-  // const [errors, setErrors] = useState<Error[] | null>(null);
-  const [errors, setErrors] = useState<Error[] | null>([{name: "General", message: "This is an error. What happens when the error is really long"}, {name:"Amount", message: "This is another error about the amount"}]);
-
-
-  //checks if conversion is "simple" (vol=>vol or weight=>weight), validate amount
-  //if so, use function from util file to perform the conversion, then set to state converted list to display
-  //else, validate ingredientName, do post request
-  //performs API call to BE
+  const [errors, setErrors] = useState<Error[] | null>(null);
+  // const [errors, setErrors] = useState<Error[] | null>([{name: "General", message: "This is an error. What happens when the error is really long"}, {name:"Amount", message: "This is another error about the amount"}]);
 
   const handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -42,7 +36,6 @@ const ConversionForm: FC<FormProps> = ({
     if (converted[0]) {
       setConvertedIngredients([...convertedIngredients, converted[0]]);
       setInputs(initialInputState)
-
     }
   };
 
@@ -142,7 +135,7 @@ const ConversionForm: FC<FormProps> = ({
               id="ingredientName"
               name="ingredientName"
               placeholder="flour"
-              value={inputs.name}
+              value={inputs.ingredientName}
               onChange={handleInputChange}
             />
           </div>

@@ -84,7 +84,7 @@ const generateTableData = (unitNames: string[]): RowData[] => {
         if (closestFrac === undefined) {
           console.log("closestFrac = undefined", "currName: ", currName, " subU: ", subU)
         }
-        console.log("closestFrac", converted - convertedInt, ":", closestFrac)
+        // console.log("closestFrac", converted - convertedInt, ":", closestFrac)
         let deci: number = Math.round(converted * 100) / 100
         if (closestFrac && closestFrac.decimal === 1) {
           closestFrac = { string: "", decimal: 0.0, common: true }

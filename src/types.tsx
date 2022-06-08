@@ -79,9 +79,10 @@ export interface SugSubmit {
   isError: boolean
 }
 
-export type ErrorTypes = "Amount" | "Ingredient Name" | "Conversion" | "General"
+export type ErrorTypes = "Amount" | "Ingredient Name" | "Conversion" | "General" | "Server"
 export interface Error {
   name: ErrorTypes,
   message: string
 }
+
 

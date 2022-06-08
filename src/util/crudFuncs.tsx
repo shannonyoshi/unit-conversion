@@ -1,4 +1,4 @@
-import { ComplexIngr, AddedIngr, SugSubmit, Suggestion } from "../types"
+import { ComplexIngr, AddedIngr, SugSubmit, Suggestion, Error } from "../types"
 
 const baseURL = "http://localhost:8080/api/";
 
@@ -58,7 +58,7 @@ export const delSuggestion = async (suggestionID: number) => {
 // example ingredient: ingredientName, currentAmount, currentUnit, altUnit, altAmount, targetUnit
 //altUnit and altAmount is the "type" and conversion of currentUnit.
 
-export const postConversion = async (ingredient: ComplexIngr): Promise<AddedIngr | null> => {
+export const postConversion = async (ingredient: ComplexIngr): Promise<[AddedIngr | null, Error | null]> => {
   const request = {
     method: "POST",
     headers: {
@@ -67,11 +67,17 @@ export const postConversion = async (ingredient: ComplexIngr): Promise<AddedIngr
     },
     body: JSON.stringify(ingredient),
   };
+  try {
+    const response = await fetch(`${baseURL}convert`, request);
+    if (!response.ok) {
+      return [null, { name: "Server", message: "An error occurred fetching ingredient information" }]
+    }
+    const data: AddedIngr = await response.json();
+    return [data, null];
 
-  const response = await fetch(`${baseURL}convert`, request);
-  if (!response.ok) {
-    return null
+  } catch (error) {
+    console.log(error)
+    return [null, { name: "Server", message: error.message }]
   }
-  const data: AddedIngr = await response.json();
-  return data;
+
 };

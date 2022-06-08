@@ -5,12 +5,6 @@
   height: 100%;
   width: 100%;
   display: block;
-  // background: rgb(251, 251, 246);
-  // background: linear-gradient(
-  //   0deg,
-  //   rgba(251, 251, 246, 0.3) 0%,
-  //   rgba(255, 255, 211, 0.3) 100%
-  // );
   background-color: color(white);
   padding-bottom: $xlg-padding;
 
@@ -103,6 +97,7 @@
   @include card-large;
   width: 90%;
   min-height:0;
+  margin: auto;
   .single-table.weight {
     margin-top: $lg-padding;
     @media (max-width:600px){

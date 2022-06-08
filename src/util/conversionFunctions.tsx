@@ -23,20 +23,16 @@ export const formConversion = async (inputs: IngrInput): Promise<[ConvIngr | nul
     return [null, { name: "Amount", message: "Unable to validate amount, either use decimal (1.5) or fraction (1 1/2) amounts" }]
   }
   const isSimple = checkIfSimple(inputs.currentUnit, inputs.targetUnit)
-  let converted: ConvIngr | null
+  // let converted: ConvIngr | null
   if (isSimple) {
-    converted = convertSimple(isAmount, inputs)
+    return [convertSimple(isAmount, inputs), null]
   }
   else {
     if (inputs.ingredientName.length === 0) {
       return [null, { name: "Ingredient Name", message: "Ingredient name needed for complex conversion" }]
     }
-    converted = await convertComplex(inputs, isAmount)
-    if (converted === null) {
-      return [null, { name: "Conversion", message: "An error occurred fetching ingredient information" }]
-    }
+    return await convertComplex(inputs, isAmount)
   }
-  return [converted, null]
 }
 
 //performs simple conversion, returns string of converted amount + unit
@@ -64,7 +60,7 @@ export const convertSimple = (isAmount: number, inputs: IngrInput): ConvIngr => 
 };
 
 // returns tuple for better error checking
-export const convertComplex = async (inputs: IngrInput, isAmount: number): Promise<ConvIngr | null> => {
+export const convertComplex = async (inputs: IngrInput, isAmount: number): Promise<[ConvIngr | null, Error | null]> => {
 
   const complexIngr: ComplexIngr = {
     ingredientName: inputs.ingredientName,
@@ -75,24 +71,23 @@ export const convertComplex = async (inputs: IngrInput, isAmount: number): Promi
     targetUnit: inputs.targetUnit,
     targetConv: unitDict[inputs.targetUnit].conversion,
   };
-  const newIngredient: AddedIngr | null = await postConversion(complexIngr);
-  console.log("newIngredient", newIngredient);
-  // return newIngredient
-  // TODO: should prettify converted string since only decimal is being returned
-  if (newIngredient === null) {
-    return null
+  let tryIngredient: [AddedIngr | null, Error | null] = await postConversion(complexIngr);
+  console.log("newIngredient", tryIngredient);
+  if (!tryIngredient[0]) {
+    return [null, tryIngredient[1]]
   }
+  const newIngredient = tryIngredient[0]
   const normalizedAmount: number = newIngredient.targetAmount * unitDict[inputs.targetUnit].conversion
   const prettyString: string = prettifyRemainder(inputs.currentUnit, newIngredient.targetAmount, inputs.targetUnit, normalizedAmount)
-  console.log('prettyString', prettyString)
   const formattedIngr: ConvIngr = {
     currentAmount: isAmount,
     currentUnit: inputs.currentUnit,
+    targetAmount: newIngredient.targetAmount,
     targetUnit: inputs.targetUnit,
     ingredientName: inputs.ingredientName,
     convertedString: `${prettyString} ${inputs.ingredientName}`,
   };
-  return formattedIngr;
+  return [formattedIngr, null];
 };
 
 //receives the converted amount in decimal, and returns a human readable string with the converted amount and target unit
