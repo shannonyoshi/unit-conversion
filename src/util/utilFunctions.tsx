@@ -3,6 +3,10 @@ import { Fraction, unitProperty } from "../types"
 
 // TODO: rewrite validateAmount to work better in typescript
 
+export const roundTo = (toRound: number, decPoints:number)=> {
+ let mult =Math.pow(10,decPoints)
+ return Math.round(toRound*mult)/mult
+}
 
 // returns decimal of the input if there is a valid fraction or null if not
 const validateFraction = (amountArray: string[]): null | number => {
@@ -32,7 +36,7 @@ const validateFraction = (amountArray: string[]): null | number => {
       typeof divisor === "number" &&
       typeof ints === "number"
     ) {
-      const quotient = Math.floor((dividend / divisor) * 1000) / 1000;
+      const quotient = roundTo(dividend / divisor, 3);
       return ints + quotient;
     }
   }
@@ -83,7 +87,7 @@ export const checkPluralUnit = (amount: number, endUnitName: string) => {
 
 //returns tolerance in mLs of +/-2.5%
 export const calcNormalizedTolerance = (normalizedAmount: number): number => {
-  const twoPointFivePercent = normalizedAmount * 1.025 - normalizedAmount;
+  const twoPointFivePercent = normalizedAmount * 1.01 - normalizedAmount;
 
   return twoPointFivePercent;
 };
@@ -154,27 +158,27 @@ const closest2 = (fracs: Fraction[], remainder: number): [Fraction, Fraction] =>
   return [current, next];
 };
 
-//returns array of units in [[name, conversion],[name, conversion]] format of same type that are smaller than remainingmLs, starting from largest unit
+// return array of unit names in order from smallest to largest units
 //exclude is for mostly starting unit name when we don't want to return the starting unit as an option
 export const findPossibleUnits = (
-  remainingmLs: number,
+  normalizedRemainder: number,
   targetUnitType: string,
   targetNormUnit: string,
   exclude?: undefined | string
-): [string, number][] => {
+): string[] => {
 
-  const possible: [string, number][] = [];
+  const possible: string[] = [];
   for (let [key, value] of Object.entries(unitDict)) {
     if (
       value.type === targetUnitType &&
-      value.conversion <= remainingmLs &&
+      value.conversion <= normalizedRemainder &&
       value.normUnit === targetNormUnit &&
       key !== exclude
     ) {
-      possible.push([key, value.conversion]);
+      possible.push(key);
     }
   }
-  return possible.reverse();
+  return possible;
 };
 
 
