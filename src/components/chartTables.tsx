@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { unitDict } from "../util/units";
-import { filterFractions, filterUnits } from "../util/utilFunctions";
+import { closestFrac, filterUnits } from "../util/utilFunctions";
 import { Fraction } from "../types"
 
 type TablesProps = {
@@ -76,28 +76,22 @@ const generateTableData = (unitNames: string[]): RowData[] => {
         let converted: number = unitDict[subU].conversion / currAmount;
         let convertedInt: number = Math.floor(converted);
 
-        let closestFracArr: Fraction[] = filterFractions(
-          "allClosest",
-          (converted - convertedInt)
-        );
-        let closestFrac: Fraction | undefined = closestFracArr.pop()
-        if (closestFrac === undefined) {
-          console.log("closestFrac = undefined", "currName: ", currName, " subU: ", subU)
-        }
-        // console.log("closestFrac", converted - convertedInt, ":", closestFrac)
+        let closestFraction: Fraction = closestFrac(converted - convertedInt);
+
+
         let deci: number = Math.round(converted * 100) / 100
-        if (closestFrac && closestFrac.decimal === 1) {
-          closestFrac = { string: "", decimal: 0.0, common: true }
+        if (closestFraction && closestFraction.decimal === 1) {
+          closestFraction = { string: "", decimal: 0.0, common: true }
           convertedInt += 1
         }
-        if (closestFrac && closestFrac.decimal < .0156 && convertedInt >= 500) {
-          closestFrac = { string: "", decimal: 0.0, common: true }
+        if (closestFraction && closestFraction.decimal < .0156 && convertedInt >= 500) {
+          closestFraction = { string: "", decimal: 0.0, common: true }
           deci = Math.round(deci)
         }
 
         subResult = {
           decimal: deci,
-          string: `${convertedInt > 0 ? convertedInt + " " : ""}${closestFrac === undefined ? "" : closestFrac.string
+          string: `${convertedInt > 0 ? convertedInt + " " : ""}${closestFrac === undefined ? "" : closestFraction.string
             }`
         }
       };

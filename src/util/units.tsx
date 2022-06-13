@@ -40,7 +40,7 @@ export const allFractions: Fraction[] = [
   { string: "7/8", decimal: 0.875, common: false },
   { string: "8/9", decimal: 0.8889, common: false },
   { string: "15/16", decimal: 0.9375, common: false },
-  { string: "1", decimal: 1.0, common: true }
+  // { string: "1", decimal: 1.0, common: true }
 ];
 
 export const unitDict: { [unitName: string]: Unit } = {

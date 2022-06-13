@@ -1,11 +1,9 @@
 import { unitDict, allFractions } from "./units";
 import { Fraction, unitProperty } from "../types"
 
-// TODO: rewrite validateAmount to work better in typescript
-
-export const roundTo = (toRound: number, decPoints:number)=> {
- let mult =Math.pow(10,decPoints)
- return Math.round(toRound*mult)/mult
+export const roundTo = (toRound: number, decPoints: number) => {
+  let mult = Math.pow(10, decPoints)
+  return Math.round(toRound * mult) / mult
 }
 
 // returns decimal of the input if there is a valid fraction or null if not
@@ -70,7 +68,7 @@ export const validateAmount = (amount: string): number | null => {
 };
 
 //checks if the conversion is weight=>weight or vol=>vol
-export const checkIfSimple = (currentUnit: string, targetUnit: string):boolean => {
+export const checkIfSimple = (currentUnit: string, targetUnit: string): boolean => {
   if (unitDict[currentUnit].normUnit === unitDict[targetUnit].normUnit) {
     return true;
   }
@@ -92,60 +90,73 @@ export const calcNormalizedTolerance = (normalizedAmount: number): number => {
   return twoPointFivePercent;
 };
 
-//filters fractions, remainder should be in decimal, if closest2, check if returning ["",1,"true"]
-export const filterFractions = (type: string, remainder?: number): Fraction[] => {
+// //filters fractions, remainder should be in decimal, if closest2, check if returning ["",1,"true"]
+// export const filterFractions = (type: string, remainder?: number): Fraction[] => {
 
-  if (remainder === undefined) {
-    switch (type) {
-      case "all":
-        return allFractions;
-      case "common":
-        // returns common=true fractions
-        return allFractions.filter((fraction) => fraction.common === true);
-      default:
-        return []
-    }
-  }
-  else {
-    switch (type) {
-      case "commonClosestLower":
-        // returns the closest common fraction that is less than the remainder
-        const commonFracs: Fraction[] = filterFractions("common");
-        const close2Fracs: Fraction[] = closest2(commonFracs, remainder);
-        return [close2Fracs[0]];
-      case "allClosest":
-        // returns the closest fraction whether common or not
-        return [allClosest(remainder)]
-      // returns closest common fraction
-      case "commonClosest":
-        return [commonClosest(remainder)];
-      case "commonClosest2":
-        let common = filterFractions("common");
-        return closest2(common, remainder);
-      default:
-        return [];
-    }
-  };
-}
+//   if (remainder === undefined) {
+//     switch (type) {
+//       case "all":
+//         return allFractions;
+//       case "common":
+//         // returns common=true fractions
+//         return allFractions.filter((fraction) => fraction.common === true);
+//       default:
+//         return []
+//     }
+//   }
+//   else {
+//     switch (type) {
+//       case "commonClosestLower":
+//         // returns the closest common fraction that is less than the remainder
+//         const commonFracs: Fraction[] = filterFractions("common");
+//         const close2Fracs: Fraction[] = closest2(commonFracs, remainder);
+//         return [close2Fracs[0]];
+//       case "allClosest":
+//         // returns the closest fraction whether common or not
+//         return [closestFrac(remainder)]
+//       // returns closest common fraction
+//       case "commonClosest":
+//         return [closestFrac(remainder, true)];
+//       case "commonClosest2": closest2
+//         let common = filterFractions("common");
+//         return closest2(common, remainder);
+//       default:
+//         return [];
+//     }
+//   };
+// }
 
 // Fraction filter functions:
 
-const allClosest = (remainder:number):Fraction =>
-  allFractions.reduce((prev, curr) => {
+const getFracs = (common: boolean): Fraction[] => {
+
+  if (common === true) {
+    return allFractions.filter((fraction) => fraction.common === true)
+  } else {
+    return allFractions
+  }
+}
+
+// const commonFracs = () => {
+//   return allFractions.filter((fraction) => fraction.common === true);
+// }
+
+export const closestLowerFrac = (remainder: number, common: boolean = false): Fraction => {
+  let fracs = closest2(remainder, true)
+  return fracs[0]
+}
+
+export const closestFrac = (remainder: number, common: boolean = false): Fraction => {
+  let fracs: Fraction[] = getFracs(common)
+  return fracs.reduce((prev, curr) => {
     return Math.abs(curr.decimal - remainder) < Math.abs(prev.decimal - remainder) ? curr : prev
   })
-
-const commonClosest = (remainder: number):Fraction =>
-  allFractions.reduce((prev, curr) =>
-    Math.abs(curr.decimal - remainder) <= Math.abs(prev.decimal - remainder) &&
-      curr.common === true
-      ? curr
-      : prev
-    , { string: "", decimal: 0.0, common: true })
+}
 
 // returns the 2 closest fractions, should have a higher than and lower than the remainder
-const closest2 = (fracs: Fraction[], remainder: number): [Fraction, Fraction] => {
+export const closest2 = (remainder: number, common: boolean = false): [Fraction, Fraction] => {
   //adds additional fraction to the end ["", 1.00, "true"]
+  let fracs = getFracs(common)
   fracs.push({ string: "", decimal: 1, common: true });
   let i = 0;
   let next = fracs[1];
@@ -155,6 +166,7 @@ const closest2 = (fracs: Fraction[], remainder: number): [Fraction, Fraction] =>
     next = fracs[i + 1];
     i += 1;
   }
+  console.log(`current, next:`, current, next)
   return [current, next];
 };
 

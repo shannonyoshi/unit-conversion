@@ -4,19 +4,19 @@ import { unitDict } from "./units";
 import {
   checkPluralUnit,
   calcNormalizedTolerance,
-  filterFractions,
   findPossibleUnits,
   validateAmount,
   checkIfSimple,
-  roundTo
+  roundTo,
+  closest2,
+  closestFrac,
+  closestLowerFrac
 } from "./utilFunctions";
 
 
 // TODO: getting inconsistent results for 47 teaspoons to cups, sometimes getting "0 cup or 1 cup, minus 1 teaspoon", sometimes getting "15/16 cup or 1 cup, minus 1 teaspoon"
 
-// used in a few funcs below
-type FracOption = { unit: string, count: number, remainder: number, frac?: Fraction }
-
+type FracOption = { unit: string, count: number, remainder: number, frac?: Fraction };
 
 export const formConversion = async (inputs: IngrInput): Promise<[ConvIngr | null, Error | null]> => {
   if (inputs.name && inputs.name.length > 0) {
@@ -117,7 +117,7 @@ const prettifyRemainder = (
   }
 
   //if amount in target unit <1/64, so negligible
-  if (convertedInDecimal <= 1/64) {
+  if (convertedInDecimal <= 1 / 64) {
     console.log(`return 2`)
     return `${convertedInDecimal.toFixed(5)} ${targetUnitName} (amount negligible)`;
   }
@@ -130,7 +130,7 @@ const prettifyRemainder = (
     return `${rounded.toString(10)} ${checkPluralUnit(rounded, targetUnitName)}`;
   }
 
-  let [fraction]: Fraction[] = filterFractions("allClosest", decimalRemainder);
+  let fraction: Fraction = closestFrac(decimalRemainder);
   // NOTE: unit string is not functioning correctly here
   let unitString = checkPluralUnit(targetInt + fraction.decimal, targetUnitName);
   const currRemainder = normalizedAmount - (targetInt + fraction.decimal) * targetUnit.conversion;
@@ -143,7 +143,7 @@ const prettifyRemainder = (
   }
 
   //returns uncommon fraction and common fraction, with +/- 1-2 of smaller unit
-  // example return: 1 6/32 cups or 1 cup, plus 2 tablespoons
+  // example return: 1 cup, plus 2 tablespoons
   let normalizedRemainder =
     normalizedAmount - targetInt * targetUnit.conversion;
   const potentialFracString: string | null = tryCloseFracs(
@@ -153,22 +153,15 @@ const prettifyRemainder = (
     normalizedTolerance,
     targetInt
   );
-  console.log(`potentialFracString`, potentialFracString)
-  console.log(`fraction`, fraction)
-  let fractionString = `${targetInt === 0 ? "" : targetInt + " "}${fraction.string} ${unitString}`;
-  console.log(`fractionString`, fractionString)
+
   if (potentialFracString) {
-    // console.log("returning");
-    return `${fractionString} ${potentialFracString}`;
+    return `${potentialFracString}`;
   }
 
   console.log(`starting recursive`)
 
   // last resort, returns `${uncommonAmount} or ${commmonAmount} ${targetU}, plus ${list of counts and units}
-  const [commonFrac]: Fraction[] = filterFractions(
-    "commonClosestLower",
-    convertedInDecimal - targetInt
-  );
+  const commonFrac: Fraction = closestLowerFrac(convertedInDecimal - targetInt, true);
   normalizedRemainder =
     normalizedRemainder - commonFrac.decimal * targetUnit.conversion;
   const possibleU = findPossibleUnits(
@@ -214,18 +207,18 @@ const tryCloseFracs = (
   let targetUnit: Unit = unitDict[targetUnitName];
   let decimalRemainder: number = convertedInDecimal - targetInt;
   // find 2 closest common fractions
-  let closest2: Fraction[] = filterFractions("commonClosest2", decimalRemainder);
-  console.log(`closest2`, closest2)
+  let closest2Fracs: Fraction[] = closest2(decimalRemainder, true);
+  console.log(`closest2Fracs`, closest2Fracs)
 
   let fracOpt1: FracOption | null = checkFraction(
-    closest2[0],
+    closest2Fracs[0],
     normalizedRemainder,
     targetUnit,
     normalizedTolerance
   );
   console.log("fracOpt1", fracOpt1);
   let fracOpt2: FracOption | null = checkFraction(
-    closest2[1],
+    closest2Fracs[1],
     normalizedRemainder,
     targetUnit,
     normalizedTolerance
@@ -252,7 +245,7 @@ const tryCloseFracs = (
     if (closest.frac.decimal === 1) {
       targetInt += 1;
       closest.frac.decimal = 0;
-      closest.frac.string="0"
+      closest.frac.string = "0"
     }
     let plusMinus =
       convertedInDecimal - targetInt - closest.frac.decimal >= 0
@@ -266,7 +259,7 @@ const tryCloseFracs = (
       closest["count"],
       closest["unit"]
     );
-    return `or ${targetInt > 0 ? targetInt : ""} ${closest.frac.string==="0"?"":closest.frac.string
+    return `${targetInt > 0 ? targetInt : ""} ${closest.frac.string === "0" ? "" : closest.frac.string
       } ${unitString}, ${plusMinus} ${closest["count"]} ${secondUnitString}`;
   }
 
