@@ -13,7 +13,7 @@ const ChartView: FC = (): JSX.Element => {
   const [unitFilter, setUnitFilter] = useState<Filter>("All");
   const [unitNames, setUnitNames] = useState<string[]>(Object.keys(unitDict));
   const [showCustomFilter, setShowCustomFilter] = useState<boolean>(false);
-  const [customUnits, setCustomUnits] = useState([]);
+  const [customUnits, setCustomUnits] = useState<string[]>([]);
   let unitFilters:Filter[] = ["All", "Standard", "Metric", "Weight", "Volume", "Custom"];
 
   return (
