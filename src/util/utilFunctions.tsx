@@ -99,11 +99,6 @@ const getFracs = (common: boolean): Fraction[] => {
   }
 }
 
-export const closestLowerFrac = (remainder: number, common: boolean = false): Fraction => {
-  let fracs = closest2(remainder, true)
-  return fracs[0]
-}
-
 export const closestFrac = (remainder: number, common: boolean = false): Fraction => {
   let fracs: Fraction[] = getFracs(common)
   return fracs.reduce((prev, curr) => {

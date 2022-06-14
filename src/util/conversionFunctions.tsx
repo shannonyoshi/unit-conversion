@@ -10,13 +10,9 @@ import {
   roundTo,
   closest2,
   closestFrac,
-  closestLowerFrac
 } from "./utilFunctions";
 
-
-// TODO: getting inconsistent results for 47 teaspoons to cups, sometimes getting "0 cup or 1 cup, minus 1 teaspoon", sometimes getting "15/16 cup or 1 cup, minus 1 teaspoon"
-
-type FracOption = { unit: string, count: number, remainder: number, frac?: Fraction };
+type pm = "plus" | "minus"
 
 export const formConversion = async (inputs: IngrInput): Promise<[ConvIngr | null, Error | null]> => {
   if (inputs.name && inputs.name.length > 0) {
@@ -107,7 +103,6 @@ const prettifyRemainder = (
 
   //returns whole numbers within tolerance buffer
   //example return: 1 cup butter
-  console.log(`normalizedTolerance`, normalizedTolerance)
   if (Math.abs(convertedInDecimal - closestInt) <= convertedTolerance) {
     return `${closestInt} ${checkPluralUnit(targetInt, targetUnitName)}`;
   }
@@ -135,24 +130,9 @@ const prettifyRemainder = (
       } ${unitString}`;
   }
 
-  //returns whole numbers with +/- 1-4 of smaller unit
-  // example return: 1 cup, plus 2 tablespoons
   let normalizedRemainder =
     normalizedAmount - targetInt * targetUnit.conversion;
-  // const potentialFracString: string | null = tryCloseFracs(
-  //   convertedInDecimal,
-  //   normalizedRemainder,
-  //   targetUnitName,
-  //   normalizedTolerance,
-  //   targetInt
-  // );
 
-  // if (potentialFracString) {
-  //   return `${potentialFracString}`;
-  // }
-
-
-  //  setting up recursive result
   const commonFrac: Fraction[] = closest2(convertedInDecimal - targetInt, true);
   let normalizedRemainder0 =
     normalizedRemainder - commonFrac[0].decimal * targetUnit.conversion;
@@ -172,7 +152,7 @@ const prettifyRemainder = (
   const possibleU1 = findPossibleUnits(normalizedRemainder1 + normalizedTolerance, targetUnit.type, targetUnit.normUnit)
   let result1: [number, string][] = convertRecursive(normalizedTolerance, normalizedRemainder1, possibleU1,)
 
-  let plusMinus = result0.length <= result1.length ? "plus" : "minus"
+  let plusMinus:pm = result0.length <= result1.length ? "plus" : "minus"
   let bestResult = result0.length <= result1.length ? result0 : result1
 
   let returnString = stringFromConvertRecursive(
@@ -184,176 +164,6 @@ const prettifyRemainder = (
   );
   return returnString;
 };
-
-// returns readable string if there is a close fraction that gets close to total amount with additional 1-2 of smaller unit
-// if option is found, returns closest option with lower count
-// const tryCloseFracs = (
-//   convertedInDecimal: number,
-//   normalizedRemainder: number,
-//   targetUnitName: string,
-//   normalizedTolerance: number,
-//   // startingUnitName: string,
-//   targetInt: number
-// ) => {
-//   let targetUnit: Unit = unitDict[targetUnitName];
-//   let decimalRemainder: number = convertedInDecimal - targetInt;
-//   // find 2 closest common fractions
-//   let closest2Fracs: Fraction[] = closest2(decimalRemainder, true);
-//   let fracOpt1: FracOption | null = checkFraction(
-//     closest2Fracs[0],
-//     normalizedRemainder,
-//     targetUnit,
-//     normalizedTolerance
-//   );
-//   let fracOpt2: FracOption | null = checkFraction(
-//     closest2Fracs[1],
-//     normalizedRemainder,
-//     targetUnit,
-//     normalizedTolerance
-//   );
-//   let closest: FracOption | null = null
-
-//   if (!fracOpt1 && !fracOpt2) {
-//     return null
-//   }
-
-//   if (!fracOpt1 && fracOpt2) {
-//     closest = fracOpt2
-//   }
-//   if (fracOpt1 && !fracOpt2) {
-//     closest = fracOpt1
-//   }
-//   if (fracOpt1 && fracOpt2) {
-//     closest = compareFracOpts(fracOpt1, fracOpt2, normalizedTolerance)
-//   }
-//   if (closest && closest.frac) {
-//     // fraction value for 1 was added to the list of fractions, so need adjust if that was the "fraction" returned
-//     if (closest.frac.decimal === 1) {
-//       targetInt += 1;
-//       closest.frac.decimal = 0;
-//       closest.frac.string = "0"
-//     }
-//     let plusMinus =
-//       convertedInDecimal - targetInt - closest.frac.decimal >= 0
-//         ? "plus"
-//         : "minus";
-//     let unitString = checkPluralUnit(
-//       targetInt + closest.frac.decimal,
-//       targetUnitName
-//     );
-//     let secondUnitString = checkPluralUnit(
-//       closest["count"],
-//       closest["unit"]
-//     );
-//     return `${targetInt > 0 ? targetInt : ""} ${closest.frac.string === "0" ? "" : closest.frac.string
-//       } ${unitString}, ${plusMinus} ${closest["count"]} ${secondUnitString}`;
-//   }
-
-//   return null;
-// };
-
-// const compareFracOpts = (frac1: FracOption, frac2: FracOption, tol: number): FracOption | null => {
-//   // check if either is within tolerance
-//   if (frac1.remainder > tol && frac2.remainder > tol) {
-//     return null
-//   }
-//   // if only 1 is within tolerance
-//   if (frac1.remainder > tol && frac2.remainder <= tol) {
-//     return frac2
-//   }
-//   if (frac1.remainder <= tol && frac2.remainder > tol) {
-//     return frac1
-//   }
-//   // if both are within tolerance, return option if the fraction is 0 or 1
-//   if (frac1.frac?.decimal === 0 || frac1.frac?.decimal === 1) {
-//     return frac1
-//   }
-//   if (frac2.frac?.decimal === 0 || frac2.frac?.decimal === 1) {
-//     return frac2
-//   }
-//   // return lower count number
-//   if (frac1.count < frac2.count) {
-//     return frac1
-//   }
-//   if (frac1.count > frac2.count) {
-//     return frac2
-//   }
-//   // if count is the same, return smaller unit
-//   // NOTE: not sure if this is the best priority, check here if returns seem off
-//   if (unitDict[frac1.unit].conversion < unitDict[frac2.unit].conversion) {
-//     return frac1
-//   }
-//   if (unitDict[frac1.unit].conversion > unitDict[frac2.unit].conversion) {
-//     return frac2
-//   }
-//   // if the unit is the same, return the smaller (already rounded)remainder
-//   if (frac1.remainder < frac2.remainder) {
-//     return frac1
-//   }
-//   if (frac1.remainder > frac2.remainder) {
-//     return frac2
-//   }
-//   // if the remainder is the same, return the smaller fraction
-//   if (frac1.frac && frac2.frac) {
-//     if (frac1.frac?.decimal <= frac2.frac?.decimal) {
-//       return frac1
-//     } else {
-//       return frac2
-//     }
-//   }
-//   console.log(`something went wrong, this should not be reached`)
-//   return frac1
-// }
-
-//if an adequate option is found, returns {unit, count, remainder, fraction}, else returns null
-// const checkFraction = (
-//   fraction: Fraction,
-//   normalizedRemainder: number,
-//   targetUnit: Unit,
-//   normalizedTolerance: number,
-//   // startingUnitName: string
-// ): FracOption | null => {
-
-
-//   normalizedRemainder = Math.abs(
-//     normalizedRemainder - fraction.decimal * targetUnit.conversion
-//   );
-//   //example unit returned: [pluralUnitName, conversion]
-//   let possibleUnits: string[] = findPossibleUnits(
-//     normalizedRemainder + normalizedTolerance,
-//     targetUnit.type,
-//     targetUnit.normUnit
-//   );
-
-//   //checks if 1 or 2 of unit will get within tolerance, if so adds absolute val of remainder, count, unit
-
-//   let lowestRem: FracOption | null = null
-
-//   while (possibleUnits.length > 0) {
-//     let currU = possibleUnits.pop()
-//     let currULowestR: [remainder: number, count: number] = [normalizedRemainder, 0]
-//     for (let i = 1; i < 5; i++) {
-//       let R = Math.abs(normalizedRemainder - unitDict[currU as string].conversion * i)
-//       if (currULowestR[0] > R) {
-//         currULowestR = [R, i]
-//       }
-//     }
-//     if (lowestRem === null || lowestRem["remainder"] > currULowestR[0]) {
-//       const rounded = roundTo(currULowestR[0], 2)
-//       lowestRem = { unit: currU as string, count: currULowestR[1], remainder: rounded }
-//     } else {
-//       break
-//     }
-//   }
-//   if (lowestRem) {
-//     lowestRem.frac = fraction
-//     if (lowestRem.remainder < normalizedRemainder) {
-//       return lowestRem
-//     }
-//   }
-//   return null
-
-// };
 
 const convertRecursive = (
   normalizedTolerance: number,
@@ -386,7 +196,7 @@ const stringFromConvertRecursive = (
   unitString: string,
   commonFrac: Fraction,
   recurResult: [number, string][],
-  plusMinus: string
+  plusMinus: pm
 ) => {
   if (commonFrac.decimal === 1) {
     targetInt += 1
