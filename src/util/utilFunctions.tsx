@@ -85,61 +85,19 @@ export const checkPluralUnit = (amount: number, endUnitName: string) => {
 
 //returns tolerance in mLs of +/-2.5%
 export const calcNormalizedTolerance = (normalizedAmount: number): number => {
-  const twoPointFivePercent = normalizedAmount * 1.01 - normalizedAmount;
+  const twoPointFivePercent = normalizedAmount * 1.002 - normalizedAmount;
 
   return twoPointFivePercent;
 };
 
-// //filters fractions, remainder should be in decimal, if closest2, check if returning ["",1,"true"]
-// export const filterFractions = (type: string, remainder?: number): Fraction[] => {
-
-//   if (remainder === undefined) {
-//     switch (type) {
-//       case "all":
-//         return allFractions;
-//       case "common":
-//         // returns common=true fractions
-//         return allFractions.filter((fraction) => fraction.common === true);
-//       default:
-//         return []
-//     }
-//   }
-//   else {
-//     switch (type) {
-//       case "commonClosestLower":
-//         // returns the closest common fraction that is less than the remainder
-//         const commonFracs: Fraction[] = filterFractions("common");
-//         const close2Fracs: Fraction[] = closest2(commonFracs, remainder);
-//         return [close2Fracs[0]];
-//       case "allClosest":
-//         // returns the closest fraction whether common or not
-//         return [closestFrac(remainder)]
-//       // returns closest common fraction
-//       case "commonClosest":
-//         return [closestFrac(remainder, true)];
-//       case "commonClosest2": closest2
-//         let common = filterFractions("common");
-//         return closest2(common, remainder);
-//       default:
-//         return [];
-//     }
-//   };
-// }
-
 // Fraction filter functions:
-
 const getFracs = (common: boolean): Fraction[] => {
-
   if (common === true) {
     return allFractions.filter((fraction) => fraction.common === true)
   } else {
     return allFractions
   }
 }
-
-// const commonFracs = () => {
-//   return allFractions.filter((fraction) => fraction.common === true);
-// }
 
 export const closestLowerFrac = (remainder: number, common: boolean = false): Fraction => {
   let fracs = closest2(remainder, true)
@@ -192,7 +150,6 @@ export const findPossibleUnits = (
   }
   return possible;
 };
-
 
 //filters based on propertyName matching provided filterString, accepts array of unit names
 export const filterUnits = (propertyName: unitProperty, filterString: string, units?: string[]): string[] => {
