@@ -123,7 +123,7 @@ export const closest2 = (remainder: number, common: boolean = false): [Fraction,
     next = fracs[i + 1];
     i += 1;
   }
-  console.log(`current, next:`, current, next)
+  // console.log(`current, next:`, current, next)
   return [current, next];
 };
 

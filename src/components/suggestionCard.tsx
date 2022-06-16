@@ -18,7 +18,7 @@ const SuggestionCard: FC<SuggCardProps> = ({ toggleEdit, suggestion, reset }: Su
     setDeleted(true);
     if (suggestion.id) {
       let result = await delSuggestion(suggestion.id);
-      console.log("result", result);
+      // console.log("result", result);
       if (result) {
         setMessage("This suggestion has been deleted");
       } else {
