@@ -20,18 +20,23 @@
 .form-wrapper {
   display: flex;
   flex-direction: column;
+ 
   
   .form-section {
-    padding: $s-padding;
-    padding-left:$lg-padding;
+    width:100%;
+    padding: $s-padding $lg-padding;
+    // padding-left:$lg-padding;
     text-align:  left;
     input {
       @include input-mixin;
-      width: 150px;
-      @media(max-width: 600px){
-        width: 100px
+      width:calc(100% - 100px);
+      // flex-grow:1;
 
-      }
+      // width: 100%;
+      // @media(max-width: 600px){
+      //   width: 100%;
+
+      // }
     }
     .checker {
       @include honey-pot
@@ -39,15 +44,20 @@
 
     .convert-label {
       @include form-label;
+      font-size: 1.25em;
       width: 100px;
+      @media (max-width: 600px) {
+        font-size: 1em;
+      }
     }
 
     select {
       @include select-mixin;
+      width:calc(100% - 100px);
     }
   }
   button {
-    @include submit-button;
+    @include small-btn;
   }
 }
 //ConvertedList

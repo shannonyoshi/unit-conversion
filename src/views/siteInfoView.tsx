@@ -1,10 +1,10 @@
-import React from "react";
+import React, { FC } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import "../styling/siteView.scss";
 
-export default function SiteInfoView() {
+const SiteInfoView: FC = (): JSX.Element => {
   return (
     <div className="info-page-wrapper">
       <div className="card-large">
@@ -12,7 +12,8 @@ export default function SiteInfoView() {
           Site Info{" "}
           <a
             href="https://github.com/shannonyoshi/unit-conversion"
-            target="_blank">
+            target="_blank"
+            rel="noopener noreferrer">
             <FontAwesomeIcon icon={["fab", "github"]} className="github-icon" />
           </a>
         </h1>
@@ -75,3 +76,5 @@ export default function SiteInfoView() {
     </div>
   );
 }
+
+export default SiteInfoView;

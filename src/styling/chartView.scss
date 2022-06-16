@@ -89,7 +89,7 @@
     color: color(darker);
   }
   .submit-btn {
-    @include submit-button;
+    @include large-btn;
   }
 }
 
@@ -98,6 +98,7 @@
   @include card-large;
   width: 90%;
   min-height:0;
+  margin: auto;
   .single-table.weight {
     margin-top: $lg-padding;
     @media (max-width:600px){

@@ -1,24 +1,32 @@
-import React from "react";
+import React, { FC, Dispatch, SetStateAction } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import {checkPluralUnit} from "../util/utilFunctions"
+import { checkPluralUnit } from "../util/utilFunctions"
+import { ConvIngr, IngrInput } from "../types"
 
-export default function ConvertedList({ingredients, setIngredients, setInputs}) {
+type ConvListProps = {
+  ingredients: ConvIngr[],
+  setIngredients: Dispatch<SetStateAction< ConvIngr[]>>,
+  setInputs: Dispatch<SetStateAction<IngrInput>>
+}
+
+const ConvertedList: FC<ConvListProps> = ({ ingredients, setIngredients, setInputs }: ConvListProps): JSX.Element => {
+  
   // removes ingredient from list
-  const deleteIngredient = (index) => {
+  const deleteIngredient = (index: number) => {
     let newIngredientsArray = ingredients;
     newIngredientsArray.splice(index, 1);
     setIngredients([...newIngredientsArray]);
   };
 
-  //adds ingredient to form, removes from lists
-  const editIngredient = (e, index) => {
+  //removes ingredient from list and adds to inputs on conversion form
+  const editIngredient = (e:React.MouseEvent, index:number) => {
     e.preventDefault();
     let toEdit = ingredients[index];
     deleteIngredient(index);
     setInputs({
       name: "",
-      amount: toEdit.amount,
+      currentAmount: toEdit.currentAmount.toString(),
       currentUnit: toEdit.currentUnit,
       targetUnit: toEdit.targetUnit,
       ingredientName: toEdit.ingredientName,
@@ -30,14 +38,14 @@ export default function ConvertedList({ingredients, setIngredients, setInputs}) 
         <h1 className="card-title">Converted List</h1>
         {ingredients.length > 0 ? (
           <ul className="list">
-            {ingredients.map((ingredient, index) => (
+            {ingredients.map((ingredient, index:number) => (
               <div className="list-item" key={`C${index}`}>
                 <li className="converted">{ingredient.convertedString}</li>
 
                 <FontAwesomeIcon
                   icon="trash-alt"
                   className="delete-item icon-btn"
-                  onClick={(e) => deleteIngredient(e, index)}
+                  onClick={(e:React.MouseEvent) => deleteIngredient(index)}
                 />
               </div>
             ))}
@@ -53,18 +61,18 @@ export default function ConvertedList({ingredients, setIngredients, setInputs}) 
             {ingredients.map((ingredient, index) => (
               <div className="list-item" key={`O${index}`}>
                 <li className="original">
-                  {`${ingredient.amount} ${checkPluralUnit(ingredient.amount, ingredient.currentUnit)} ${ingredient.ingredientName}`}
+                  {`${ingredient.currentAmount} ${checkPluralUnit(Number(ingredient.currentAmount), ingredient.currentUnit)} ${ingredient.ingredientName}`}
                 </li>
                 <div>
                   <FontAwesomeIcon
                     icon="edit"
                     className="edit-item icon-btn"
-                    onClick={(e) => editIngredient(e, index)}
+                    onClick={(e:React.MouseEvent) => editIngredient(e,index)}
                   />
                   <FontAwesomeIcon
                     icon="trash-alt"
                     className="delete-item icon-btn"
-                    onClick={(e) => deleteIngredient(index)}
+                    onClick={(e:React.MouseEvent) => deleteIngredient(index)}
                   />
                 </div>
               </div>
@@ -77,3 +85,5 @@ export default function ConvertedList({ingredients, setIngredients, setInputs}) 
     </>
   );
 }
+
+export default ConvertedList;

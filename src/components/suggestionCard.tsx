@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, FC } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { delSuggestion } from "../util/crudFuncs";
 
-export default function SuggestionCard({ toggleEdit, suggestion, reset }) {
+import { Suggestion } from "../types"
+
+interface SuggCardProps {
+  toggleEdit: (e: React.MouseEvent) => void;
+  suggestion: Suggestion;
+  reset: () => void;
+}
+
+const SuggestionCard: FC<SuggCardProps> = ({ toggleEdit, suggestion, reset }: SuggCardProps) => {
   const [message, setMessage] = useState("");
   const [deleted, setDeleted] = useState(false);
-  const removeSug = async (e) => {
+  const removeSug = async (e: React.MouseEvent) => {
     e.preventDefault();
     setDeleted(true);
     if (suggestion.id) {
@@ -24,31 +32,31 @@ export default function SuggestionCard({ toggleEdit, suggestion, reset }) {
   return (
     <div className="card-med-large">
       <div></div>
-        {deleted ? (
-          <div className="deleted">
-            <p className="warning">{message}</p>
+      {deleted ? (
+        <div className="deleted">
+          <p className="warning">{message}</p>
           <FontAwesomeIcon
-          icon="sync-alt"
-          flip="horizontal"
-          className="icon-btn reset"
-          onClick={reset}
+            icon="sync-alt"
+            flip="horizontal"
+            className="icon-btn reset"
+            onClick={reset}
           />
-          </div>
-          ) : (
-            <div className="icons">
-            <FontAwesomeIcon
-              icon="edit"
-              className="icon-btn edit-icon"
-              onClick={toggleEdit}
-              />
+        </div>
+      ) : (
+        <div className="icons">
+          <FontAwesomeIcon
+            icon="edit"
+            className="icon-btn edit-icon"
+            onClick={toggleEdit}
+          />
 
-            <FontAwesomeIcon
-              icon="trash-alt"
-              className="icon-btn del-icon"
-              onClick={removeSug}
-            />
-          </div>
-        )}
+          <FontAwesomeIcon
+            icon="trash-alt"
+            className="icon-btn del-icon"
+            onClick={removeSug}
+          />
+        </div>
+      )}
       <h1 className="card-title">Submitted Suggestion</h1>
       <div className="suggestion-wrapper">
         <div className="suggestion-section">
@@ -65,10 +73,9 @@ export default function SuggestionCard({ toggleEdit, suggestion, reset }) {
         </div>
         <div className="suggestion-section">
           <p
-            className={`suggestion-${
-              suggestion.IisError ? "isError" : "isNotError"
-            }`}>
-            {suggestion.IsError
+            className={`suggestion-${suggestion.isError ? "isError" : "isNotError"
+              }`}>
+            {suggestion.isError
               ? "This submission IS an Error Report."
               : "This submission is NOT an Error Report."}
           </p>
@@ -77,3 +84,5 @@ export default function SuggestionCard({ toggleEdit, suggestion, reset }) {
     </div>
   );
 }
+
+export default SuggestionCard;

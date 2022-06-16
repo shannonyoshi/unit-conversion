@@ -91,14 +91,17 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 				fmt.Printf("ERROR, %v\n", err)
 				return
 			}
+			// convert to ratio that can be stored in DB
 			newIngr := models.ConvertToRatio(ingrInput, APIIngredient)
-
+			// adds new ingredient to DB
 			_, err = models.AddIngredient(newIngr)
 			if err != nil {
 				fmt.Printf("ERROR, %v\n", err)
 			}
 			fmt.Printf("APIIngredient: %+v\n", APIIngredient)
-			err = json.NewEncoder(w).Encode(APIIngredient)
+			// convert new ingredient to return
+			convertedNewIngr := models.Convert(ingrInput, newIngr)
+			err = json.NewEncoder(w).Encode(convertedNewIngr)
 			if err != nil {
 				fmt.Printf("ERROR, %v\n", err)
 			}
