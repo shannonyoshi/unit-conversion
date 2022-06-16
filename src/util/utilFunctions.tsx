@@ -42,6 +42,10 @@ const validateFraction = (amountArray: string[]): null | number => {
 };
 //returns parsed amount in decimal or false if amount is unable to be parsed
 export const validateAmount = (amount: string): number | null => {
+  let num = Number(amount)
+  if (!isNaN(num)){
+    return num
+  }
 
   //split amount on white space into string[], then remove excess white space
   let amountArray: string[] = amount.split(" ").map((item: string) => item.trim());
