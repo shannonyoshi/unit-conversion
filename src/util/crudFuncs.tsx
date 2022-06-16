@@ -1,6 +1,6 @@
+import { ComplexIngr, AddedIngr, SugSubmit, Suggestion, Error } from "../types"
 // const baseURL = "http://localhost:8080/api/";
 const baseURL = "https://www.bakingunits.com/api/"
-import { ComplexIngr, AddedIngr, SugSubmit, Suggestion, Error } from "../types"
 
 
 export const postSuggestion = async (suggestion: SugSubmit) => {
@@ -74,7 +74,7 @@ export const postConversion = async (ingredient: ComplexIngr): Promise<[AddedIng
       return [null, { name: "Server", message: "An error occurred fetching ingredient information" }]
     }
     const data: AddedIngr = await response.json();
-    console.log("data: ", data )
+    console.log("data: ", data)
     return [data, null];
 
   } catch (error) {
