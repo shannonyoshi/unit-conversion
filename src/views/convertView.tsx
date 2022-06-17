@@ -13,9 +13,11 @@ const initialInputState:IngrInput={
   targetUnit: "",
   ingredientName: "",
 }
+
 const ConvertView: FC=():JSX.Element=> {
   const [ingredients, setIngredients] = useState<ConvIngr[]>([]);
   const [inputs, setInputs] = useState<IngrInput>(initialInputState);
+
   return (
     <div className="convert-page-wrapper">
       <ConversionForm
