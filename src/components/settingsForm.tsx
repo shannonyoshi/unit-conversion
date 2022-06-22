@@ -6,11 +6,11 @@ import { Set } from "./conversionForm";
 interface SettingsProps {
   settings: Set,
   setSettings: Dispatch<SetStateAction<Set>>,
-  setViewSettings: Dispatch<SetStateAction<boolean>>
+  defaultTol: Set
 }
 
 
-const SettingsForm: FC<SettingsProps> = ({ settings, setSettings, setViewSettings }: SettingsProps): JSX.Element => {
+const SettingsForm: FC<SettingsProps> = ({ settings, setSettings, defaultTol }: SettingsProps): JSX.Element => {
 
   const [inputs, setInputs] = useState<Set>(settings)
 
@@ -25,14 +25,20 @@ const SettingsForm: FC<SettingsProps> = ({ settings, setSettings, setViewSetting
     setInputs((inputs) => ({ ...inputs, [name]: value }))
   }
 
-  const validateTolerance = () => {
-
+  const handleSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault()
+    setSettings(inputs)
+    setInputs(defaultTol)
   }
 
+  const reset = () => {
+    setInputs(defaultTol)
+  }
 
-  return <form>
+  return <form className="settings-form" onSubmit={handleSubmit}>
+      {/* <p>This setting changes the accuracy of the converted ingredient when converting to standard measurements (as opposed to metric). This does not affect metric return values.</p> */}
     <div className="form-section">
-      <label htmlFor="amount" className="amount-label">
+      <label htmlFor="amount" className="settings-label">
         Amount
       </label>
       <input
@@ -44,7 +50,10 @@ const SettingsForm: FC<SettingsProps> = ({ settings, setSettings, setViewSetting
         onChange={handleInputChange}
         placeholder="examples:   1    |   .1    |    1/4   "
       />
-      <label htmlFor="tolType" className="type-label">
+    </div>
+    <div className="form-section">
+
+      <label htmlFor="tolType" className="settings-label">
         Type
       </label>
       <select
@@ -64,6 +73,7 @@ const SettingsForm: FC<SettingsProps> = ({ settings, setSettings, setViewSetting
 
       </select>
     </div>
+    <button type="submit">Save</button>
   </form>
 }
 

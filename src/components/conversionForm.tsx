@@ -23,6 +23,7 @@ export interface Set {
   toleranceType: string
 }
 
+const defaultTol:Set = { tolerance: 1, toleranceType: "percent" }
 
 const ConversionForm: FC<FormProps> = ({
   setConvertedIngredients,
@@ -32,7 +33,7 @@ const ConversionForm: FC<FormProps> = ({
   initialInputState,
 }: FormProps): JSX.Element => {
   const [errors, setErrors] = useState<Error[] | null>(null);
-  const [settings, setSettings] = useState<Set>({ tolerance: 1, toleranceType: "percent" })
+  const [settings, setSettings] = useState<Set>(defaultTol)
   const [viewSettings, setViewSettings] = useState<boolean>(false)
 
   const handleSubmit = async (event: React.SyntheticEvent) => {
@@ -65,9 +66,9 @@ const ConversionForm: FC<FormProps> = ({
   return (
     <div className="card-small">
       <div className="form-wrapper">
-        {viewSettings === false ? <FontAwesomeIcon icon="cog" className="icon-btn settings-item" onClick={(e: React.MouseEvent) => setViewSettings(true)} /> : <></>}
+        {viewSettings === false ? <FontAwesomeIcon icon="cog" className="icon-btn settings-item" onClick={(e: React.MouseEvent) => setViewSettings(true)} /> : <div className="x-btn" onClick={(e: React.MouseEvent) => setViewSettings(false)}>&#xd7;</div>}
         <h1 className="card-title">{viewSettings === true ? "Tolerance Settings" : "Unit Converter"}</h1>
-        {viewSettings === true ? <SettingsForm settings={settings} setSettings={setSettings} setViewSettings={setViewSettings} /> :
+        {viewSettings === true ? <SettingsForm settings={settings} setSettings={setSettings} defaultTol={defaultTol} /> :
           <form onSubmit={handleSubmit} autoComplete="off">
             <div className="form-section">
               <label htmlFor="name" className="checker">

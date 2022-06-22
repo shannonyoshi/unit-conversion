@@ -251,7 +251,6 @@
   padding-bottom: $m-padding;
   min-height: 395px;
   min-width: 400px;
-
 }
 
 @mixin card-large {
@@ -261,10 +260,6 @@
   padding: $lg-padding;
   margin: 0 $lg-padding;
 
-  // @media(max-width: 1100px){
-  //   padding:$m-padding;
-  //   margin:$m-padding;
-  // }
   @media (max-width: 800px) {
     padding: $m-padding;
     margin:0 $m-padding;

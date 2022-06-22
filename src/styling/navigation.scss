@@ -29,10 +29,11 @@ nav {
       padding: 0;
       width: 0;
       z-index: 2;
+      // display:none;
       &.true {
         width: 60vw;
         max-height: 250px;
-        padding: $m-padding $s-padding;
+        padding: $s-padding;
       }
     }
   }
