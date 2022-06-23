@@ -2,6 +2,7 @@ import React, { useState, Dispatch, SetStateAction, FC } from "react";
 
 import { unitDict } from "../util/units";
 import { Set } from "../types";
+import { validateAmount } from "../util/utilFunctions";
 
 interface SettingsProps {
   settings: Set,
@@ -27,9 +28,14 @@ const SettingsForm: FC<SettingsProps> = ({ settings, setSettings, defaultTol }: 
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
+    console.log(`typeof settings.tolerance`, typeof (settings.tolerance))
+    let isAmount:number | null = typeof settings.tolerance === "number" ? settings.tolerance : validateAmount(inputs.tolerance.toString(10))
+    console.log(`isAmount`, isAmount)
     // TODO: add settings validation!!
-    setSettings(inputs)
-    setInputs(defaultTol)
+    if (isAmount){
+      setSettings(inputs)
+      setInputs(defaultTol)
+    }
   }
 
   const reset = () => {

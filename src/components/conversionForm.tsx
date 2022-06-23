@@ -18,7 +18,7 @@ interface FormProps {
   initialInputState: IngrInput;
 }
 
-const defaultTol:Set = { tolerance: 1, toleranceType: "percent" }
+const defaultTol:Set = { tolerance: .5, toleranceType: "percent" }
 
 const ConversionForm: FC<FormProps> = ({
   setConvertedIngredients,
