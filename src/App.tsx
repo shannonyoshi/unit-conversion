@@ -17,9 +17,10 @@ import {
   faEdit,
   faSyncAlt,
   faCog,
+  faUndoAlt
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faTrashAlt, faBalanceScale, faChevronDown, faEdit, faSyncAlt, faCog);
+library.add(faTrashAlt, faBalanceScale, faChevronDown, faEdit, faSyncAlt, faCog, faUndoAlt);
 const App: FC = (): JSX.Element => {
   // ingredient ex. {"Amount": "3", "currentUnit": "cups", "targetUnit": "grams", "ingredient": "flour", "id": 0}
   return (

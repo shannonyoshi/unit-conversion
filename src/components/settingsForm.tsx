@@ -1,7 +1,7 @@
 import React, { useState, Dispatch, SetStateAction, FC } from "react";
 
 import { unitDict } from "../util/units";
-import { Set } from "./conversionForm";
+import { Set } from "../types";
 
 interface SettingsProps {
   settings: Set,
@@ -27,6 +27,7 @@ const SettingsForm: FC<SettingsProps> = ({ settings, setSettings, defaultTol }: 
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
+    // TODO: add settings validation!!
     setSettings(inputs)
     setInputs(defaultTol)
   }
@@ -36,7 +37,7 @@ const SettingsForm: FC<SettingsProps> = ({ settings, setSettings, defaultTol }: 
   }
 
   return <form className="settings-form" onSubmit={handleSubmit}>
-      {/* <p>This setting changes the accuracy of the converted ingredient when converting to standard measurements (as opposed to metric). This does not affect metric return values.</p> */}
+    <p>This setting changes the accuracy of the converted ingredient when converting to standard measurements. This does not affect decimal (metric) return values.</p>
     <div className="form-section">
       <label htmlFor="amount" className="settings-label">
         Amount

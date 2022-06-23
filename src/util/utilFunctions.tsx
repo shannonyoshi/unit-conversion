@@ -1,5 +1,5 @@
 import { unitDict, allFractions } from "./units";
-import { Fraction, unitProperty } from "../types"
+import { Fraction, unitProperty, Set, AddedIngr } from "../types"
 
 export const roundTo = (toRound: number, decPoints: number) => {
   let mult = Math.pow(10, decPoints)
@@ -43,7 +43,7 @@ const validateFraction = (amountArray: string[]): null | number => {
 //returns parsed amount in decimal or false if amount is unable to be parsed
 export const validateAmount = (amount: string): number | null => {
   let num = Number(amount)
-  if (!isNaN(num)){
+  if (!isNaN(num)) {
     return num
   }
 
@@ -87,11 +87,22 @@ export const checkPluralUnit = (amount: number, endUnitName: string) => {
   return returnString;
 };
 
-//returns tolerance in mLs of +/-2.5%
-export const calcNormalizedTolerance = (normalizedAmount: number): number => {
-  const twoPointFivePercent = normalizedAmount * 1.002 - normalizedAmount;
-
-  return twoPointFivePercent;
+//returns tolerance in mL or g
+export const calcNormalizedTolerance = (normalizedAmount: number, settings: Set, ingr?: AddedIngr): number => {
+  if (settings.toleranceType === "percent") {
+    let percentage = settings.tolerance / 100
+    return normalizedAmount * percentage;
+  }
+  else {
+    let tolU = unitDict[settings.toleranceType]
+    let convertedTol = tolU.conversion * settings.tolerance
+    if (!ingr || tolU.normUnit === unitDict[ingr.targetUnit].normUnit) {
+      return convertedTol
+    }
+    else {
+      return convertedTol * ingr.targetAmount / ingr.sourceAmount
+    }
+  }
 };
 
 // Fraction filter functions:
@@ -123,7 +134,6 @@ export const closest2 = (remainder: number, common: boolean = false): [Fraction,
     next = fracs[i + 1];
     i += 1;
   }
-  console.log(`current, next:`, current, next)
   return [current, next];
 };
 

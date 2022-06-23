@@ -1,9 +1,9 @@
-import React, { useState, Dispatch, SetStateAction, FC } from "react";
+import React, { useEffect, useState, Dispatch, SetStateAction, FC } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { formConversion } from "../util/conversionFunctions";
 import { unitDict } from "../util/units";
 
-import { IngrInput, ConvIngr, Error } from "../types";
+import { IngrInput, ConvIngr, Error, Set } from "../types";
 
 import ShowErrors from "./errors";
 import SettingsForm from "./settingsForm";
@@ -16,11 +16,6 @@ interface FormProps {
   inputs: IngrInput;
   setInputs: Dispatch<SetStateAction<IngrInput>>;
   initialInputState: IngrInput;
-}
-
-export interface Set {
-  tolerance: number,
-  toleranceType: string
 }
 
 const defaultTol:Set = { tolerance: 1, toleranceType: "percent" }
@@ -36,9 +31,14 @@ const ConversionForm: FC<FormProps> = ({
   const [settings, setSettings] = useState<Set>(defaultTol)
   const [viewSettings, setViewSettings] = useState<boolean>(false)
 
+  useEffect(()=>{
+    setViewSettings(false)
+  },[settings])
+
   const handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();
-    const converted: [ConvIngr | null, Error | null] = await formConversion(inputs)
+    
+    const converted: [ConvIngr | null, Error | null] = await formConversion(inputs, settings)
     if (converted[1]) {
       setErrors([converted[1]])
       return
@@ -66,7 +66,7 @@ const ConversionForm: FC<FormProps> = ({
   return (
     <div className="card-small">
       <div className="form-wrapper">
-        {viewSettings === false ? <FontAwesomeIcon icon="cog" className="icon-btn settings-item" onClick={(e: React.MouseEvent) => setViewSettings(true)} /> : <div className="x-btn" onClick={(e: React.MouseEvent) => setViewSettings(false)}>&#xd7;</div>}
+        {viewSettings === false ? <FontAwesomeIcon icon="cog" className="icon-btn" onClick={(e: React.MouseEvent) => setViewSettings(true)} /> : <div className="x-btn" onClick={(e: React.MouseEvent) => setViewSettings(false)}>&#xd7;</div>}
         <h1 className="card-title">{viewSettings === true ? "Tolerance Settings" : "Unit Converter"}</h1>
         {viewSettings === true ? <SettingsForm settings={settings} setSettings={setSettings} defaultTol={defaultTol} /> :
           <form onSubmit={handleSubmit} autoComplete="off">
