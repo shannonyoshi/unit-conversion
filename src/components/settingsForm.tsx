@@ -12,7 +12,6 @@ interface SettingsProps {
   setViewSettings: Dispatch<SetStateAction<boolean>>,
 }
 
-
 const SettingsForm: FC<SettingsProps> = ({ settings, setSettings, defaultTol, setViewSettings }: SettingsProps): JSX.Element => {
   const [errors, setErrors] = useState<Error[] | null>(null)
   const [inputs, setInputs] = useState<Set>(settings)
@@ -36,26 +35,28 @@ const SettingsForm: FC<SettingsProps> = ({ settings, setSettings, defaultTol, se
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault()
-    console.log(`typeof settings.tolerance`, typeof (settings.tolerance))
     let isAmount: number | null = typeof settings.tolerance === "number" ? settings.tolerance : validateAmount(inputs.tolerance.toString(10))
-    console.log(`isAmount`, isAmount)
-    // TODO: add settings validation!!
     if (isAmount && !isNaN(isAmount)) {
       setSettings(inputs)
       setInputs(defaultTol)
     } else {
       setErrors([{ name: "Tolerance", message: "Unable to validate the number supplied" }])
     }
-
   }
 
-  const reset = () => {
+  const reset = (e: React.SyntheticEvent) => {
+    e.preventDefault()
     setInputs(defaultTol)
   }
 
+  const close = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    setViewSettings(false)
+  }
+
   return <form className="settings-form" onSubmit={handleSubmit}>
-    <FontAwesomeIcon icon="undo-alt" className="icon-btn reset" onClick={reset} />
     <p>This setting changes the accuracy of the converted ingredient when converting to standard measurements. This does not affect decimal (metric) return values.</p>
+    <FontAwesomeIcon icon="undo-alt" className="icon-btn reset" onClick={reset} title="reset" />
     <div className="form-section">
       <label htmlFor="amount" className="settings-label">
         Amount
@@ -94,9 +95,8 @@ const SettingsForm: FC<SettingsProps> = ({ settings, setSettings, defaultTol, se
     </div>
     {errors ? <ShowErrors errors={errors} /> : null}
     <div className="buttons">
-      <button type="submit">Save</button> <button className="close" onClick={(e: React.MouseEvent) => setViewSettings(false)}>Close</button>
+      <button type="submit">Save</button> <button className="close" onClick={close}>Close</button>
     </div>
-
   </form>
 }
 

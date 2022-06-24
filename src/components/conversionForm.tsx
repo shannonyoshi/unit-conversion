@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Dispatch, SetStateAction, FC } from "react";
+import React, { useState, Dispatch, SetStateAction, FC } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { formConversion } from "../util/conversionFunctions";
 import { unitDict } from "../util/units";
@@ -30,10 +30,6 @@ const ConversionForm: FC<FormProps> = ({
   const [errors, setErrors] = useState<Error[] | null>(null);
   const [settings, setSettings] = useState<Set>(defaultTol)
   const [viewSettings, setViewSettings] = useState<boolean>(false)
-
-  useEffect(() => {
-    setViewSettings(false)
-  }, [settings])
 
   const handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault();

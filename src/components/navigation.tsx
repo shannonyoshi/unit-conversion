@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction, MouseEventHandler } from "react";
+import React, { FC, MouseEventHandler } from "react";
 import { NavLink } from "react-router-dom";
 
 import "../styling/navigation.scss";

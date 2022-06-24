@@ -30,7 +30,7 @@ const validateFraction = (amountArray: string[]): null | number => {
   let fraction: fracInfo | null = findFraction(amountArray)
 
   //if one "/" was found and "/" is not the first or last character of the strings 
-  if (fraction && fraction.slashIndex != 0 && fraction.slashIndex != fraction.string.length - 1) {
+  if (fraction && fraction.slashIndex !== 0 && fraction.slashIndex !== fraction.string.length - 1) {
 
     const fracArray = fraction.string.split("/");
     const dividend = parseInt(fracArray[0], 10);
