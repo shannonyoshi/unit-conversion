@@ -27,15 +27,23 @@
     @include small-btn;
   }
   .icon-btn {
-    position: absolute;
     @include hover-raise;
-    color: color(medium);
     width: 1.5em;
     height: 1.5em;
-    right: $s-padding;
-    top: 0px;
-    &:hover {
-      color: color(dark-highlight);
+    &.settings {
+      color: color(medium);
+      position: absolute;
+      right: $s-padding;
+      top: 0px;
+      &:hover {
+        color: color(dark-highlight);
+      }
+    }
+    &.reset {
+      color: color(alert);
+      &:hover {
+        color: color(alert-orange);
+      }
     }
   }
   .x-btn {
@@ -119,10 +127,9 @@ div.errors {
 }
 // Settings Form
 .settings-form {
-  p{
-    color:color(dark);
-    font-size:1em;
+  p {
+    color: color(dark);
+    font-size: 1em;
     margin: 0 $lg-padding $s-padding;
   }
-
 }

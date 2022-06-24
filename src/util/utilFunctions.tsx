@@ -7,47 +7,47 @@ export const roundTo = (toRound: number, decPoints: number) => {
 }
 
 // TODO:Start here tomorrow try with "02/5 percent"
+interface fracInfo {
+  string: string, // string of the fraction
+  slashIndex: number, // represents index of "/" in this fraction string
+  location: number //represents index of fraction in the amount array
+}
+
+// returns fraction if one is found, otherwise null (including if more than one is found)
+const findFraction = (amountArray: string[]): fracInfo | null => {
+  let fractions: fracInfo[] = []
+  for (let i = 0; i < amountArray.length; i++) {
+    if (amountArray[i].includes("/")) {
+      fractions.push({ string: amountArray[i], slashIndex: amountArray[i].indexOf("/"), location: i })
+    }
+  }
+  return fractions.length === 1 ? fractions[0] : null
+
+}
 
 // returns decimal of the input if there is a valid fraction or null if not
 const validateFraction = (amountArray: string[]): null | number => {
-  let slashIndices: number[] = [];
-  // finds strings that include "/", and saves index of that string
-  const fraction = amountArray.filter(string => {
-    if (string.includes("/")) {
-      slashIndices.push(string.indexOf("/"));
-      return true;
-    }
-    return false;
-  });
-  //if one "/" was found and "/" is not the first of last character of the stringS
-  if (slashIndices.length === 1 && slashIndices[0] != 0 && slashIndices[0] != amountArray[0].length - 1) {
-    let frac: number = slashIndices[0];
-    let ints: number = 0;
-    // for numbers >1
-    if (frac > 0) {
-      console.log(`frac`, frac)
-      // ints is the whole number before the fraction
-      const try = amountArray.slice(0, frac).join("")
-      ints = parseInt(amountArray.slice(0, frac).join(""), 10);
-    }
-    const fracArray = fraction[0].split("/");
+  let fraction: fracInfo | null = findFraction(amountArray)
+
+  //if one "/" was found and "/" is not the first or last character of the strings 
+  if (fraction && fraction.slashIndex != 0 && fraction.slashIndex != fraction.string.length - 1) {
+
+    const fracArray = fraction.string.split("/");
     const dividend = parseInt(fracArray[0], 10);
     const divisor = parseInt(fracArray[1], 10);
-    console.log(`fracArray`, fracArray)
-    console.log(`dividend`, dividend)
-    console.log(`divisor`, divisor)
-    console.log(`ints`, ints)
-    if (
-      typeof dividend === "number" &&
-      typeof divisor === "number" &&
-      typeof ints === "number"
-    ) {
+    let wholeNum: number = 0
+
+    if (fraction.location > 0) {
+      let ints = amountArray.slice(0, fraction.location).join("")
+      wholeNum = Number(ints)
+    }
+    if (!isNaN(dividend) && !isNaN(divisor) && !isNaN(wholeNum)) {
       const quotient = roundTo(dividend / divisor, 3);
-      console.log(`quotient`, quotient)
-      if (ints + quotient===0){
+      if (wholeNum + quotient === 0) {
         return null
+      } else {
+        return wholeNum + quotient;
       }
-      return ints + quotient;
     }
   }
   return null;
@@ -56,36 +56,41 @@ const validateFraction = (amountArray: string[]): null | number => {
 export const validateAmount = (amount: string): number | null => {
 
   let num = Number(amount)
-  console.log(`num`, num)
-  console.log(`isNaN(num)`, isNaN(num))
+  // console.log(`num`, num)
+  // console.log(`isNaN(num)`, isNaN(num))
   if (!isNaN(num)) {
-    console.log(`return num`)
+    // console.log(`return num`)
     return num
   } else {
-
+    console.log(`else`)
     //split amount on white space into string[], then remove excess white space
     let amountArray: string[] = amount.split(" ").map((item: string) => item.trim());
     amountArray = amountArray.filter((item: string) => item !== "");
+    console.log(`amountArray`, amountArray)
     //checks if amount is a whole number that can be returned
     if (!amount.includes(".") && !amount.includes("/") && !amount.includes(",")) {
       const parsedWholeNum = parseInt(amountArray.join(""));
       if (typeof parsedWholeNum === "number" && !isNaN(num)) {
+        console.log(`parsedWholeNum`, parsedWholeNum)
         return parsedWholeNum;
       }
     }
     // checks amount is/has fraction
-    if (amount.includes("/") && amountArray[0].length > 1) {
+    if (amount.includes("/")) {
+      console.log(`validateFraction`)
       return validateFraction(amountArray);
 
     }
     if ((amount.includes(".") || amount.includes(",")) && amountArray.length === 1) {
       const parsedFl = parseFloat(amountArray[0]);
       if (typeof parsedFl === "number") {
+        console.log(`parsedFl`, parsedFl)
         return parsedFl;
       }
     }
 
   }
+  console.log(`return null from validateAAmount`)
   return null;
 };
 
