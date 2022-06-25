@@ -17,7 +17,7 @@ const Footer = (): JSX.Element => {
           <a
             href="https://github.com/shannonyoshi/unit-conversion"
             target="_blank" rel="noopener noreferrer">
-            <FontAwesomeIcon icon={["fab", "github"]} />
+            <FontAwesomeIcon icon={["fab", "github"]} className="github-icon" />
           </a>
           <a className="portfolio-link" href="https://syoshi.dev/"
             target="_blank" rel="noopener noreferrer">PortFolio

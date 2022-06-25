@@ -79,6 +79,6 @@ export const postConversion = async (ingredient: ComplexIngr): Promise<[AddedIng
 
   } catch (error) {
     console.log("error", error)
-    return [null, { name: "Server", message: error.message }]
+    return [null, { name: "Server", message: error as string }]
   }
 };
