@@ -61,7 +61,6 @@
 .form-section {
   width: 100%;
   padding: $s-padding $lg-padding;
-  // padding-left:$lg-padding;
   text-align: left;
   input {
     @include input-mixin;
@@ -111,6 +110,8 @@ ul {
   color: color(dark);
 }
 div.errors {
+
+  padding: $s-padding $lg-padding;
   h3 {
     font-size: 1.5em;
     font-weight: bold;
@@ -118,8 +119,11 @@ div.errors {
     text-align: left;
     padding-left: $s-padding;
   }
-  li {
-    color: color(alert);
+  ul{
+    padding:0;
+    li {
+      color: color(alert);
+    }
   }
   b {
     font-weight: bold;
@@ -132,9 +136,4 @@ div.errors {
     font-size: 1em;
     margin: 0 $lg-padding $s-padding;
   }
-
-  // .buttons{
-  //   display:flex;
-  //   flex-direction: row;
-  // }
 }

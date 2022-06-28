@@ -36,7 +36,7 @@ export const formConversion = async (inputs: IngrInput, settings: Set): Promise<
   else {
     if (inputs.ingredientName.length === 0) {
       // form button should be disabled when not enough info, so this should not be needed
-      return [null, { name: "Ingredient Name", message: "Ingredient name needed for complex conversion" }]
+      return [null, { name: "Ingredient Name", message: "An ingredient name is needed for complex conversion" }]
     }
     return await convertComplex(inputs, isAmount, settings)
   }

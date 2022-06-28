@@ -6,7 +6,6 @@ export const roundTo = (toRound: number, decPoints: number) => {
   return Math.round(toRound * mult) / mult
 }
 
-// TODO:Start here tomorrow try with "02/5 percent"
 interface fracInfo {
   string: string, // string of the fraction
   slashIndex: number, // represents index of "/" in this fraction string
@@ -62,35 +61,35 @@ export const validateAmount = (amount: string): number | null => {
     // console.log(`return num`)
     return num
   } else {
-    console.log(`else`)
+    // console.log(`else`)
     //split amount on white space into string[], then remove excess white space
     let amountArray: string[] = amount.split(" ").map((item: string) => item.trim());
     amountArray = amountArray.filter((item: string) => item !== "");
-    console.log(`amountArray`, amountArray)
+    // console.log(`amountArray`, amountArray)
     //checks if amount is a whole number that can be returned
     if (!amount.includes(".") && !amount.includes("/") && !amount.includes(",")) {
       const parsedWholeNum = parseInt(amountArray.join(""));
       if (typeof parsedWholeNum === "number" && !isNaN(num)) {
-        console.log(`parsedWholeNum`, parsedWholeNum)
+        // console.log(`parsedWholeNum`, parsedWholeNum)
         return parsedWholeNum;
       }
     }
     // checks amount is/has fraction
     if (amount.includes("/")) {
-      console.log(`validateFraction`)
+      // console.log(`validateFraction`)
       return validateFraction(amountArray);
 
     }
     if ((amount.includes(".") || amount.includes(",")) && amountArray.length === 1) {
       const parsedFl = parseFloat(amountArray[0]);
       if (typeof parsedFl === "number") {
-        console.log(`parsedFl`, parsedFl)
+        // console.log(`parsedFl`, parsedFl)
         return parsedFl;
       }
     }
 
   }
-  console.log(`return null from validateAAmount`)
+  // console.log(`return null from validateAAmount`)
   return null;
 };
 
@@ -110,7 +109,7 @@ export const checkPluralUnit = (amount: number, endUnitName: string) => {
   return returnString;
 };
 
-//returns tolerance in mL or g
+//returns tolerance in mL or g, ingr only required for complex conversions
 export const calcNormalizedTolerance = (normalizedAmount: number, settings: Set, ingr?: AddedIngr): number => {
   if (settings.toleranceType === "percent") {
     let percentage = settings.tolerance / 100

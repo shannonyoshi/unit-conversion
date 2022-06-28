@@ -39,6 +39,7 @@ const SettingsForm: FC<SettingsProps> = ({ settings, setSettings, defaultTol, se
     if (isAmount && !isNaN(isAmount)) {
       setSettings(inputs)
       setInputs(defaultTol)
+      setViewSettings(false)
     } else {
       setErrors([{ name: "Tolerance", message: "Unable to validate the number supplied" }])
     }
