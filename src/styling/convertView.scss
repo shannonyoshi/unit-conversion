@@ -1,15 +1,14 @@
 @import "variables";
 @import "mixins";
 
-
 // ConvertView
 .convert-page-wrapper {
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
-  background-color: rgba(251, 251, 246, .5);
-  height:100%;
-  padding:$xlg-padding 0;
+  background-color: rgba(251, 251, 246, 0.5);
+  height: 100%;
+  padding: $xlg-padding 0;
 }
 
 .card-small {
@@ -20,44 +19,66 @@
 .form-wrapper {
   display: flex;
   flex-direction: column;
- 
-  
-  .form-section {
-    width:100%;
-    padding: $s-padding $lg-padding;
-    // padding-left:$lg-padding;
-    text-align:  left;
-    input {
-      @include input-mixin;
-      width:calc(100% - 100px);
-      // flex-grow:1;
-
-      // width: 100%;
-      // @media(max-width: 600px){
-      //   width: 100%;
-
-      // }
-    }
-    .checker {
-      @include honey-pot
-    }
-
-    .convert-label {
-      @include form-label;
-      font-size: 1.25em;
-      width: 100px;
-      @media (max-width: 600px) {
-        font-size: 1em;
-      }
-    }
-
-    select {
-      @include select-mixin;
-      width:calc(100% - 100px);
-    }
+  transform: rotate(0);
+  .checker {
+    @include honey-pot;
   }
   button {
     @include small-btn;
+  }
+  .icon-btn {
+    @include hover-raise;
+    width: 1.5em;
+    height: 1.5em;
+    &.settings {
+      color: color(medium);
+      position: absolute;
+      right: $s-padding;
+      top: 0px;
+      &:hover {
+        color: color(dark-highlight);
+      }
+    }
+    &.reset {
+      color: color(alert);
+      &:hover {
+        color: color(alert-orange);
+      }
+    }
+  }
+  .x-btn {
+    position: absolute;
+    @include hover-raise;
+    color: color(accent);
+    right: $s-padding;
+    top: -12px;
+    font-size: 3em;
+    &:hover {
+      color: color(alert-orange);
+    }
+  }
+}
+.form-section {
+  width: 100%;
+  padding: $s-padding $lg-padding;
+  text-align: left;
+  input {
+    @include input-mixin;
+    width: calc(100% - 100px);
+  }
+
+  label {
+    @include form-label;
+    font-size: 1.25em;
+    width: 100px;
+    @media (max-width: 600px) {
+      font-size: 1em;
+    }
+  }
+
+  select {
+    @include select-mixin;
+    width: calc(100% - 100px);
   }
 }
 //ConvertedList
@@ -74,32 +95,45 @@ ul {
   padding: $xxs-padding;
   border-bottom: 2px solid color(medium);
   .icon-btn {
-    padding-left: .75em;
+    padding-left: 0.75em;
     font-size: 1.5em;
-    width:1.5em;
+    width: 1.5em;
   }
   .edit-item {
-    @include edit-btn
+    @include edit-btn;
   }
   .delete-item {
-    @include del-btn
+    @include del-btn;
   }
 }
 .no-items {
   color: color(dark);
 }
-div.errors{
-  h3{
+div.errors {
+
+  padding: $s-padding $lg-padding;
+  h3 {
     font-size: 1.5em;
     font-weight: bold;
     color: color(alert);
-    text-align:left;
+    text-align: left;
     padding-left: $s-padding;
   }
-  li{
-    color:color(alert)
+  ul{
+    padding:0;
+    li {
+      color: color(alert);
+    }
   }
-  b{
+  b {
     font-weight: bold;
+  }
+}
+// Settings Form
+.settings-form {
+  p {
+    color: color(dark);
+    font-size: 1em;
+    margin: 0 $lg-padding $s-padding;
   }
 }

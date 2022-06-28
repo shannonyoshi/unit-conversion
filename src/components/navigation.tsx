@@ -1,19 +1,19 @@
-import React, { FC } from "react";
+import React, { FC, MouseEventHandler } from "react";
 import { NavLink } from "react-router-dom";
 
 import "../styling/navigation.scss";
 
 interface NavProps {
   description: string,
-  clickHandler?: (e:React.MouseEvent) => void;
+  toggleOpen?: MouseEventHandler;
 }
 
-const Navigation: FC<NavProps> = ({ description, clickHandler }: NavProps): JSX.Element => {
+const Navigation: FC<NavProps> = ({ description, toggleOpen }: NavProps): JSX.Element => {
   return (
     <div className={`nav-wrapper ${description}`}>
       <nav
-        className={`nav${description}`}
-        onClick={clickHandler ? clickHandler : undefined}>
+        className={`nav ${description}`}
+        onClick={toggleOpen}>
         <NavLink
           exact
           to="/"

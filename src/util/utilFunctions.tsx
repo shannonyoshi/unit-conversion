@@ -1,73 +1,95 @@
 import { unitDict, allFractions } from "./units";
-import { Fraction, unitProperty } from "../types"
+import { Fraction, unitProperty, Set, AddedIngr } from "../types"
 
 export const roundTo = (toRound: number, decPoints: number) => {
   let mult = Math.pow(10, decPoints)
   return Math.round(toRound * mult) / mult
 }
 
+interface fracInfo {
+  string: string, // string of the fraction
+  slashIndex: number, // represents index of "/" in this fraction string
+  location: number //represents index of fraction in the amount array
+}
+
+// returns fraction if one is found, otherwise null (including if more than one is found)
+const findFraction = (amountArray: string[]): fracInfo | null => {
+  let fractions: fracInfo[] = []
+  for (let i = 0; i < amountArray.length; i++) {
+    if (amountArray[i].includes("/")) {
+      fractions.push({ string: amountArray[i], slashIndex: amountArray[i].indexOf("/"), location: i })
+    }
+  }
+  return fractions.length === 1 ? fractions[0] : null
+
+}
+
 // returns decimal of the input if there is a valid fraction or null if not
 const validateFraction = (amountArray: string[]): null | number => {
-  let slashIndices: number[] = [];
-  // finds strings that include "/", and saves index of that string
-  const fraction = amountArray.filter((string, index) => {
-    if (string.includes("/")) {
-      slashIndices.push(index);
-      return true;
-    }
-    return false;
-  });
-  //if one "/" was found
-  if (slashIndices.length === 1) {
-    let fracIndex: number = slashIndices[0];
-    let ints: number = 0;
-    // for numbers >1
-    if (fracIndex > 0) {
-      // ints is the whole number before the fraction
-      ints = parseInt(amountArray.slice(0, fracIndex).join(""), 10);
-    }
-    const fracArray = fraction[0].split("/");
+  let fraction: fracInfo | null = findFraction(amountArray)
+
+  //if one "/" was found and "/" is not the first or last character of the strings 
+  if (fraction && fraction.slashIndex !== 0 && fraction.slashIndex !== fraction.string.length - 1) {
+
+    const fracArray = fraction.string.split("/");
     const dividend = parseInt(fracArray[0], 10);
     const divisor = parseInt(fracArray[1], 10);
-    if (
-      typeof dividend === "number" &&
-      typeof divisor === "number" &&
-      typeof ints === "number"
-    ) {
+    let wholeNum: number = 0
+
+    if (fraction.location > 0) {
+      let ints = amountArray.slice(0, fraction.location).join("")
+      wholeNum = Number(ints)
+    }
+    if (!isNaN(dividend) && !isNaN(divisor) && !isNaN(wholeNum)) {
       const quotient = roundTo(dividend / divisor, 3);
-      return ints + quotient;
+      if (wholeNum + quotient === 0) {
+        return null
+      } else {
+        return wholeNum + quotient;
+      }
     }
   }
   return null;
 };
 //returns parsed amount in decimal or false if amount is unable to be parsed
 export const validateAmount = (amount: string): number | null => {
-  let num = Number(amount)
-  if (!isNaN(num)){
-    return num
-  }
 
-  //split amount on white space into string[], then remove excess white space
-  let amountArray: string[] = amount.split(" ").map((item: string) => item.trim());
-  amountArray = amountArray.filter((item: string) => item !== "");
-  //checks if amount is a whole number that can be returned
-  if (!amount.includes(".") && !amount.includes("/") && !amount.includes(",")) {
-    const parsedWholeNum = parseInt(amountArray.join(""));
-    if (typeof parsedWholeNum === "number") {
-      return parsedWholeNum;
+  let num = Number(amount)
+  // console.log(`num`, num)
+  // console.log(`isNaN(num)`, isNaN(num))
+  if (!isNaN(num)) {
+    // console.log(`return num`)
+    return num
+  } else {
+    // console.log(`else`)
+    //split amount on white space into string[], then remove excess white space
+    let amountArray: string[] = amount.split(" ").map((item: string) => item.trim());
+    amountArray = amountArray.filter((item: string) => item !== "");
+    // console.log(`amountArray`, amountArray)
+    //checks if amount is a whole number that can be returned
+    if (!amount.includes(".") && !amount.includes("/") && !amount.includes(",")) {
+      const parsedWholeNum = parseInt(amountArray.join(""));
+      if (typeof parsedWholeNum === "number" && !isNaN(num)) {
+        // console.log(`parsedWholeNum`, parsedWholeNum)
+        return parsedWholeNum;
+      }
     }
     // checks amount is/has fraction
     if (amount.includes("/")) {
+      // console.log(`validateFraction`)
       return validateFraction(amountArray);
 
     }
     if ((amount.includes(".") || amount.includes(",")) && amountArray.length === 1) {
       const parsedFl = parseFloat(amountArray[0]);
       if (typeof parsedFl === "number") {
+        // console.log(`parsedFl`, parsedFl)
         return parsedFl;
       }
     }
+
   }
+  // console.log(`return null from validateAAmount`)
   return null;
 };
 
@@ -87,11 +109,22 @@ export const checkPluralUnit = (amount: number, endUnitName: string) => {
   return returnString;
 };
 
-//returns tolerance in mLs of +/-2.5%
-export const calcNormalizedTolerance = (normalizedAmount: number): number => {
-  const twoPointFivePercent = normalizedAmount * 1.002 - normalizedAmount;
-
-  return twoPointFivePercent;
+//returns tolerance in mL or g, ingr only required for complex conversions
+export const calcNormalizedTolerance = (normalizedAmount: number, settings: Set, ingr?: AddedIngr): number => {
+  if (settings.toleranceType === "percent") {
+    let percentage = settings.tolerance / 100
+    return normalizedAmount * percentage;
+  }
+  else {
+    let tolU = unitDict[settings.toleranceType]
+    let convertedTol = tolU.conversion * settings.tolerance
+    if (!ingr || tolU.normUnit === unitDict[ingr.targetUnit].normUnit) {
+      return convertedTol
+    }
+    else {
+      return convertedTol * ingr.targetAmount / ingr.sourceAmount
+    }
+  }
 };
 
 // Fraction filter functions:
@@ -123,7 +156,6 @@ export const closest2 = (remainder: number, common: boolean = false): [Fraction,
     next = fracs[i + 1];
     i += 1;
   }
-  // console.log(`current, next:`, current, next)
   return [current, next];
 };
 

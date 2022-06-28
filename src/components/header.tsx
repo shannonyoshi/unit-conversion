@@ -21,7 +21,7 @@ const Header: FC = (): JSX.Element => {
         </div>
         <Logo description="header-logo" />
       </div>
-      <Navigation description={`header-nav ${open}`} clickHandler={toggleOpen} />
+      <Navigation description={`header-nav ${open}`} toggleOpen={toggleOpen} />
     </header>
   );
 };
