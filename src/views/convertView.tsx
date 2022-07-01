@@ -1,12 +1,12 @@
 import React, { useState, FC } from "react";
-import ConversionForm from "../components/conversionForm";
 import ConvertedList from "../components/convertedList";
+import ConversionCard from "../components/conversionCard"
 import "../styling/convertView.scss";
 
-import {IngrInput, ConvIngr}from "../types"
+import { IngrInput, ConvIngr, InputsList } from "../types"
 
 //name is used as a honeypot to weed out bots submitting the form
-const initialInputState:IngrInput={
+const initialInputState: IngrInput = {
   name: "",
   currentAmount: "",
   currentUnit: "",
@@ -14,19 +14,20 @@ const initialInputState:IngrInput={
   ingredientName: "",
 }
 
-const ConvertView: FC=():JSX.Element=> {
+const ConvertView: FC = (): JSX.Element => {
   const [ingredients, setIngredients] = useState<ConvIngr[]>([]);
   const [inputs, setInputs] = useState<IngrInput>(initialInputState);
 
   return (
     <div className="convert-page-wrapper">
-      <ConversionForm
-        setConvertedIngredients={setIngredients}
-        convertedIngredients={ingredients}
+      <ConversionCard
+        setIngredients={setIngredients}
+        ingredients={ingredients}
         inputs={inputs}
         setInputs={setInputs}
         initialInputState={initialInputState}
       />
+
       <ConvertedList
         ingredients={ingredients}
         setIngredients={setIngredients}

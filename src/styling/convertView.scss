@@ -13,6 +13,11 @@
 
 .card-small {
   @include card-small;
+  p {
+    color: color(dark);
+    font-size: 1em;
+    margin: 0 $lg-padding $s-padding;
+  }
 }
 
 //ConversionForm
@@ -26,15 +31,24 @@
   button {
     @include small-btn;
   }
+  .icons{
+    position: absolute;
+    right: $s-padding;
+    top: 0px;
+    padding-top:0;
+  }
+  .hidden{
+    opacity:0;
+  }
+
   .icon-btn {
     @include hover-raise;
-    width: 1.5em;
-    height: 1.5em;
-    &.settings {
+    cursor:pointer;
+    width: 1.5rem;
+    height: 1.5rem;
+    &.settings,&.list, &.individual {
       color: color(medium);
-      position: absolute;
-      right: $s-padding;
-      top: 0px;
+      
       &:hover {
         color: color(dark-highlight);
       }
@@ -130,10 +144,6 @@ div.errors {
   }
 }
 // Settings Form
-.settings-form {
-  p {
-    color: color(dark);
-    font-size: 1em;
-    margin: 0 $lg-padding $s-padding;
-  }
-}
+// .settings-form {
+
+// }

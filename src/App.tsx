@@ -17,12 +17,14 @@ import {
   faEdit,
   faSyncAlt,
   faCog,
-  faUndoAlt
+  faUndoAlt,
+  faEllipsisV,
+  faCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 
 
-library.add(faTrashAlt, faBalanceScale, faChevronDown, faEdit, faSyncAlt, faCog, faUndoAlt, faGithub);
+library.add(faTrashAlt, faBalanceScale, faChevronDown, faEdit, faSyncAlt, faCog, faUndoAlt, faGithub, faEllipsisV, faCircle);
 const App: FC = (): JSX.Element => {
   // ingredient ex. {"Amount": "3", "currentUnit": "cups", "targetUnit": "grams", "ingredient": "flour", "id": 0}
   return (

@@ -90,4 +90,11 @@ export interface Set {
   toleranceType: string
 }
 
+export interface InputsList{
+  name:string,
+  string:"",
+  valList: IngrInput[] //validated list
+}
+
+export type FormOptions = "individual" | "list";
 

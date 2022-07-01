@@ -55,50 +55,55 @@ const SettingsForm: FC<SettingsProps> = ({ settings, setSettings, defaultTol, se
     setViewSettings(false)
   }
 
-  return <form className="settings-form" onSubmit={handleSubmit}>
-    <p>This setting changes the accuracy of the converted ingredient when converting to standard measurements. This does not affect decimal (metric) return values.</p>
-    <FontAwesomeIcon icon="undo-alt" className="icon-btn reset" onClick={reset} title="reset" />
-    <div className="form-section">
-      <label htmlFor="amount" className="settings-label">
-        Amount
-      </label>
-      <input
-        required
-        value={inputs.tolerance}
-        type="text"
-        id="tolAmount"
-        name="tolerance"
-        onChange={handleInputChange}
-        placeholder="examples:   1    |   .1    |    1/4   "
-      />
-    </div>
-    <div className="form-section">
+  return (
+    <div>
+      <h1 className="card-title">Tolerance Settings</h1>
+      <form className="settings-form" onSubmit={handleSubmit}>
+        <p>This setting changes the accuracy of the converted ingredient when converting to standard measurements. This does not affect decimal (metric) return values.</p>
+        <FontAwesomeIcon icon="undo-alt" className="icon-btn reset" onClick={reset} title="reset" />
+        <div className="form-section">
+          <label htmlFor="amount" className="settings-label">
+            Amount
+          </label>
+          <input
+            required
+            value={inputs.tolerance}
+            type="text"
+            id="tolAmount"
+            name="tolerance"
+            onChange={handleInputChange}
+            placeholder="examples:   1    |   .1    |    1/4   "
+          />
+        </div>
+        <div className="form-section">
 
-      <label htmlFor="tolType" className="settings-label">
-        Type
-      </label>
-      <select
-        required
-        id="tolType"
-        onChange={handleSelectChange}
-        name="toleranceType"
-        value={inputs.toleranceType}>
-        <option value="percent" key={`tolTypepercent`}>
-          Percent
-        </option>
-        {Object.keys(unitDict).map((unit) => (
-          <option value={unit} key={`tolType${unit}`}>
-            {unit}
-          </option>
-        ))}
+          <label htmlFor="tolType" className="settings-label">
+            Type
+          </label>
+          <select
+            required
+            id="tolType"
+            onChange={handleSelectChange}
+            name="toleranceType"
+            value={inputs.toleranceType}>
+            <option value="percent" key={`tolTypepercent`}>
+              Percent
+            </option>
+            {Object.keys(unitDict).map((unit) => (
+              <option value={unit} key={`tolType${unit}`}>
+                {unit}
+              </option>
+            ))}
 
-      </select>
+          </select>
+        </div>
+        {errors ? <ShowErrors errors={errors} /> : null}
+        <div className="buttons">
+          <button type="submit">Save</button> <button className="close" onClick={close}>Close</button>
+        </div>
+      </form>
     </div>
-    {errors ? <ShowErrors errors={errors} /> : null}
-    <div className="buttons">
-      <button type="submit">Save</button> <button className="close" onClick={close}>Close</button>
-    </div>
-  </form>
+  )
 }
 
 export default SettingsForm;
