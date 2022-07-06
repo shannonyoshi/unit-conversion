@@ -19,7 +19,7 @@ interface ConvCardProps {
 
 const initInputsList: InputsList = {
   name: "",
-  string:"1 cup    flour\n3/4 cup sugar   ",
+  string: "1 cup    flour ->pints\n3/4 cup sugar  ->tablespoon ",
   valList: []
 }
 
@@ -29,11 +29,11 @@ const ConversionCard = ({ setIngredients, ingredients, inputs, setInputs, initia
   const [viewSettings, setViewSettings] = useState<boolean>(false)
   const [inputsList, setInputsList] = useState<InputsList>(initInputsList);
 
-  const showList = (e: React.MouseEvent)=>{
+  const showList = (e: React.MouseEvent) => {
     e.preventDefault()
     setFormType("list")
   }
-  const showIndividual = (e: React.MouseEvent)=>{
+  const showIndividual = (e: React.MouseEvent) => {
     e.preventDefault()
     setFormType("individual")
   }
@@ -48,15 +48,15 @@ const ConversionCard = ({ setIngredients, ingredients, inputs, setInputs, initia
             <FontAwesomeIcon icon="circle" className="icon-btn individual" onClick={showIndividual} />
           }
           {/* {viewSettings === false ? */}
-            <FontAwesomeIcon icon="cog" className={`icon-btn settings ${viewSettings===true?"hidden":""}`} onClick={(e: React.MouseEvent) => setViewSettings(true)} /> 
-            {/* <div className="icon-btn placeholder"></div> */}
+          <FontAwesomeIcon icon="cog" className={`icon-btn settings ${viewSettings === true ? "hidden" : ""}`} onClick={(e: React.MouseEvent) => setViewSettings(true)} />
+          {/* <div className="icon-btn placeholder"></div> */}
           {/* } */}
         </div>
         {viewSettings === true ?
           <SettingsForm settings={settings} setSettings={setSettings} defaultTol={defaultTol} setViewSettings={setViewSettings} /> :
           formType === "list" ?
-            <ConversionListForm inputsList={inputsList} setInputsList={setInputsList} settings={settings} setIngredients={setIngredients}/> :
-            <ConversionForm setConvertedIngredients={setIngredients} convertedIngredients={ingredients} inputs={inputs} setInputs={setInputs} initialInputState={initialInputState} settings={settings}/>
+            <ConversionListForm inputsList={inputsList} setInputsList={setInputsList} settings={settings} setIngredients={setIngredients} ingredients={ingredients} /> :
+            <ConversionForm setConvertedIngredients={setIngredients} convertedIngredients={ingredients} inputs={inputs} setInputs={setInputs} initialInputState={initialInputState} settings={settings} />
         }
       </div>
     </div>

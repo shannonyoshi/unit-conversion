@@ -61,7 +61,7 @@ const ConvertedList: FC<ConvListProps> = ({ ingredients, setIngredients, setInpu
             {ingredients.map((ingredient, index) => (
               <div className="list-item" key={`O${index}`}>
                 <li className="original">
-                  {`${ingredient.currentAmount} ${checkPluralUnit(Number(ingredient.currentAmount), ingredient.currentUnit)} ${ingredient.ingredientName}`}
+                  {`${ingredient.currAmtStr} ${checkPluralUnit(Number(ingredient.currentAmount), ingredient.currentUnit)} ${ingredient.ingredientName}`}
                 </li>
                 <div>
                   <FontAwesomeIcon

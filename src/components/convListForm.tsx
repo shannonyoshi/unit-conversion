@@ -1,18 +1,21 @@
-import React, { FC, SetStateAction, Dispatch } from "react";
+import React, { FC, SetStateAction, Dispatch, useState } from "react";
 
 import ShowErrors from "./errors"
 
-import { InputsList, ConvIngr, Set } from "../types";
+import { InputsList, ConvIngr, Set, Error } from "../types";
 import { listConversion } from "../util/conversionFunctions";
 
 interface ListFormProps {
   inputsList: InputsList,
   setInputsList: Dispatch<SetStateAction<InputsList>>,
-  setIngredients: Dispatch<SetStateAction<ConvIngr[]>>
+  setIngredients: Dispatch<SetStateAction<ConvIngr[]>>,
+  ingredients: ConvIngr[],
   settings: Set,
 }
 
-const ConversionListForm: FC<ListFormProps> = ({ inputsList, setInputsList, setIngredients, settings }: ListFormProps): JSX.Element => {
+const ConversionListForm: FC<ListFormProps> = ({ inputsList, setInputsList, setIngredients, settings, ingredients }: ListFormProps): JSX.Element => {
+  const [errors, setErrors] = useState<Error[] | null>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
     e.persist()
     setInputsList((inputsList) => ({ ...inputsList, [e.target.name]: e.target.value }))
@@ -21,6 +24,19 @@ const ConversionListForm: FC<ListFormProps> = ({ inputsList, setInputsList, setI
   const handleSubmit = async (e: React.SyntheticEvent): Promise<Error | void> => {
     e.preventDefault()
     const tryList: [ConvIngr | null, Error | null][] = await listConversion(inputsList, settings)
+    let errorList: Error[] = []
+    let ingrList: ConvIngr[] = []
+    tryList.forEach(ingr => {
+      if (ingr[0] !== null) {
+        ingrList.push(ingr[0])
+      } if (ingr[1] !== null) {
+        errorList.push(ingr[1])
+      }
+    })
+    setIngredients([...ingredients, ...ingrList])
+    setErrors(errorList)
+
+
     // TODO: finish error checking, etc for handleSubmit 
   }
 
@@ -28,7 +44,7 @@ const ConversionListForm: FC<ListFormProps> = ({ inputsList, setInputsList, setI
     <div>
       <h1 className="card-title">List Converter</h1>
       <p>If converting to grams or doing a simple (weight&#10140;weight or volume&#10140;volume) conversion, you can list all ingredients and convert them at once</p>
-      <p>Example: 1 cup water -> pints</p>
+      <p>Example: 1 cup water -&gt; pints</p>
       <form onSubmit={handleSubmit} autoComplete="off">
         <div>
           <label htmlFor="name" className="checker">
@@ -57,6 +73,7 @@ const ConversionListForm: FC<ListFormProps> = ({ inputsList, setInputsList, setI
 
           />
         </div>
+        {errors ? <ShowErrors errors={errors} /> : null}
         <button
           type="submit"
           disabled={inputsList.string.length === 0 ? true :

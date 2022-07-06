@@ -35,6 +35,7 @@ export interface Unit {
 }
 // converted ingredient
 export interface ConvIngr {
+  currAmtStr: string,
   currentAmount: number,
   currentUnit: string,
   targetAmount?: number,

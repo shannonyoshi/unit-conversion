@@ -1,5 +1,5 @@
 import { unitDict, allFractions } from "./units";
-import { Fraction, unitProperty, Set, AddedIngr } from "../types"
+import { Fraction, unitProperty, Set, AddedIngr, IngrInput, Error } from "../types"
 
 export const getAbbrev = (): string[][] => {
   let units = Object.keys(unitDict)
@@ -50,6 +50,87 @@ export const matchUnitNames = (input: string[]): string | null => {
     }
   }
   return null
+}
+
+export const validateList = (ingrString: string): [IngrInput | null, Error | null] => {
+  let error: Error
+  let currString = ingrString
+  let arrow: number = ingrString.indexOf("->")
+  let targetU: string = ""
+
+  if (arrow > -1) {
+    currString = ingrString.slice(0, arrow)
+    let end: string[] = ingrString.slice(arrow + 2).split(" ")
+    let target: string | null = matchUnitNames(end)
+    if (target) {
+      targetU = target
+    } else {
+      error = { name: "General", message: "Could not validate target unit name" }
+      return [null, error]
+    }
+  } else {
+    targetU = "grams"
+  }
+
+  let words = currString.split(" ")
+  let amount: number = 0
+  let amountI: number[] = []
+  let currentU: string | null = null
+  let unitI: number[] = []
+  let iNameStart: number = -1
+
+  for (let i = 0; i < words.length; i++) {
+    // find valid amount
+    let isAmount = validateAmount(words[i])
+    if (isAmount) {
+      amountI.push(i)
+      amount += isAmount
+      continue;
+    }
+    // if amount has been found, and current word is not an amount, 
+    // check if this word is a unit
+    if (amount > 0 && !isAmount && !currentU) {
+      currentU = matchUnitNames([words[i]])
+      if (currentU !== null) {
+        unitI.push(i)
+        continue;
+      }
+      // if this word isn't a unit, check if its a compount unit (2 words)
+      // if so, skip the next i
+      if (currentU === null && i + 1 < words.length) {
+        currentU = matchUnitNames([words[i], words[i + 1]])
+        // console.log(` returned currentU`, currentU)
+        if (currentU) {
+          unitI.push(i)
+          unitI.push(i + 1)
+          i += 1
+          continue;
+        }
+      }
+    }
+    // once an amount and current unit are validated,
+    // the rest of the words are the ingredient name
+    if (amount > 0 && currentU && iNameStart === -1) {
+      iNameStart = i
+      break;
+    }
+  }
+  let amountString = amountI.map(index => words[index]).join(" ")
+  let iName = iNameStart !== -1 ? words.slice(-words.length + iNameStart).join(" ") : ""
+  if (amount > 0 && currentU) {
+    let ret: IngrInput = {
+      name: "",
+      currentAmount: amountString,
+      currentUnit: currentU,
+      targetUnit: targetU,
+      ingredientName: iName
+    }
+    return [ret, null]
+  } else {
+    let messageString = `${amount === 0 ? `Could not validate the amount ${amountString}` : currentU ? `Could not validate the unit provided: ${ingrString.slice(unitI[0], unitI[-1])}` : "Error validating information provided"}`
+    error = { name: "Conversion", message: messageString }
+    return [null, error]
+  }
 }
 
 // returns decimal of the input if there is a valid fraction or null if not
