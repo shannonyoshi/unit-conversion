@@ -31,6 +31,7 @@ export interface Unit {
   output: Output,
   type: UnitType,
   singular: string
+  aka:string[]
 }
 // converted ingredient
 export interface ConvIngr {
@@ -92,7 +93,7 @@ export interface Set {
 
 export interface InputsList{
   name:string,
-  string:"",
+  string:string,
   valList: IngrInput[] //validated list
 }
 

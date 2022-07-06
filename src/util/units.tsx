@@ -51,6 +51,7 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "fraction",
     type: "US",
     singular: "drop",
+    aka:[]
   },
   "smidges": {
     name: "smidges",
@@ -59,6 +60,7 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "fraction",
     type: "US",
     singular: "smidge",
+    aka:[]
   },
   "pinches": {
     name: "pinches",
@@ -67,13 +69,16 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "fraction",
     type: "US",
     singular: "pinch",
-  }, "dashes": {
+    aka:[]
+  },
+  "dashes": {
     name: "dashes",
     normUnit: "mL",
     conversion: 0.462086,
     output: "fraction",
     type: "US",
     singular: "dash",
+    aka: ["ds"]
   },
   "milliliters": {
     name: "milliliters",
@@ -82,6 +87,7 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "decimal",
     type: "metric",
     singular: "milliliter",
+    aka: ["ml", "mL"]
   },
   "teaspoons": {
     name: "teaspoons",
@@ -90,6 +96,7 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "fraction",
     type: "US",
     singular: "teaspoon",
+    aka: ["t", "ts", "tsp", "tspn"]
   },
   "tablespoons": {
     name: "tablespoons",
@@ -98,6 +105,7 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "fraction",
     type: "US",
     singular: "tablespoon",
+    aka: ["T", "TB", "Tb", "tb", "Tbl", "tbl", "Tbs", "tbs", "Tbsp", "tbsp",]
   },
   "fluid ounces": {
     name: "fluid ounces",
@@ -106,6 +114,8 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "fraction",
     type: "US",
     singular: "fluid ounce",
+    aka: ["fluid oz", "fl oz", "oz fl"]
+
   },
   "cups": {
     name: "cups",
@@ -114,6 +124,7 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "fraction",
     type: "US",
     singular: "cup",
+    aka: ["c"]
   },
   "pints": {
     name: "pints",
@@ -122,6 +133,7 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "fraction",
     type: "US",
     singular: "pint",
+    aka: ["p", "pt"]
   },
   "quarts": {
     name: "quarts",
@@ -130,6 +142,7 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "fraction",
     type: "US",
     singular: "quart",
+    aka: ["q", "qt", "qts"]
   },
   "liters": {
     name: "liters",
@@ -138,6 +151,7 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "decimal",
     type: "metric",
     singular: "liter",
+    aka: ["l", "lt", "ltr"]
   },
   "gallons": {
     name: "gallons",
@@ -146,6 +160,7 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "fraction",
     type: "US",
     singular: "gallon",
+    aka: ["gl", "gal"]
   },
   "grams": {
     name: "grams",
@@ -154,6 +169,7 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "decimal",
     type: "metric",
     singular: "gram",
+    aka: ["g", "gm"]
   },
   "ounces": {
     name: "ounces",
@@ -162,6 +178,7 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "fraction",
     type: "US",
     singular: "ounce",
+    aka: ["oz"]
   },
   "pounds": {
     name: "pounds",
@@ -170,6 +187,7 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "fraction",
     type: "US",
     singular: "pound",
+    aka: ["lb", "lbs"]
   },
   "kilograms": {
     name: "kilograms",
@@ -178,129 +196,6 @@ export const unitDict: { [unitName: string]: Unit } = {
     output: "decimal",
     type: "metric",
     singular: "kilogram",
+    aka: ["kg", "kgs", "kilo"]
   },
 }
-
-
-//pluralUnit: {normUnit: mL or g, conversion: in mL/grams, output: fractions/decimal, type:metric/US}
-// export const unitDict = {
-//   drops: {
-//     normUnit: "mL",
-//     conversion: 0.0513429,
-//     output: "fraction",
-//     type: "US",
-//     singular: "drop",
-//   },
-//   smidges: {
-//     normUnit: "mL",
-//     conversion: 0.115522,
-//     output: "fraction",
-//     type: "US",
-//     singular: "smidge",
-//   },
-//   pinches: {
-//     normUnit: "mL",
-//     conversion: 0.231043,
-//     output: "fraction",
-//     type: "US",
-//     singular: "pinch",
-//   },
-//   dashes: {
-//     normUnit: "mL",
-//     conversion: 0.462086,
-//     output: "fraction",
-//     type: "US",
-//     singular: "dash",
-//   },
-//   milliliters: {
-//     normUnit: "mL",
-//     conversion: 1,
-//     output: "decimal",
-//     type: "metric",
-//     singular: "milliliter",
-//   },
-//   teaspoons: {
-//     normUnit: "mL",
-//     conversion: 4.92892,
-//     output: "fraction",
-//     type: "US",
-//     singular: "teaspoon",
-//   },
-//   tablespoons: {
-//     normUnit: "mL",
-//     conversion: 14.7868,
-//     output: "fraction",
-//     type: "US",
-//     singular: "tablespoon",
-//   },
-//   "fluid ounces": {
-//     normUnit: "mL",
-//     conversion: 29.5735,
-//     output: "fraction",
-//     type: "US",
-//     singular: "fluid ounce",
-//   },
-//   cups: {
-//     normUnit: "mL",
-//     conversion: 236.588,
-//     output: "fraction",
-//     type: "US",
-//     singular: "cup",
-//   },
-//   pints: {
-//     normUnit: "mL",
-//     conversion: 473.176,
-//     output: "fraction",
-//     type: "US",
-//     singular: "pint",
-//   },
-//   quarts: {
-//     normUnit: "mL",
-//     conversion: 946.353,
-//     output: "fraction",
-//     type: "US",
-//     singular: "quart",
-//   },
-//   liters: {
-//     normUnit: "mL",
-//     conversion: 1000,
-//     output: "decimal",
-//     type: "metric",
-//     singular: "liter",
-//   },
-//   gallons: {
-//     normUnit: "mL",
-//     conversion: 3785.41,
-//     output: "fraction",
-//     type: "US",
-//     singular: "gallon",
-//   },
-//   grams: {
-//     normUnit: "g",
-//     conversion: 1,
-//     output: "decimal",
-//     type: "metric",
-//     singular: "gram",
-//   },
-//   ounces: {
-//     normUnit: "g",
-//     conversion: 28.3495,
-//     output: "fraction",
-//     type: "US",
-//     singular: "ounce",
-//   },
-//   pounds: {
-//     normUnit: "g",
-//     conversion: 453.592,
-//     output: "fraction",
-//     type: "US",
-//     singular: "pound",
-//   },
-//   kilograms: {
-//     normUnit: "g",
-//     conversion: 1000,
-//     output: "decimal",
-//     type: "metric",
-//     singular: "kilogram",
-//   },
-// };

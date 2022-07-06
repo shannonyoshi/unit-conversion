@@ -1,6 +1,15 @@
 import { unitDict, allFractions } from "./units";
 import { Fraction, unitProperty, Set, AddedIngr } from "../types"
 
+export const getAbbrev = (): string[][] => {
+  let units = Object.keys(unitDict)
+  let ret: string[][] = []
+  for (let i = 0; i < units.length; i++) {
+    ret.push([units[i], unitDict[units[i]].singular, ...unitDict[units[i]]!.aka])
+  }
+  return ret
+}
+
 export const roundTo = (toRound: number, decPoints: number) => {
   let mult = Math.pow(10, decPoints)
   return Math.round(toRound * mult) / mult
@@ -22,6 +31,25 @@ const findFraction = (amountArray: string[]): fracInfo | null => {
   }
   return fractions.length === 1 ? fractions[0] : null
 
+}
+export const matchUnitNames = (input: string[]): string | null => {
+  // console.log(`input`, input)
+  let abbrevs = getAbbrev()
+  // console.log(`abbrevs`, abbrevs)
+  let potentialU = input.length > 1 ? input.join(" ") : input[0]
+  // console.log(`potentialU`, potentialU)
+  if (!potentialU.startsWith("t") && !potentialU.startsWith("T")) {
+    potentialU = potentialU.toLowerCase()
+  }
+  for (let i = 0; i < abbrevs.length; i++) {
+    // console.log(`abbrevs[i]`, abbrevs[i])
+    // console.log(`abbrevs[i].includes(potentialU)`, abbrevs[i].includes(potentialU))
+    if (abbrevs[i].includes(potentialU)) {
+      // console.log(`return true`, abbrevs[i][0])
+      return abbrevs[i][0]
+    }
+  }
+  return null
 }
 
 // returns decimal of the input if there is a valid fraction or null if not
@@ -51,6 +79,7 @@ const validateFraction = (amountArray: string[]): null | number => {
   }
   return null;
 };
+
 //returns parsed amount in decimal or false if amount is unable to be parsed
 export const validateAmount = (amount: string): number | null => {
 

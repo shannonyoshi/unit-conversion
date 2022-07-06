@@ -19,7 +19,7 @@ interface ConvCardProps {
 
 const initInputsList: InputsList = {
   name: "",
-  string: "",
+  string:"1 cup    flour\n3/4 cup sugar   ",
   valList: []
 }
 
