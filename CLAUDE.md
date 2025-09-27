@@ -1,0 +1,1 @@
+- when starting the server, always use NODE_OPTIONS="--openssl-legacy-provider" npm start

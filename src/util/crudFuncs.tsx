@@ -1,6 +1,6 @@
 import { ComplexIngr, AddedIngr, SugSubmit, Suggestion, Error } from "../types"
-// const baseURL = "http://localhost:8080/api/";
-const baseURL = "https://www.bakingunits.com/api/"
+const baseURL = "http://localhost:8080/api/";
+// const baseURL = "https://www.bakingunits.com/api/"
 
 
 export const postSuggestion = async (suggestion: SugSubmit) => {

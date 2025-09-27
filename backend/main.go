@@ -145,7 +145,14 @@ func main() {
 	fs := wrapHandler(http.FileServer(http.Dir("./static")))
 	mux.Handle("/", fs)
 
-	cors := cors.Default().Handler(mux)
+	// cors := cors.Default().Handler(mux)
+	// for local testing
+	cors:=cors.New(cors.Options{
+		AllowedOrigins: []string{"http://localhost:3001"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders: []string{"*"},
+	}).Handler(mux)
+
 	wrap := handlers.LoggingHandler(os.Stdout, cors)
 
 	err := http.ListenAndServe(":8080", wrap)
