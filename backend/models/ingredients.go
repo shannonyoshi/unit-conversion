@@ -62,23 +62,25 @@ func RequestAPIInfo(input IngredientInput) (IngredientInfo, error) {
 	q.Add("sourceAmount", fmt.Sprintf("%f", input.CurrentAmount))
 	q.Add("sourceUnit", input.CurrentUnit)
 	q.Add("targetUnit", input.TargetUnit)
-	q.Add("apiKey", os.Getenv("SPOONTACULAR_API_KEY"))
+	q.Add("apiKey", os.Getenv("SPOONACULAR_API_KEY"))
 	req.URL.RawQuery = q.Encode()
 	resp, err := client.Do(req)
 	if err != nil {
+		fmt.Println(err)
 		return APIIngredient, err
-		// fmt.Println(err)
+		 
 	}
 	decoder := json.NewDecoder(resp.Body)
 	err = decoder.Decode(&APIIngredient)
 	// fmt.Printf("Error?: %v\n", err)
 	if err != nil {
+		fmt.Println(err)
 		return APIIngredient, err
-		// fmt.Println(err)
+		
 	}
-	// fmt.Printf("Query URL: %v\n", req.URL.String())
-	// fmt.Println(APIIngredient)
-	// fmt.Printf("API Ingredient: %+v\n", APIIngredient)
+	fmt.Printf("Query URL: %v\n", req.URL.String())
+	fmt.Println(APIIngredient)
+	fmt.Printf("API Ingredient: %+v\n", APIIngredient)
 	return APIIngredient, nil
 }
 

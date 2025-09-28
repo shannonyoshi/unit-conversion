@@ -89,6 +89,7 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 			APIIngredient, err := models.RequestAPIInfo(ingrInput)
 			if err != nil {
 				fmt.Printf("ERROR, %v\n", err)
+				http.Error(w, fmt.Sprintf(`{"error": "Failed to get ingredient info: %v"}`, err), http.StatusInternalServerError)
 				return
 			}
 			// convert to ratio that can be stored in DB
@@ -108,6 +109,7 @@ func conversionPage(w http.ResponseWriter, r *http.Request) {
 
 		} else {
 			fmt.Println(err)
+			http.Error(w, fmt.Sprintf(`{"error": "Database error: %v"}`, err), http.StatusInternalServerError)
 		}
 		return
 	}
